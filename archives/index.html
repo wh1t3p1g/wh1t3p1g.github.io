@@ -8,7 +8,7 @@
 
 <title>
   
-    Archive
+    归档
   
 </title>
 
@@ -90,21 +90,21 @@
           
             
               <li class="category-list-container">
-                <a href="javascript:;">Category</a>
+                <a href="javascript:;">分类</a>
                 
               </li>
             
           
             
               <li class="tag-list-container">
-                <a href="javascript:;">Tag</a>
+                <a href="javascript:;">标签</a>
                 <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/">flask</a><span class="tag-list-count">1</span></li></ul>
               </li>
             
           
             
               <li class="archive-list-container">
-                <a href="javascript:;">Archive</a>
+                <a href="javascript:;">归档</a>
                 <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/">2016</a><span class="archive-list-count">2</span></li></ul>
               </li>
             
@@ -197,12 +197,12 @@
       </div>
       <div class="article-entry">
         
-          <p>##0x00　引言<br>　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。</p>
-<p>##0x01　安装virtualenv<br>　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载<a href="https://pypi.python.org/pypi/virtualenv" target="_blank" rel="external">virtualenv.py</a>来构建虚拟环境。<br>　　使用pip命令 <code>pip install virtualenv</code></p>
-<p>##0x02　建立环境<br>　　首先进入网站的根目录（或者是任何需要建立虚拟环境的文件夹下）<br>　　使用dos命令 <code>virtualenv venv</code> 其中venv为python的虚拟环境，其中包括了python.exe、pip、easy_install等python环境。</p>
-<p>##0x03　激活环境<br>　　完成上一步后，接下来需要在dos界面激活虚拟环境，这样可以使得接下来下载的python模块都位于venv下的pip环境中<br><code>Scripts\activate   激活虚拟环境</code><br><code>deactivate  退出虚拟环境</code><br>　　激活后命令行开头多了（venv），如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E:\code\python-workplace\flasker\venv&gt;Scripts\activate</span><br><span class="line">(venv) E:\code\python-workplace\flasker\venv&gt;</span><br></pre></td></tr></table></figure></p>
-<p>##0x04　安装模块<br>　　在上面的基础下，通过<code>pip install xxxx</code>安装的模块都是安装在venv环境下的，对主机上的环境没有影响。</p>
-<p>##0x05　引入路径<br>　　在具体使用过程中，需要把venv的路径导入sys.path，这样才可以使用虚拟环境中的python模块。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">importos,sys</span><br><span class="line">sys.path.append(os.getcwd()+&apos;\\venv\\Lib\\site-packages&apos;)</span><br></pre></td></tr></table></figure></p>
+          <h2 id="0x00-引言"><a href="#0x00-引言" class="headerlink" title="0x00　引言"></a>0x00　引言</h2><p>　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。</p>
+<h2 id="0x01-安装virtualenv"><a href="#0x01-安装virtualenv" class="headerlink" title="0x01　安装virtualenv"></a>0x01　安装virtualenv</h2><p>　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载<a href="https://pypi.python.org/pypi/virtualenv" target="_blank" rel="external">virtualenv.py</a>来构建虚拟环境。<br>　　使用pip命令 <code>pip install virtualenv</code></p>
+<h2 id="0x02-建立环境"><a href="#0x02-建立环境" class="headerlink" title="0x02　建立环境"></a>0x02　建立环境</h2><p>　　首先进入网站的根目录（或者是任何需要建立虚拟环境的文件夹下）<br>　　使用dos命令 <code>virtualenv venv</code> 其中venv为python的虚拟环境，其中包括了python.exe、pip、easy_install等python环境。</p>
+<h2 id="0x03-激活环境"><a href="#0x03-激活环境" class="headerlink" title="0x03　激活环境"></a>0x03　激活环境</h2><p>　　完成上一步后，接下来需要在dos界面激活虚拟环境，这样可以使得接下来下载的python模块都位于venv下的pip环境中<br><code>Scripts\activate   激活虚拟环境</code><br><code>deactivate  退出虚拟环境</code><br>　　激活后命令行开头多了（venv），如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E:\code\python-workplace\flasker\venv&gt;Scripts\activate</span><br><span class="line">(venv) E:\code\python-workplace\flasker\venv&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x04-安装模块"><a href="#0x04-安装模块" class="headerlink" title="0x04　安装模块"></a>0x04　安装模块</h2><p>　　在上面的基础下，通过<code>pip install xxxx</code>安装的模块都是安装在venv环境下的，对主机上的环境没有影响。</p>
+<h2 id="0x05-引入路径"><a href="#0x05-引入路径" class="headerlink" title="0x05　引入路径"></a>0x05　引入路径</h2><p>　　在具体使用过程中，需要把venv的路径导入sys.path，这样才可以使用虚拟环境中的python模块。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">importos,sys</span><br><span class="line">sys.path.append(os.getcwd()+<span class="string">'\\venv\\Lib\\site-packages'</span>)</span><br></pre></td></tr></table></figure></p>
 <p>　　到这里就完成了python虚拟环境的搭建，总体对经常变动编程环境的城旭猿来说这是个非常有用功能。<br>　　<strong>==The End==</strong></p>
 
         
