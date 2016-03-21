@@ -8,20 +8,50 @@
 
 <title>
   
-    0kami&#39;s Blog
+    DOM-XSS
   
 </title>
 
-<meta name="description" content="404">
-<meta property="og:type" content="website">
-<meta property="og:title" content="0kami's Blog">
-<meta property="og:url" content="http://yoursite.com/404.html">
+<meta name="description" content="0x00 引言　　这几天阅读了《Web前端黑客技术揭秘》，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见0x0附录。
+0x0 附录
+
+
+输出点
+javascript code
+
+
+
+
+直接输出HTML内">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DOM-XSS">
+<meta property="og:url" content="http://yoursite.com/2016/03/17/DOM-XSS/index.html">
 <meta property="og:site_name" content="0kami's Blog">
-<meta property="og:description" content="404">
-<meta property="og:updated_time" content="2016-03-16T13:41:17.833Z">
+<meta property="og:description" content="0x00 引言　　这几天阅读了《Web前端黑客技术揭秘》，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见0x0附录。
+0x0 附录
+
+
+输出点
+javascript code
+
+
+
+
+直接输出HTML内">
+<meta property="og:updated_time" content="2016-03-17T14:43:36.766Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="0kami's Blog">
-<meta name="twitter:description" content="404">
+<meta name="twitter:title" content="DOM-XSS">
+<meta name="twitter:description" content="0x00 引言　　这几天阅读了《Web前端黑客技术揭秘》，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见0x0附录。
+0x0 附录
+
+
+输出点
+javascript code
+
+
+
+
+直接输出HTML内">
 
 
   <link rel="alternative" href="/atom.xml" title="0kami&#39;s Blog" type="application/atom+xml">
@@ -158,30 +188,53 @@
       
         <div style="max-width: 1000px">
       
-          <article id="default-undefined" class="article article-type-default">
+          <article id="post-DOM-XSS" class="article article-type-post">
+  
+    <h1 class="article-header">
+      DOM-XSS
+    </h1>
   
   
 
   <div class="article-info">
     <span class="article-date">
-  2016-03-16
+  2016-03-17
 </span>
 
     
+	<span class="article-category tagcloud">
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Web安全/">Web安全</a></li></ul>
+	</span>
+
 
     
+	<span class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/XSS/">XSS</a></li></ul>
+	</span>
+
 
   </div>
   <div class="article-entry">
-    <html>
-    <head>
-         <meta charset="UTF-8">
-         <title>404</title>                                                                                                                                        
-    </head>
-    <body>
-         <script type="text/javascript" src="http://www.qq.com/404/search_children.js" charset="utf-8"></script>
-    </body>
-</html>
+    <h2 id="0x00-引言"><a href="#0x00-引言" class="headerlink" title="0x00 引言"></a>0x00 引言</h2><p>　　这几天阅读了<em>《Web前端黑客技术揭秘》</em>，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。<br>　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见<strong>0x0附录</strong>。</p>
+<h2 id="0x0-附录"><a href="#0x0-附录" class="headerlink" title="0x0 附录"></a>0x0 附录</h2><table>
+<thead>
+<tr>
+<th>输出点</th>
+<th>javascript code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>直接输出HTML内容</td>
+<td>document.write(…)<br>document.writeln(…)<br> document.body.innerHtml=…</td>
+</tr>
+<tr>
+<td>直接修改DOM树（包括DHTML事件）</td>
+<td>document.forms[0].action=…<br></td>
+</tr>
+</tbody>
+</table>
+
   </div>
   <footer class="article-footer">
     
@@ -208,7 +261,7 @@
 
   <link rel="stylesheet" href="http://static.duoshuo.com/styles/embed.default.css?349d9313.css">
   <!-- 多说评论框 start -->
-  <div class="ds-thread" data-thread-key="404.html" data-title="" data-url="/404.html"></div>
+  <div class="ds-thread" data-thread-key="2016/03/17/DOM-XSS/" data-title="DOM-XSS" data-url="/2016/03/17/DOM-XSS/"></div>
   <!-- 多说评论框 end -->
   <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
   <script type="text/javascript">

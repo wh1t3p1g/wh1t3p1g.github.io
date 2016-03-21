@@ -8,14 +8,14 @@
 
 <title>
   
-    Archive
+    Category: writeup
   
 </title>
 
 <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="0kami's Blog">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta property="og:url" content="http://yoursite.com/categories/writeup/index.html">
 <meta property="og:site_name" content="0kami's Blog">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -157,19 +157,12 @@
       
         <div style="max-width: 1000px">
       
-          
+          <h1>writeup</h1>
+
 
   
   
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <h1><a href="/archives/2016" class="archive-year">2016</a></h1>
-        </div>
-        <div class="post-list">
-    
+    <div class="post-list">
   
 
     <div class="post-list-item article">
@@ -212,155 +205,7 @@
     </div>
 
   
-
-  
-  
-    
-  
-
-    <div class="post-list-item article">
-      <h3 class="article-header">
-        <a href="/2016/03/17/DOM-XSS/" >
-  DOM-XSS
-</a>
-
-      </h3>
-      
-
-      <div class="article-info">
-        <a href="/2016/03/17/DOM-XSS/"><span class="article-date">
-  2016-03-17
-</span>
-</a>
-        
-	<span class="article-category tagcloud">
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Web安全/">Web安全</a></li></ul>
-	</span>
-
-
-        
-	<span class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/XSS/">XSS</a></li></ul>
-	</span>
-
-
-      </div>
-      <div class="article-entry">
-        
-          <h2 id="0x00-引言"><a href="#0x00-引言" class="headerlink" title="0x00 引言"></a>0x00 引言</h2><p>　　这几天阅读了<em>《Web前端黑客技术揭秘》</em>，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。<br>　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见<strong>0x0附录</strong>。</p>
-<h2 id="0x0-附录"><a href="#0x0-附录" class="headerlink" title="0x0 附录"></a>0x0 附录</h2><table>
-<thead>
-<tr>
-<th>输出点</th>
-<th>javascript code</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>直接输出HTML内容</td>
-<td>document.write(…)<br>document.writeln(…)<br> document.body.innerHtml=…</td>
-</tr>
-<tr>
-<td>直接修改DOM树（包括DHTML事件）</td>
-<td>document.forms[0].action=…<br></td>
-</tr>
-</tbody>
-</table>
-
-        
-      </div>
     </div>
-
-  
-
-  
-  
-    
-  
-
-    <div class="post-list-item article">
-      <h3 class="article-header">
-        <a href="/2016/03/16/flask-virtualenv/" >
-  flask virtualenv环境搭建
-</a>
-
-      </h3>
-      
-
-      <div class="article-info">
-        <a href="/2016/03/16/flask-virtualenv/"><span class="article-date">
-  2016-03-16
-</span>
-</a>
-        
-	<span class="article-category tagcloud">
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/python/">python</a></li></ul>
-	</span>
-
-
-        
-	<span class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flask/">flask</a></li></ul>
-	</span>
-
-
-      </div>
-      <div class="article-entry">
-        
-          <h2 id="0x00-引言"><a href="#0x00-引言" class="headerlink" title="0x00　引言"></a>0x00　引言</h2><p>　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。</p>
-<h2 id="0x01-安装virtualenv"><a href="#0x01-安装virtualenv" class="headerlink" title="0x01　安装virtualenv"></a>0x01　安装virtualenv</h2><p>　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载<a href="https://pypi.python.org/pypi/virtualenv" target="_blank" rel="external">virtualenv.py</a>来构建虚拟环境。<br>　　使用pip命令 <code>pip install virtualenv</code></p>
-<h2 id="0x02-建立环境"><a href="#0x02-建立环境" class="headerlink" title="0x02　建立环境"></a>0x02　建立环境</h2><p>　　首先进入网站的根目录（或者是任何需要建立虚拟环境的文件夹下）<br>　　使用dos命令 <code>virtualenv venv</code> 其中venv为python的虚拟环境，其中包括了python.exe、pip、easy_install等python环境。</p>
-<h2 id="0x03-激活环境"><a href="#0x03-激活环境" class="headerlink" title="0x03　激活环境"></a>0x03　激活环境</h2><p>　　完成上一步后，接下来需要在dos界面激活虚拟环境，这样可以使得接下来下载的python模块都位于venv下的pip环境中<br><code>Scripts\activate   激活虚拟环境</code><br><code>deactivate  退出虚拟环境</code><br>　　激活后命令行开头多了（venv），如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E:\code\python-workplace\flasker\venv&gt;Scripts\activate</span><br><span class="line">(venv) E:\code\python-workplace\flasker\venv&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="0x04-安装模块"><a href="#0x04-安装模块" class="headerlink" title="0x04　安装模块"></a>0x04　安装模块</h2><p>　　在上面的基础下，通过<code>pip install xxxx</code>安装的模块都是安装在venv环境下的，对主机上的环境没有影响。</p>
-<h2 id="0x05-引入路径"><a href="#0x05-引入路径" class="headerlink" title="0x05　引入路径"></a>0x05　引入路径</h2><p>　　在具体使用过程中，需要把venv的路径导入sys.path，这样才可以使用虚拟环境中的python模块。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">importos,sys</span><br><span class="line">sys.path.append(os.getcwd()+<span class="string">'\\venv\\Lib\\site-packages'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>　　到这里就完成了python虚拟环境的搭建，总体对经常变动编程环境的城旭猿来说这是个非常有用功能。<br>　　<strong>==The End==</strong></p>
-
-        
-      </div>
-    </div>
-
-  
-
-  
-  
-    
-  
-
-    <div class="post-list-item article">
-      <h3 class="article-header">
-        <a href="/2016/03/16/hello-world/" >
-  Hello World
-</a>
-
-      </h3>
-      
-
-      <div class="article-info">
-        <a href="/2016/03/16/hello-world/"><span class="article-date">
-  2016-03-16
-</span>
-</a>
-        
-
-        
-
-      </div>
-      <div class="article-entry">
-        
-          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-        
-      </div>
-    </div>
-
   
 
 

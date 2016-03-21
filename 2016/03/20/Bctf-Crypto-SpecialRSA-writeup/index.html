@@ -8,19 +8,20 @@
 
 <title>
   
-    Archive
+    Bctf Crypto SpecialRSA writeup
   
 </title>
 
-<meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="0kami's Blog">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta name="description" content="题目描述题目描述　　将附带的zip文件下载并解压。可以看到以下几个文件：　　　　　　1. 加密算法　　　　　　2. 示例密文　　　　　　3. 示例明文　　　　　　4. 加密的flag文件　　大致我们可以看出来，题目的意图为通过示例密明文，算出加密秘钥k，然后通过k解密flag文件。阅读加解密算法，我们可以得出以下的数学公式：12345gcd(k,N)=1,kd+Ny=1,c=&amp;gt;cripher">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bctf Crypto SpecialRSA writeup">
+<meta property="og:url" content="http://yoursite.com/2016/03/20/Bctf-Crypto-SpecialRSA-writeup/index.html">
 <meta property="og:site_name" content="0kami's Blog">
-<meta property="og:description">
+<meta property="og:description" content="题目描述题目描述　　将附带的zip文件下载并解压。可以看到以下几个文件：　　　　　　1. 加密算法　　　　　　2. 示例密文　　　　　　3. 示例明文　　　　　　4. 加密的flag文件　　大致我们可以看出来，题目的意图为通过示例密明文，算出加密秘钥k，然后通过k解密flag文件。阅读加解密算法，我们可以得出以下的数学公式：12345gcd(k,N)=1,kd+Ny=1,c=&amp;gt;cripher">
+<meta property="og:updated_time" content="2016-03-20T08:07:32.818Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="0kami's Blog">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Bctf Crypto SpecialRSA writeup">
+<meta name="twitter:description" content="题目描述题目描述　　将附带的zip文件下载并解压。可以看到以下几个文件：　　　　　　1. 加密算法　　　　　　2. 示例密文　　　　　　3. 示例明文　　　　　　4. 加密的flag文件　　大致我们可以看出来，题目的意图为通过示例密明文，算出加密秘钥k，然后通过k解密flag文件。阅读加解密算法，我们可以得出以下的数学公式：12345gcd(k,N)=1,kd+Ny=1,c=&amp;gt;cripher">
 
 
   <link rel="alternative" href="/atom.xml" title="0kami&#39;s Blog" type="application/atom+xml">
@@ -157,211 +158,84 @@
       
         <div style="max-width: 1000px">
       
-          
-
+          <article id="post-Bctf-Crypto-SpecialRSA-writeup" class="article article-type-post">
+  
+    <h1 class="article-header">
+      Bctf Crypto SpecialRSA writeup
+    </h1>
   
   
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <h1><a href="/archives/2016" class="archive-year">2016</a></h1>
-        </div>
-        <div class="post-list">
-    
-  
 
-    <div class="post-list-item article">
-      <h3 class="article-header">
-        <a href="/2016/03/20/Bctf-Crypto-SpecialRSA-writeup/" >
-  Bctf Crypto SpecialRSA writeup
-</a>
-
-      </h3>
-      
-
-      <div class="article-info">
-        <a href="/2016/03/20/Bctf-Crypto-SpecialRSA-writeup/"><span class="article-date">
+  <div class="article-info">
+    <span class="article-date">
   2016-03-20
 </span>
-</a>
-        
+
+    
 	<span class="article-category tagcloud">
 	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/writeup/">writeup</a></li></ul>
 	</span>
 
 
-        
+    
 	<span class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bctf/">bctf</a></li></ul>
 	</span>
 
 
-      </div>
-      <div class="article-entry">
-        
-          <h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p><a href="http://blog.0kami.cn/images/bctf/specialRSA.jpg" target="_blank" rel="external">题目描述</a><br>　　将附带的<a href="http://blog.0kami.cn/static/speical_rsa.zip" title="zip" target="_blank" rel="external">zip</a>文件下载并解压。可以看到以下几个文件：<br>　　　　　　1. 加密算法<br>　　　　　　2. 示例密文<br>　　　　　　3. 示例明文<br>　　　　　　4. 加密的flag文件<br>　　大致我们可以看出来，题目的意图为通过示例密明文，算出加密秘钥k，然后通过k解密flag文件。阅读加解密算法，我们可以得出以下的数学公式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gcd(k,N)=1,kd+Ny=1,c=&gt;criphertext,m=&gt;plaintext</span><br><span class="line">   encode c=[(k^r%N)*m]%N</span><br><span class="line">   decode m=[(d^r%N)*c]%N</span><br><span class="line">   已知2组(m,r,c) N 的值</span><br><span class="line">   求解k</span><br></pre></td></tr></table></figure></p>
+  </div>
+  <div class="article-entry">
+    <h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p><a href="http://blog.0kami.cn/images/bctf/specialRSA.jpg" target="_blank" rel="external">题目描述</a><br>　　将附带的<a href="http://blog.0kami.cn/static/speical_rsa.zip" title="zip" target="_blank" rel="external">zip</a>文件下载并解压。可以看到以下几个文件：<br>　　　　　　1. 加密算法<br>　　　　　　2. 示例密文<br>　　　　　　3. 示例明文<br>　　　　　　4. 加密的flag文件<br>　　大致我们可以看出来，题目的意图为通过示例密明文，算出加密秘钥k，然后通过k解密flag文件。阅读加解密算法，我们可以得出以下的数学公式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gcd(k,N)=1,kd+Ny=1,c=&gt;criphertext,m=&gt;plaintext</span><br><span class="line">   encode c=[(k^r%N)*m]%N</span><br><span class="line">   decode m=[(d^r%N)*c]%N</span><br><span class="line">   已知2组(m,r,c) N 的值</span><br><span class="line">   求解k</span><br></pre></td></tr></table></figure></p>
 <p>　　到这里卡了很久，一直没个正确的方式来获取k，不用数学就会忘记啊啊啊啊啊啊啊。后来求组了老师，得到了一个思路。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">下面所有^-1表示对应的乘法逆元</span><br><span class="line">   假设gcd(r1,r2)=1,那么存在a,b使得公式r1*a+r2*b=1</span><br><span class="line">   那么   k^1</span><br><span class="line">         =k^(r1*a+r2*b)</span><br><span class="line">         =k^(r1*a) * k^(r2*b)</span><br><span class="line">         =(k^r1)^a * (k^r2)^b</span><br><span class="line">而k^rn 可以通过(m,r,c)对来获得</span><br><span class="line">这里直接使用encode公式c=[(k^r%N)*m]%N</span><br><span class="line">通过推导可以得出k^r=c*(m^-1)</span><br><span class="line">m的逆元可以通过扩展欧几里德算法来求得</span><br></pre></td></tr></table></figure></p>
 <p>　　有了上面的思路，就可以写程序来加解密了，这里我用了python来写，其中(m,r,c)对我事先拿出来了，清楚一点,下面的程序是来算k的<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">import msgpack</span><br><span class="line">from Crypto.PublicKey import RSA</span><br><span class="line">N = 23927411014020695772934916764953661641310148480977056645255098192491740356525240675906285700516357578929940114553700976167969964364149615226568689224228028461686617293534115788779955597877965044570493457567420874741357186596425753667455266870402154552439899664446413632716747644854897551940777512522044907132864905644212655387223302410896871080751768224091760934209917984213585513510597619708797688705876805464880105797829380326559399723048092175492203894468752718008631464599810632513162129223356467602508095356584405555329096159917957389834381018137378015593755767450675441331998683799788355179363368220408879117131L</span><br><span class="line"></span><br><span class="line">def Ext_Euclid (a , b ):</span><br><span class="line">        <span class="string">''</span><span class="string">'</span><br><span class="line">        扩展欧几里得算法  a*x + b*y = gcd(a,b)  返回 x,y以及a，b的最大公约数gcd</span><br><span class="line">        :param a:</span><br><span class="line">        :param b:</span><br><span class="line">        :return:x,y以及a，b的最大公约数gcd</span><br><span class="line"></span><br><span class="line">        '</span><span class="string">''</span></span><br><span class="line">        <span class="keyword">if</span> (b == 0):</span><br><span class="line">            <span class="built_in">return</span> 1 , 0 , a</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            x , y , q=Ext_Euclid( b , a % b )</span><br><span class="line">            x , y = y,( x - (a // b) * y )</span><br><span class="line">            <span class="built_in">return</span> x , y , q</span><br><span class="line">m1=8246074182642091125578311828374843698994233243811347691229334829218700728624047916518503687366611595562099039411430662968666847086659721231623198995017758424796091810259884653332576136128144958751327844746991264667007359518181363522934430676655236880489550093852524801304612322373542296281962196795304499711006801211783005857297362930338978872451934860435597545642219213551685973208209873623909629278321181485010964460652298690058747090298312365230671723790850998541956664376820820570709272500330966205578898690396706695024001970727864091436518202414166919020415892764617055978488996164642229582717493375419993187360L</span><br><span class="line"></span><br><span class="line">c1=14548997380897265239778884825381301109965518989661808090688952232381091726761464959572943383024428028270717629953894592890859128818839328499002950828491521254480795364789013196240119403187073307558598496713832435709741997056117831860370227155633169019665564392649528306986826960829410120348913586592199732730933259880469229724149887380005627321752843489564984358708013300524640545437703771424168108213045567568595093421366224818609501318783680497763353618110184078118456368631056649526433730408976988014678391205055298782061128568056163894010397245301425676232126267874656710256838457728944370612289985071385621160886L</span><br><span class="line"></span><br><span class="line">m11=RSA.inverse(m1,N)<span class="comment"># 求逆元</span></span><br><span class="line">kr1=m11*c1</span><br><span class="line"></span><br><span class="line">m2=15575051453858521753108462063723750986386093067763948316612157946190835527332641201837062951012227815568418309166473080588354562426066694924364886916408150576082667797274000661726279871971377438362829402529682825471299861814829463510659258586020732228351258291527965822977048954720558973840956731377322516168809373640494227129998871167089589689796024458501705704779109152762373660542684880052489213039920383757930855300338529058000330103359636123251274293258L</span><br><span class="line"></span><br><span class="line">c2=12793942795110038319724531875568693507469327176085954164034728727511164833335101755153514030256152878364664079056565385331901196541015393609751624971554016671160730478932343949538202167508319292084519621768851878526657022981883304260886841513342396524869530063372782511380879783246034751883691295368172069170967975561364277514063320691930900258017293871754252209727301719207692321798229276732198521711602080244950295889575423383308099786298184477668302842952215665734671829249323604032320696267130330613134368640401070775927197554082071807605399448960911234829590548855031180158567578928333030631307816223152118126597L</span><br><span class="line"></span><br><span class="line">m21=RSA.inverse(m2,N)</span><br><span class="line">kr2=m21*c2</span><br><span class="line"><span class="comment"># print kr2</span></span><br><span class="line"></span><br><span class="line">r1=12900676191620430360427117641859547516838813596331616166760756921115466932766990479475373384324634210232168544745677888398849094363202992662466063289599443L</span><br><span class="line"></span><br><span class="line">r2=7718975159402389617924543100113967512280131630286624078102368166185443466262861344357647019797762407935675150925250503475336639811981984126529557679881059L</span><br><span class="line"></span><br><span class="line">a,b,_=Ext_Euclid(r1,r2)</span><br><span class="line"><span class="built_in">print</span> a</span><br><span class="line"><span class="built_in">print</span> b</span><br><span class="line"><span class="comment"># print a*r1+b*r2</span></span><br><span class="line"></span><br><span class="line">x1=RSA.inverse(kr2,N)</span><br><span class="line">k=(pow(kr1, a,N)*pow(x1,-b,N))%N</span><br><span class="line"><span class="built_in">print</span> k</span><br></pre></td></tr></table></figure></p>
 <p>　　通过上面的程序可以算出<code>k=175971776542095822590595405274258668271271366360140578776612582276966567082080372980811310146217399585938214712928761559525614866113821551467842221588432676885027725038849513527080849158072296957428701767142294778752742980766436072183367444762212399986777124093501619273513421803177347181063254421492621011961L</code><br>　　接下来就简单了将k带入官方的算法就可以得到flag.<br>　　 <code>BCTF{q0000000000b3333333333-ju57-w0n-pwn20wn!!!!!!!!!!!!}</code><br>　　上面程序中需要注意的是pow函数不支持指数为负数的情况，所以还要再转一下弯。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a&gt;0,b&lt;0</span><br><span class="line">(k^r)^b</span><br><span class="line">=(k^-r)^-b</span><br><span class="line">所以可以先求出k^r mod N的逆元</span><br></pre></td></tr></table></figure></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>　　数学方面的知识还是短板啊，以后得加强一下:)</p>
 
-        
-      </div>
-    </div>
-
-  
-
-  
-  
+  </div>
+  <footer class="article-footer">
     
-  
-
-    <div class="post-list-item article">
-      <h3 class="article-header">
-        <a href="/2016/03/17/DOM-XSS/" >
-  DOM-XSS
-</a>
-
-      </h3>
+  <div class="cc">
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/deed.e" target="_blank" title="Attribution-ShareAlike">
+      <img src="/images/cc/cc.png">
       
-
-      <div class="article-info">
-        <a href="/2016/03/17/DOM-XSS/"><span class="article-date">
-  2016-03-17
-</span>
-</a>
+          <img src="/images/cc/by.png">
         
-	<span class="article-category tagcloud">
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Web安全/">Web安全</a></li></ul>
-	</span>
+          <img src="/images/cc/sa.png">
+      
+      <span>
+        This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.
+      </span>
+    </a>
+  </div>
 
 
-        
-	<span class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/XSS/">XSS</a></li></ul>
-	</span>
-
-
-      </div>
-      <div class="article-entry">
-        
-          <h2 id="0x00-引言"><a href="#0x00-引言" class="headerlink" title="0x00 引言"></a>0x00 引言</h2><p>　　这几天阅读了<em>《Web前端黑客技术揭秘》</em>，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。<br>　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见<strong>0x0附录</strong>。</p>
-<h2 id="0x0-附录"><a href="#0x0-附录" class="headerlink" title="0x0 附录"></a>0x0 附录</h2><table>
-<thead>
-<tr>
-<th>输出点</th>
-<th>javascript code</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>直接输出HTML内容</td>
-<td>document.write(…)<br>document.writeln(…)<br> document.body.innerHtml=…</td>
-</tr>
-<tr>
-<td>直接修改DOM树（包括DHTML事件）</td>
-<td>document.forms[0].action=…<br></td>
-</tr>
-</tbody>
-</table>
-
-        
-      </div>
-    </div>
-
-  
-
-  
-  
     
-  
 
-    <div class="post-list-item article">
-      <h3 class="article-header">
-        <a href="/2016/03/16/flask-virtualenv/" >
-  flask virtualenv环境搭建
-</a>
-
-      </h3>
-      
-
-      <div class="article-info">
-        <a href="/2016/03/16/flask-virtualenv/"><span class="article-date">
-  2016-03-16
-</span>
-</a>
-        
-	<span class="article-category tagcloud">
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/python/">python</a></li></ul>
-	</span>
+  </footer>
+</article>
 
 
-        
-	<span class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flask/">flask</a></li></ul>
-	</span>
-
-
-      </div>
-      <div class="article-entry">
-        
-          <h2 id="0x00-引言"><a href="#0x00-引言" class="headerlink" title="0x00　引言"></a>0x00　引言</h2><p>　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。</p>
-<h2 id="0x01-安装virtualenv"><a href="#0x01-安装virtualenv" class="headerlink" title="0x01　安装virtualenv"></a>0x01　安装virtualenv</h2><p>　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载<a href="https://pypi.python.org/pypi/virtualenv" target="_blank" rel="external">virtualenv.py</a>来构建虚拟环境。<br>　　使用pip命令 <code>pip install virtualenv</code></p>
-<h2 id="0x02-建立环境"><a href="#0x02-建立环境" class="headerlink" title="0x02　建立环境"></a>0x02　建立环境</h2><p>　　首先进入网站的根目录（或者是任何需要建立虚拟环境的文件夹下）<br>　　使用dos命令 <code>virtualenv venv</code> 其中venv为python的虚拟环境，其中包括了python.exe、pip、easy_install等python环境。</p>
-<h2 id="0x03-激活环境"><a href="#0x03-激活环境" class="headerlink" title="0x03　激活环境"></a>0x03　激活环境</h2><p>　　完成上一步后，接下来需要在dos界面激活虚拟环境，这样可以使得接下来下载的python模块都位于venv下的pip环境中<br><code>Scripts\activate   激活虚拟环境</code><br><code>deactivate  退出虚拟环境</code><br>　　激活后命令行开头多了（venv），如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E:\code\python-workplace\flasker\venv&gt;Scripts\activate</span><br><span class="line">(venv) E:\code\python-workplace\flasker\venv&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="0x04-安装模块"><a href="#0x04-安装模块" class="headerlink" title="0x04　安装模块"></a>0x04　安装模块</h2><p>　　在上面的基础下，通过<code>pip install xxxx</code>安装的模块都是安装在venv环境下的，对主机上的环境没有影响。</p>
-<h2 id="0x05-引入路径"><a href="#0x05-引入路径" class="headerlink" title="0x05　引入路径"></a>0x05　引入路径</h2><p>　　在具体使用过程中，需要把venv的路径导入sys.path，这样才可以使用虚拟环境中的python模块。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">importos,sys</span><br><span class="line">sys.path.append(os.getcwd()+<span class="string">'\\venv\\Lib\\site-packages'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>　　到这里就完成了python虚拟环境的搭建，总体对经常变动编程环境的城旭猿来说这是个非常有用功能。<br>　　<strong>==The End==</strong></p>
-
-        
-      </div>
-    </div>
-
-  
-
-  
-  
-    
-  
-
-    <div class="post-list-item article">
-      <h3 class="article-header">
-        <a href="/2016/03/16/hello-world/" >
-  Hello World
-</a>
-
-      </h3>
-      
-
-      <div class="article-info">
-        <a href="/2016/03/16/hello-world/"><span class="article-date">
-  2016-03-16
-</span>
-</a>
-        
-
-        
-
-      </div>
-      <div class="article-entry">
-        
-          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-        
-      </div>
-    </div>
-
-  
+  <link rel="stylesheet" href="http://static.duoshuo.com/styles/embed.default.css?349d9313.css">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="2016/03/20/Bctf-Crypto-SpecialRSA-writeup/" data-title="Bctf Crypto SpecialRSA writeup" data-url="/2016/03/20/Bctf-Crypto-SpecialRSA-writeup/"></div>
+  <!-- 多说评论框 end -->
+  <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+  <script type="text/javascript">
+    var duoshuoQuery = {
+      short_name: "0kami"
+    };
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = (document.location.protocol == 'https:'
+        ? 'https:'
+        : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+  <!-- 多说公共JS代码 end -->
 
 
 

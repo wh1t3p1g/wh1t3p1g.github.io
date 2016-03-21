@@ -8,20 +8,19 @@
 
 <title>
   
-    0kami&#39;s Blog
+    Tag: XSS
   
 </title>
 
-<meta name="description" content="404">
+<meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="0kami's Blog">
-<meta property="og:url" content="http://yoursite.com/404.html">
+<meta property="og:url" content="http://yoursite.com/tags/XSS/index.html">
 <meta property="og:site_name" content="0kami's Blog">
-<meta property="og:description" content="404">
-<meta property="og:updated_time" content="2016-03-16T13:41:17.833Z">
+<meta property="og:description">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="0kami's Blog">
-<meta name="twitter:description" content="404">
+<meta name="twitter:description">
 
 
   <link rel="alternative" href="/atom.xml" title="0kami&#39;s Blog" type="application/atom+xml">
@@ -158,75 +157,70 @@
       
         <div style="max-width: 1000px">
       
-          <article id="default-undefined" class="article article-type-default">
+          <h1>XSS</h1>
+
+
   
+  
+    <div class="post-list">
   
 
-  <div class="article-info">
-    <span class="article-date">
-  2016-03-16
+    <div class="post-list-item article">
+      <h3 class="article-header">
+        <a href="/2016/03/17/DOM-XSS/" >
+  DOM-XSS
+</a>
+
+      </h3>
+      
+
+      <div class="article-info">
+        <a href="/2016/03/17/DOM-XSS/"><span class="article-date">
+  2016-03-17
 </span>
-
-    
-
-    
-
-  </div>
-  <div class="article-entry">
-    <html>
-    <head>
-         <meta charset="UTF-8">
-         <title>404</title>                                                                                                                                        
-    </head>
-    <body>
-         <script type="text/javascript" src="http://www.qq.com/404/search_children.js" charset="utf-8"></script>
-    </body>
-</html>
-  </div>
-  <footer class="article-footer">
-    
-  <div class="cc">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/deed.e" target="_blank" title="Attribution-ShareAlike">
-      <img src="/images/cc/cc.png">
-      
-          <img src="/images/cc/by.png">
+</a>
         
-          <img src="/images/cc/sa.png">
-      
-      <span>
-        This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.
-      </span>
-    </a>
-  </div>
+	<span class="article-category tagcloud">
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Web安全/">Web安全</a></li></ul>
+	</span>
 
 
-    
+        
+	<span class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/XSS/">XSS</a></li></ul>
+	</span>
 
-  </footer>
-</article>
 
+      </div>
+      <div class="article-entry">
+        
+          <h2 id="0x00-引言"><a href="#0x00-引言" class="headerlink" title="0x00 引言"></a>0x00 引言</h2><p>　　这几天阅读了<em>《Web前端黑客技术揭秘》</em>，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。<br>　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见<strong>0x0附录</strong>。</p>
+<h2 id="0x0-附录"><a href="#0x0-附录" class="headerlink" title="0x0 附录"></a>0x0 附录</h2><table>
+<thead>
+<tr>
+<th>输出点</th>
+<th>javascript code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>直接输出HTML内容</td>
+<td>document.write(…)<br>document.writeln(…)<br> document.body.innerHtml=…</td>
+</tr>
+<tr>
+<td>直接修改DOM树（包括DHTML事件）</td>
+<td>document.forms[0].action=…<br></td>
+</tr>
+</tbody>
+</table>
 
-  <link rel="stylesheet" href="http://static.duoshuo.com/styles/embed.default.css?349d9313.css">
-  <!-- 多说评论框 start -->
-  <div class="ds-thread" data-thread-key="404.html" data-title="" data-url="/404.html"></div>
-  <!-- 多说评论框 end -->
-  <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-  <script type="text/javascript">
-    var duoshuoQuery = {
-      short_name: "0kami"
-    };
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';
-      ds.async = true;
-      ds.src = (document.location.protocol == 'https:'
-        ? 'https:'
-        : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-  <!-- 多说公共JS代码 end -->
+        
+      </div>
+    </div>
+
+  
+    </div>
+  
 
 
 
