@@ -242,7 +242,20 @@
       <div class="article-entry">
         
           <h2 id="0x00-引言"><a href="#0x00-引言" class="headerlink" title="0x00 引言"></a>0x00 引言</h2><p>　　这几天阅读了<em>《Web前端黑客技术揭秘》</em>，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。<br>　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见<strong>0x0附录</strong>。</p>
-<h2 id="0x0-附录"><a href="#0x0-附录" class="headerlink" title="0x0 附录"></a>0x0 附录</h2><table>
+<h2 id="0x01-DOM渲染"><a href="#0x01-DOM渲染" class="headerlink" title="0x01 DOM渲染"></a>0x01 DOM渲染</h2><p>　　首先我们来理解一下HTML与Javascript自解码机制，查看以下三个例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1. &lt;input type=&quot;button&quot; id=exec_btn&quot; value=&quot;exec&quot; onclick=&quot;document.write(&apos;&lt;img src=@ onerror=alert(123) /&gt;&apos;)&quot; /&gt;</span><br><span class="line">2. &lt;input type=&quot;button&quot; id=exec_btn&quot; value=&quot;exec&quot; onclick=&quot;document.write(HtmlEncode(&apos;&lt;img src=@ onerror=alert(123) /&gt;&apos;))&quot; /&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">	function HtmlEncode(str) &#123;</span><br><span class="line">		var s=&quot;&quot;;</span><br><span class="line">		if(str.length==0) return &quot;&quot;;</span><br><span class="line">		s=str.replace(/&amp;/g, &quot;&amp;amp;&quot;);</span><br><span class="line">		s=str.replace(/&lt;/g, &quot;&amp;lt;&quot;);</span><br><span class="line">		s=str.replace(/&gt;/g, &quot;&amp;gt;&quot;);</span><br><span class="line">		s=str.replace(/\&quot;/g, &quot;&amp;quot;&quot;);</span><br><span class="line">		return s;</span><br><span class="line">	&#125;</span><br><span class="line">3. &lt;input type=&quot;button&quot; id=exec_btn&quot; value=&quot;exec&quot; onclick=&quot;document.write(&apos;&amp;lt;img src=@ onerror=alert(123) /&amp;gt;&apos;)&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
+<p>　　对于第一种情况，很清楚，点击这个按钮后，会将<code>&lt;img src=@ onerror=alert(123) /&gt;</code>写入DOM中，并触发<code>alert(123)</code>。而第二种与第三种，<code>document.write</code>的内容都变成了<code>&amp;lt;img src=@ onerror=alert(123) /&amp;gt;</code>，区别在于一个是在HTML标签中,一个是通过Javascript处理后才变成这个样子的，那么这2种情况都会触发弹窗吗？答案是第二种不会，而第三种会触发。<br>　　形成这样的原因就是因为HTML与Javascript自解码机制，在HTML标签中的javascript可以进行HTML形式的编码。在HTML标签中的javascript代码会先被HTML形式的编码进行解码，即第三种情况中<code>&amp;lt;img src=@ onerror=alert(123) /&amp;gt;</code>在javascript运行前已经解码为<code>&lt;img src=@ onerror=alert(123) /&gt;</code>，而第二种情况为javascript运行中进行的HTML形式的编码，所以写到DOM中时直接显示在页面上。<br>HTML中的编码：</p>
+<ul>
+<li>进制编码：&#xH;(十六进制格式)、&#D;(十进制格式),最后的分号可以不要</li>
+<li>HTML实体编码：即上面的那个HtmlEncode<br>　　那么同样的，在javascript上下文环境中，将内容改为javascript的编码，同样会自解码，我们来看下一个例子<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;input type=&quot;button&quot; id=&quot;exec_btn&quot; value=&quot;exec&quot; /&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">	function $(id)&#123;return document.getElementById(id);&#125;;</span><br><span class="line">	$(&apos;exec_btn&apos;).onclick=function()&#123;</span><br><span class="line">		document.write(&apos;&lt;img src=@ onerror=alert(123) /&gt;&apos;);</span><br><span class="line">		document.write(&apos;\u003c\u0069\u006d\u0067\u0020\u0073\u0072\u0063\u003d\u0040\u0020\u006f\u006e\u0065\u0072\u0072\u006f\u0072\u003d\u0061\u006c\u0065\u0072\u0074\u0028\u0031\u0032\u0033\u0029\u0020\u002f\u003e&apos;);</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>　　上面2中write出现的结果是相同的，同样的道理，由于上述编码为javascript的编码形式，并且在javascript的上下文环境中，会先进行解码，再运行javascript。<br>JavaScript中的编码：</p>
+<ul>
+<li>Unicode形式：\uH</li>
+<li>普通十六进制：\xH</li>
+<li>纯转义：\’、\”、\&lt;、>这样在特殊字符前加\进行转义<br>　　通过上面几个例子，我们可以知道在HTML中与在Javascript中自动解码的差异，如果防御没有区分这样的场景，就会出现问题。<h2 id="0x0-附录"><a href="#0x0-附录" class="headerlink" title="0x0 附录"></a>0x0 附录</h2></li>
+</ul>
+<table>
 <thead>
 <tr>
 <th>输出点</th>
@@ -256,7 +269,19 @@
 </tr>
 <tr>
 <td>直接修改DOM树（包括DHTML事件）</td>
-<td>document.forms[0].action=…<br></td>
+<td>document.forms[0].action=…<br>document.attachEvent(…)<br>document.create…(…)<br>document.execCommand(…)<br>document.body. …<br>widow.attachEvent(…)</td>
+</tr>
+<tr>
+<td>替换document url</td>
+<td>document.location=…(以及直接赋值给location的href,host,hostname属性)<br>document.location.hostname=…<br>document.location.replace(…)<br>document.location.assign(…)<br>documnent.URL=…<br>window.navigate(…)</td>
+</tr>
+<tr>
+<td>打开或修改新窗口</td>
+<td>document.open(…)<br>window.open(…)<br>window.location.href=…(以及直接赋值给location的href,host,hostname属性)</td>
+</tr>
+<tr>
+<td>直接执行脚本</td>
+<td>eval(…)<br>window.execScript(…)<br>window.setInterval(…)<br>window.setTimeout(…)</td>
 </tr>
 </tbody>
 </table>
