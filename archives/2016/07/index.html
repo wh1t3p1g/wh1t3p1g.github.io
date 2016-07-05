@@ -175,7 +175,7 @@
     <div class="post-list-item article">
       <h3 class="article-header">
         <a href="/2016/07/04/file-upload-vul/" >
-  file-upload-vul
+  文件上传学习总结
 </a>
 
       </h3>
@@ -207,11 +207,56 @@
 <h2 id="0x03-服务端检测绕过（MIME类型检测）"><a href="#0x03-服务端检测绕过（MIME类型检测）" class="headerlink" title="0x03 服务端检测绕过（MIME类型检测）"></a>0x03 服务端检测绕过（MIME类型检测）</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="keyword">if</span>($_FILES[<span class="string">'userfile'</span>][<span class="string">'type'</span>] != <span class="string">"image/gif"</span>) &#123; <span class="comment">//检测Content-type</span></span><br><span class="line">		<span class="keyword">echo</span> <span class="string">"Sorry, we only allow uploading GIF images"</span>;</span><br><span class="line">		<span class="keyword">exit</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	$uploaddir = <span class="string">'uploads/'</span>;</span><br><span class="line">	$uploadfile = $uploaddir . basename($_FILES[<span class="string">'userfile'</span>][<span class="string">'name'</span>]);</span><br><span class="line">	<span class="keyword">if</span> (move_uploaded_file($_FILES[<span class="string">'userfile'</span>][<span class="string">'tmp_name'</span>], $uploadfile)) 	  &#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">"File is valid, and was successfully uploaded.\n"</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">"File uploading failed.\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 <p>上面为php后端检测MIME类型的一个例子<br>通过判断<code>$_FILES[&#39;userfile&#39;][&#39;type&#39;] != &quot;image/gif&quot;</code>来保证上传的类型为gif类型的文件。<br>绕过这一类型的检测，可以通过burp拦包，将原<code>Content-Type</code>类型该为符合要求的<code>image/gif</code>类型。</p>
 <h2 id="0x04-服务端检测绕过（目录路劲检测）"><a href="#0x04-服务端检测绕过（目录路劲检测）" class="headerlink" title="0x04 服务端检测绕过（目录路劲检测）"></a>0x04 服务端检测绕过（目录路劲检测）</h2><p>有一些web应用程序有多个文件夹用来存储图片文件，所以为了标识上传的图片是属于哪个文件夹的，上传文件时会带上文件存储路劲。而此时如果对文件目录路劲检测不够完全，可以通过截断攻击。（如%00,windows下%80-%90）<br>如上传时提供存储路劲为<code>image/20160704/</code>可以通过修改为<code>image/20160704/evil.php%00</code>来达到截断目的。后端程序会将该路劲连接为<code>image/20160704/evil.php%00filename.gif</code>00截断导致最终存储的文件名为evil.php</p>
-<h2 id="0x05-服务器端检测绕过（文件扩展名检测）"><a href="#0x05-服务器端检测绕过（文件扩展名检测）" class="headerlink" title="0x05 服务器端检测绕过（文件扩展名检测）"></a>0x05 服务器端检测绕过（文件扩展名检测）</h2><p>1.黑名单检测<br>黑名单检测通常会有一个文件后缀名黑名单（例如html|htm|php|php2|php3|php4|php5…）<br>但是通常黑名单检测不能包含所有的恶意脚本后缀，防护难度会比较大，推荐使用白名单<br>绕过的方法：<br>1.文件名大小写绕过（例如用Php，Asp等）<br>2.名单列表绕过(用黑名单中未提及的文件后缀来绕过，如asa，cer等不常见的文件后缀)<br>3.特殊文件名绕过（只适用windows，将文件名改为evil.php.或evil.php (注意这里有一个空格),在windows下，不允许这样的命名，所以会将.和空格自动去掉）<br>4.0x00截断（asp下可以尝试使用,asp为从后往前扫描扩展名，<code>evil.asp%00.jpg</code>，会被识别为jpg，只要检测方式如这种可以通过这种方式绕过）<br>5..htaccess文件攻击（配合名单列表绕过，上传一个自定义的.htaccess，就可以轻松绕过各种检测）</p>
-<h4 id="htaccess文件攻击"><a href="#htaccess文件攻击" class="headerlink" title=".htaccess文件攻击"></a>.htaccess文件攻击</h4><p>6.解析漏洞（apache解析漏洞，iis6.0解析漏洞，nginx解析漏洞）</p>
-<h4 id="apache解析漏洞"><a href="#apache解析漏洞" class="headerlink" title="apache解析漏洞"></a>apache解析漏洞</h4><p>apache是从右到左开始判断解析，如果最右的后缀无法解析，则尝试解析后一个后缀</p>
-<h4 id="iis6-0解析漏洞"><a href="#iis6-0解析漏洞" class="headerlink" title="iis6.0解析漏洞"></a>iis6.0解析漏洞</h4><p>成因为iis6.0不解析;后面的，所以提交evil.asp;.html解析为asp类型<br>还有一个为IIS6.0的00截断攻击<br>IIS6.0双文件上传</p>
-<h4 id="nginx解析漏洞"><a href="#nginx解析漏洞" class="headerlink" title="nginx解析漏洞"></a>nginx解析漏洞</h4><p>将php文件换成其他可以通过的文件后缀，访问的时候在后面加上/.php，即evil.jpg/.php，evil.jpg会解析为php的格式<br>7.其他方式<br>提交前将filename=”evil.php”该为”evil.php”.jpg”</p>
+<h2 id="0x05-服务器端检测绕过（文件扩展名检测）"><a href="#0x05-服务器端检测绕过（文件扩展名检测）" class="headerlink" title="0x05 服务器端检测绕过（文件扩展名检测）"></a>0x05 服务器端检测绕过（文件扩展名检测）</h2><p>1.黑名单检测<br>黑名单检测通常会有一个文件后缀名黑名单（例如html|htm|php|php2|php3|php4|php5…）<br>但是通常黑名单检测不能包含所有的恶意脚本后缀，防护难度会比较大，推荐使用白名单<br>绕过的方法：</p>
+<ul>
+<li>文件名大小写绕过（例如用Php，Asp等）</li>
+<li>名单列表绕过(用黑名单中未提及的文件后缀来绕过，如asa，cer等不常见的文件后缀)</li>
+<li>特殊文件名绕过（只适用windows，将文件名改为evil.php.或evil.php (注意这里有一个空格),在windows下，不允许这样的命名，所以会将.和空格自动去掉）</li>
+<li>0x00截断（asp下可以尝试使用,asp为从后往前扫描扩展名，<code>evil.asp%00.jpg</code>，会被识别为jpg，只要检测方式如这种可以通过这种方式绕过）</li>
+<li>.htaccess文件攻击（配合名单列表绕过，上传一个自定义的.htaccess，就可以轻松绕过各种检测）<h4 id="htaccess文件攻击"><a href="#htaccess文件攻击" class="headerlink" title=".htaccess文件攻击"></a>.htaccess文件攻击</h4>如果黑名单中未包含.htaccess后缀的可以通过重写解析配置来达到解析的效果<br>针对php，上传自定义.htaccess<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;FilesMatch &quot;haha&quot;&gt;</span><br><span class="line">SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>同目录有个我们上传一个只有文件名并包含字符串”haha”，但是却无任何扩展名的文件<br>里面的内容是 php 一句话木马，通过菜刀连接可以解析php<br>成因：<br>    在 PHP manual 中提到了下面一段话<br>    move_uploaded_file section, there is a warning which states ‘If the destination file already exists, it will be overwritten.’<br>    如果 PHP 安全没配置好<br>    就可以通过 move_uploaded_file 函数把自己写的.htaccess 文件覆盖掉服务器上的<br>    这样就能任意定义解析名单了</p>
+<ul>
+<li>解析漏洞（apache解析漏洞，iis6.0解析漏洞，nginx解析漏洞）<h4 id="apache解析漏洞"><a href="#apache解析漏洞" class="headerlink" title="apache解析漏洞"></a>apache解析漏洞</h4>apache是从右到左开始判断解析，如果最右的后缀无法解析，则尝试解析后一个后缀<h4 id="iis6-0解析漏洞"><a href="#iis6-0解析漏洞" class="headerlink" title="iis6.0解析漏洞"></a>iis6.0解析漏洞</h4></li>
+<li>成因为iis6.0不解析;后面的，所以提交evil.asp;.html解析为asp类型</li>
+<li>还有一个为IIS6.0的00截断攻击</li>
+<li>IIS6.0双文件上传</li>
+<li>文件夹的名字包含<code>.asp</code>则这个文件夹下的文件都以asp的形式来解析<h4 id="iis7-0-7-5解析漏洞"><a href="#iis7-0-7-5解析漏洞" class="headerlink" title="iis7.0/7.5解析漏洞"></a>iis7.0/7.5解析漏洞</h4>对于php有一个类似Nginx的解析漏洞<code>evil.jpg/evil.php</code> 解析evil.jpg中的php代码，这个漏洞成因在于php-cgi的漏洞<h4 id="nginx解析漏洞"><a href="#nginx解析漏洞" class="headerlink" title="nginx解析漏洞"></a>nginx解析漏洞</h4></li>
+<li>将php文件换成其他可以通过的文件后缀，访问的时候在后面加上/.php，即evil.jpg/.php，evil.jpg会解析为php的格式</li>
+<li>%00截断</li>
+<li>其他方式<br>提交前将filename=”evil.php”该为”evil.php”.jpg”</li>
+</ul>
+<p>2.白名单检测</p>
+<ul>
+<li>0x00截断绕过</li>
+<li>解析漏洞绕过（文件名不被重写）</li>
+</ul>
+<h2 id="服务器端检测绕过（文件内容检测）"><a href="#服务器端检测绕过（文件内容检测）" class="headerlink" title="服务器端检测绕过（文件内容检测）"></a>服务器端检测绕过（文件内容检测）</h2><p>图像类的文件内容检测</p>
+<ul>
+<li>文件幻数检测（图片头格式检测）<br>jpg内容头value= FF D8 FF E0 00 10 4A 46 49 46<br>gif内容头value= 47 49 46 38 39 61<br>png内容头value= 89 50 4E 47<br>在文件头后加上一句话木马就能绕过</li>
+<li><p>文件相关信息检测<br>图像文件相关信息检测常用的就是php的getimagesize()函数，只需将文件头部分伪造好就好了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GIF89a</span><br><span class="line">(...some binary data for image...)</span><br><span class="line">&lt;?php phpinfo(); ?&gt;</span><br><span class="line">(... skipping the rest of binary data ...)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文件加载检测<br>调用API或函数去进行文件加载测试，常见的是图像渲染测试，二次渲染，可以通过上传恶意文件，再下载下来，diff一下找到不变的位置插入一句话木马，但成功率不高</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>轻量级检测绕过攻击<ul>
+<li>绕过 javascript 对扩展名的检测<br>&lt;用 burp 之类的反向代理工具直接 POST 数据包到服务端，绕过前端检测&gt;</li>
+<li>绕过服务端对 http request 包 MIME 类型检测<br>&lt;用 burp 之类的反向代理工具伪造 POST 数据包到服务端，绕过 MIME 检测&gt;</li>
+</ul>
+</li>
+<li>路径/扩展名检测绕过攻击<ul>
+<li>黑名单绕过<br>文件名大小写绕过<br>名单列表绕过<br>特殊文件名绕过<br>0x00 截断绕过<br>.htaccess 文件攻击<br>本地包含漏洞<br>Apache 解析漏洞<br>IIS 解析漏洞<br>Nginx 解析漏洞</li>
+<li>白名单绕过<br>0x00 截断绕过<br>本地文件包含漏洞<br>IIS 解析漏洞<br>Nginx 解析漏洞</li>
+</ul>
+</li>
+<li>文件内容检测绕过攻击<ul>
+<li>文件加载测试绕过<br>&lt;对文件进行代码注入再配合任意解析调用/漏洞&gt;</li>
+</ul>
+</li>
+</ol>
 
         
       </div>
