@@ -22,7 +22,7 @@
 <meta property="og:description" content="0x00 概述这几天空下来根据上传攻击框架学习总结一下上传攻击。
 0x01 上传检测流程1.客户端javascript检测（检测文件扩展名为主）2.服务端MIME类型检测（检测Content-type内容）3.服务端目录路劲检测（检测跟path相关的内容）4.服务端文件扩展名检测（检测跟文件后缀相关的内容）5.服务端文件内容检测（检测内容是否合法或含有恶意代码）
 0x02 客户端javascrip">
-<meta property="og:updated_time" content="2016-07-04T08:03:49.641Z">
+<meta property="og:updated_time" content="2016-07-15T02:06:21.751Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件上传学习总结">
 <meta name="twitter:description" content="0x00 概述这几天空下来根据上传攻击框架学习总结一下上传攻击。
@@ -225,7 +225,7 @@
 <h2 id="服务器端检测绕过（文件内容检测）"><a href="#服务器端检测绕过（文件内容检测）" class="headerlink" title="服务器端检测绕过（文件内容检测）"></a>服务器端检测绕过（文件内容检测）</h2><p>图像类的文件内容检测</p>
 <ul>
 <li>文件幻数检测（图片头格式检测）<br>jpg内容头value= FF D8 FF E0 00 10 4A 46 49 46<br>gif内容头value= 47 49 46 38 39 61<br>png内容头value= 89 50 4E 47<br>在文件头后加上一句话木马就能绕过</li>
-<li><p>文件相关信息检测<br>图像文件相关信息检测常用的就是php的getimagesize()函数，只需将文件头部分伪造好就好了</p>
+<li><p>文件相关信息检测<br>图像文件相关信息检测常用的就是php的getimagesize()函数，可以通过修改图片的注释区（data区）插入一句话代码，如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GIF89a</span><br><span class="line">(...some binary data for image...)</span><br><span class="line">&lt;?php phpinfo(); ?&gt;</span><br><span class="line">(... skipping the rest of binary data ...)</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>文件加载检测<br>调用API或函数去进行文件加载测试，常见的是图像渲染测试，二次渲染，可以通过上传恶意文件，再下载下来，diff一下找到不变的位置插入一句话木马，但成功率不高</p>

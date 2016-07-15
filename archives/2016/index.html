@@ -235,7 +235,7 @@
 <h2 id="服务器端检测绕过（文件内容检测）"><a href="#服务器端检测绕过（文件内容检测）" class="headerlink" title="服务器端检测绕过（文件内容检测）"></a>服务器端检测绕过（文件内容检测）</h2><p>图像类的文件内容检测</p>
 <ul>
 <li>文件幻数检测（图片头格式检测）<br>jpg内容头value= FF D8 FF E0 00 10 4A 46 49 46<br>gif内容头value= 47 49 46 38 39 61<br>png内容头value= 89 50 4E 47<br>在文件头后加上一句话木马就能绕过</li>
-<li><p>文件相关信息检测<br>图像文件相关信息检测常用的就是php的getimagesize()函数，只需将文件头部分伪造好就好了</p>
+<li><p>文件相关信息检测<br>图像文件相关信息检测常用的就是php的getimagesize()函数，可以通过修改图片的注释区（data区）插入一句话代码，如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GIF89a</span><br><span class="line">(...some binary data for image...)</span><br><span class="line">&lt;?php phpinfo(); ?&gt;</span><br><span class="line">(... skipping the rest of binary data ...)</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>文件加载检测<br>调用API或函数去进行文件加载测试，常见的是图像渲染测试，二次渲染，可以通过上传恶意文件，再下载下来，diff一下找到不变的位置插入一句话木马，但成功率不高</p>
