@@ -5,19 +5,16 @@
   
   <title>flask virtualenv环境搭建 | 0kami&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="引言　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。
-安装virtualenv　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载virtualenv.py来构建虚拟环境。　　使用pi">
+  <meta name="description" content="引言　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="flask virtualenv环境搭建">
 <meta property="og:url" content="http://yoursite.com/2016/03/16/flask-virtualenv/index.html">
 <meta property="og:site_name" content="0kami's Blog">
-<meta property="og:description" content="引言　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。
-安装virtualenv　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载virtualenv.py来构建虚拟环境。　　使用pi">
-<meta property="og:updated_time" content="2016-08-19T07:33:12.333Z">
+<meta property="og:description" content="引言　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。">
+<meta property="og:updated_time" content="2016-08-19T11:32:18.287Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flask virtualenv环境搭建">
-<meta name="twitter:description" content="引言　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。
-安装virtualenv　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载virtualenv.py来构建虚拟环境。　　使用pi">
+<meta name="twitter:description" content="引言　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。">
   
     <link rel="alternative" href="/atom.xml" title="0kami&#39;s Blog" type="application/atom+xml">
   
@@ -265,7 +262,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。</p>
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。<br><a id="more"></a></p>
 <h2 id="安装virtualenv"><a href="#安装virtualenv" class="headerlink" title="安装virtualenv"></a>安装virtualenv</h2><p>　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载<a href="https://pypi.python.org/pypi/virtualenv" target="_blank" rel="external">virtualenv.py</a>来构建虚拟环境。<br>　　使用pip命令 <code>pip install virtualenv</code></p>
 <h2 id="建立环境"><a href="#建立环境" class="headerlink" title="建立环境"></a>建立环境</h2><p>　　首先进入网站的根目录（或者是任何需要建立虚拟环境的文件夹下）<br>　　使用dos命令 <code>virtualenv venv</code> 其中venv为python的虚拟环境，其中包括了python.exe、pip、easy_install等python环境。</p>
 <h2 id="激活环境"><a href="#激活环境" class="headerlink" title="激活环境"></a>激活环境</h2><p>　　完成上一步后，接下来需要在dos界面激活虚拟环境，这样可以使得接下来下载的python模块都位于venv下的pip环境中<br><code>Scripts\activate   激活虚拟环境</code><br><code>deactivate  退出虚拟环境</code><br>　　激活后命令行开头多了（venv），如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E:\code\python-workplace\flasker\venv&gt;Scripts\activate</span><br><span class="line">(venv) E:\code\python-workplace\flasker\venv&gt;</span><br></pre></td></tr></table></figure></p>
@@ -283,7 +280,7 @@
         <p><span>本文标题:</span><a href="/2016/03/16/flask-virtualenv/">flask virtualenv环境搭建</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 0kami-zj9s 的个人博客">0kami-zj9s</a></p>
         <p><span>发布时间:</span>2016年03月16日 - 21时36分</p>
-        <p><span>最后更新:</span>2016年08月19日 - 15时33分</p>
+        <p><span>最后更新:</span>2016年08月19日 - 19时32分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/03/16/flask-virtualenv/" title="flask virtualenv环境搭建">http://yoursite.com/2016/03/16/flask-virtualenv/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/03/16/flask-virtualenv/　　作者: 0kami-zj9s" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -436,7 +433,7 @@
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" >海贼到访数: 
+                        <span id="site-visit" >今日到访数: 
                             <span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>

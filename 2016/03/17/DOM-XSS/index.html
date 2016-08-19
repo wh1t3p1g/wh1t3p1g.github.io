@@ -5,19 +5,16 @@
   
   <title>DOM XSS | 0kami&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="引言　　这几天阅读了《Web前端黑客技术揭秘》，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见0x04附录。
-DOM渲染　　首先我们来理解一下HTML与Javascript自解码机制，查看以下三个例子1">
+  <meta name="description" content="引言　　这几天阅读了《Web前端黑客技术揭秘》，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见0x04附录。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DOM XSS">
 <meta property="og:url" content="http://yoursite.com/2016/03/17/DOM-XSS/index.html">
 <meta property="og:site_name" content="0kami's Blog">
-<meta property="og:description" content="引言　　这几天阅读了《Web前端黑客技术揭秘》，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见0x04附录。
-DOM渲染　　首先我们来理解一下HTML与Javascript自解码机制，查看以下三个例子1">
-<meta property="og:updated_time" content="2016-08-19T07:34:22.617Z">
+<meta property="og:description" content="引言　　这几天阅读了《Web前端黑客技术揭秘》，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见0x04附录。">
+<meta property="og:updated_time" content="2016-08-19T11:32:02.574Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DOM XSS">
-<meta name="twitter:description" content="引言　　这几天阅读了《Web前端黑客技术揭秘》，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见0x04附录。
-DOM渲染　　首先我们来理解一下HTML与Javascript自解码机制，查看以下三个例子1">
+<meta name="twitter:description" content="引言　　这几天阅读了《Web前端黑客技术揭秘》，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见0x04附录。">
   
     <link rel="alternative" href="/atom.xml" title="0kami&#39;s Blog" type="application/atom+xml">
   
@@ -265,7 +262,7 @@ DOM渲染　　首先我们来理解一下HTML与Javascript自解码机制，查
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>　　这几天阅读了<em>《Web前端黑客技术揭秘》</em>，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。<br>　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见<strong>0x04附录</strong>。</p>
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>　　这几天阅读了<em>《Web前端黑客技术揭秘》</em>，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。<br>　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见<strong>0x04附录</strong>。<br><a id="more"></a></p>
 <h2 id="DOM渲染"><a href="#DOM渲染" class="headerlink" title="DOM渲染"></a>DOM渲染</h2><p>　　首先我们来理解一下HTML与Javascript自解码机制，查看以下三个例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1. &lt;input type=&quot;button&quot; id=exec_btn&quot; value=&quot;exec&quot; onclick=&quot;document.write(&apos;&lt;img src=@ onerror=alert(123) /&gt;&apos;)&quot; /&gt;</span><br><span class="line">2. &lt;input type=&quot;button&quot; id=exec_btn&quot; value=&quot;exec&quot; onclick=&quot;document.write(HtmlEncode(&apos;&lt;img src=@ onerror=alert(123) /&gt;&apos;))&quot; /&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">	function HtmlEncode(str) &#123;</span><br><span class="line">		var s=&quot;&quot;;</span><br><span class="line">		if(str.length==0) return &quot;&quot;;</span><br><span class="line">		s=str.replace(/&amp;/g, &quot;&amp;amp;&quot;);</span><br><span class="line">		s=str.replace(/&lt;/g, &quot;&amp;lt;&quot;);</span><br><span class="line">		s=str.replace(/&gt;/g, &quot;&amp;gt;&quot;);</span><br><span class="line">		s=str.replace(/\&quot;/g, &quot;&amp;quot;&quot;);</span><br><span class="line">		return s;</span><br><span class="line">	&#125;</span><br><span class="line">3. &lt;input type=&quot;button&quot; id=exec_btn&quot; value=&quot;exec&quot; onclick=&quot;document.write(&apos;&amp;lt;img src=@ onerror=alert(123) /&amp;gt;&apos;)&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
 <p>　　对于第一种情况，很清楚，点击这个按钮后，会将<code>&lt;img src=@ onerror=alert(123) /&gt;</code>写入DOM中，并触发<code>alert(123)</code>。而第二种与第三种，<code>document.write</code>的内容都变成了<code>&amp;lt;img src=@ onerror=alert(123) /&amp;gt;</code>，区别在于一个是在HTML标签中,一个是通过Javascript处理后才变成这个样子的，那么这2种情况都会触发弹窗吗？答案是第二种不会，而第三种会触发。<br>　　形成这样的原因就是因为HTML与Javascript自解码机制，在HTML标签中的javascript可以进行HTML形式的编码。在HTML标签中的javascript代码会先被HTML形式的编码进行解码，即第三种情况中<code>&amp;lt;img src=@ onerror=alert(123) /&amp;gt;</code>在javascript运行前已经解码为<code>&lt;img src=@ onerror=alert(123) /&gt;</code>，而第二种情况为javascript运行中进行的HTML形式的编码，所以写到DOM中时直接显示在页面上。<br>HTML中的编码：</p>
 <ul>
@@ -338,7 +335,7 @@ DOM渲染　　首先我们来理解一下HTML与Javascript自解码机制，查
         <p><span>本文标题:</span><a href="/2016/03/17/DOM-XSS/">DOM XSS</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 0kami-zj9s 的个人博客">0kami-zj9s</a></p>
         <p><span>发布时间:</span>2016年03月17日 - 21时11分</p>
-        <p><span>最后更新:</span>2016年08月19日 - 15时34分</p>
+        <p><span>最后更新:</span>2016年08月19日 - 19时32分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/03/17/DOM-XSS/" title="DOM XSS">http://yoursite.com/2016/03/17/DOM-XSS/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/03/17/DOM-XSS/　　作者: 0kami-zj9s" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -498,7 +495,7 @@ DOM渲染　　首先我们来理解一下HTML与Javascript自解码机制，查
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" >海贼到访数: 
+                        <span id="site-visit" >今日到访数: 
                             <span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>

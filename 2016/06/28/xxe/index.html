@@ -5,16 +5,16 @@
   
   <title>XML External Entity(XXE) | 0kami&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00 描述XML的一些基础知识，摘自security.tencent.comXML例子1234567891011121314&amp;lt;?xml version=&quot;1.0&quot; ?&amp;gt;  xml声明&amp;lt;!DOCTYPE note[   文档类型定义	&amp;lt;!ELEMENT note (to,from,heading,body)&amp;gt;	&amp;lt;!ELEMENT to   (#PCDATA)&amp;">
+  <meta name="description" content="0x00 描述XML的一些基础知识，摘自security.tencent.com">
 <meta property="og:type" content="article">
 <meta property="og:title" content="XML External Entity(XXE)">
 <meta property="og:url" content="http://yoursite.com/2016/06/28/xxe/index.html">
 <meta property="og:site_name" content="0kami's Blog">
-<meta property="og:description" content="0x00 描述XML的一些基础知识，摘自security.tencent.comXML例子1234567891011121314&amp;lt;?xml version=&quot;1.0&quot; ?&amp;gt;  xml声明&amp;lt;!DOCTYPE note[   文档类型定义	&amp;lt;!ELEMENT note (to,from,heading,body)&amp;gt;	&amp;lt;!ELEMENT to   (#PCDATA)&amp;">
-<meta property="og:updated_time" content="2016-07-04T03:14:31.030Z">
+<meta property="og:description" content="0x00 描述XML的一些基础知识，摘自security.tencent.com">
+<meta property="og:updated_time" content="2016-08-19T11:32:31.060Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XML External Entity(XXE)">
-<meta name="twitter:description" content="0x00 描述XML的一些基础知识，摘自security.tencent.comXML例子1234567891011121314&amp;lt;?xml version=&quot;1.0&quot; ?&amp;gt;  xml声明&amp;lt;!DOCTYPE note[   文档类型定义	&amp;lt;!ELEMENT note (to,from,heading,body)&amp;gt;	&amp;lt;!ELEMENT to   (#PCDATA)&amp;">
+<meta name="twitter:description" content="0x00 描述XML的一些基础知识，摘自security.tencent.com">
   
     <link rel="alternative" href="/atom.xml" title="0kami&#39;s Blog" type="application/atom+xml">
   
@@ -262,7 +262,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="0x00-描述"><a href="#0x00-描述" class="headerlink" title="0x00 描述"></a>0x00 描述</h2><p>XML的一些基础知识，摘自<a href="https://security.tencent.com/index.php/blog/msg/69" target="_blank" rel="external">security.tencent.com</a><br>XML例子<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> <span class="meta">?&gt;</span></span>  xml声明</span><br><span class="line"><span class="meta">&lt;!DOCTYPE note[   文档类型定义</span><br><span class="line">	&lt;!ELEMENT note (to,from,heading,body)&gt;</span><br><span class="line">	&lt;!ELEMENT to   (#PCDATA)&gt;</span><br><span class="line">	&lt;!ELEMENT from   (#PCDATA)&gt;</span><br><span class="line">	&lt;!ELEMENT heading   (#PCDATA)&gt;</span><br><span class="line">	&lt;!ELEMENT body   (#PCDATA)&gt;</span><br><span class="line">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">note</span>&gt;</span> 文档元素</span><br><span class="line"><span class="tag">&lt;<span class="name">to</span>&gt;</span>George<span class="tag">&lt;/<span class="name">to</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">from</span>&gt;</span>John<span class="tag">&lt;/<span class="name">from</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">heading</span>&gt;</span>Test<span class="tag">&lt;/<span class="name">heading</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span>This is a Test<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">note</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+        <h2 id="0x00-描述"><a href="#0x00-描述" class="headerlink" title="0x00 描述"></a>0x00 描述</h2><p>XML的一些基础知识，摘自<a href="https://security.tencent.com/index.php/blog/msg/69" target="_blank" rel="external">security.tencent.com</a><br><a id="more"></a><br>XML例子<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> <span class="meta">?&gt;</span></span>  xml声明</span><br><span class="line"><span class="meta">&lt;!DOCTYPE note[   文档类型定义</span><br><span class="line">	&lt;!ELEMENT note (to,from,heading,body)&gt;</span><br><span class="line">	&lt;!ELEMENT to   (#PCDATA)&gt;</span><br><span class="line">	&lt;!ELEMENT from   (#PCDATA)&gt;</span><br><span class="line">	&lt;!ELEMENT heading   (#PCDATA)&gt;</span><br><span class="line">	&lt;!ELEMENT body   (#PCDATA)&gt;</span><br><span class="line">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">note</span>&gt;</span> 文档元素</span><br><span class="line"><span class="tag">&lt;<span class="name">to</span>&gt;</span>George<span class="tag">&lt;/<span class="name">to</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">from</span>&gt;</span>John<span class="tag">&lt;/<span class="name">from</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">heading</span>&gt;</span>Test<span class="tag">&lt;/<span class="name">heading</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span>This is a Test<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">note</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>上述为一个XML的实例<br>DTD（文档类型定义）的作用是定义 XML 文档的合法构建模块。DTD 可以在 XML 文档内声明，也可以外部引用。</p>
 <h5 id="内部声明DTD"><a href="#内部声明DTD" class="headerlink" title="内部声明DTD"></a>内部声明DTD</h5><p><code>&lt;!DOCTYPE 根元素 [元素声明]&gt;</code></p>
 <h5 id="引用外部DTD"><a href="#引用外部DTD" class="headerlink" title="引用外部DTD"></a>引用外部DTD</h5><p><code>&lt;!DOCTYPE 根元素 SYSTEM &quot;文件名&quot;&gt;</code>或者<code>&lt;!DOCTYPE 根元素 PUBLIC &quot;public_ID&quot; &quot;文件名&quot;&gt;</code><br>DTD实体是用于定义引用普通文本或特殊字符的快捷方式的变量，可以内部声明或外部引用。</p>
@@ -349,7 +349,7 @@
         <p><span>本文标题:</span><a href="/2016/06/28/xxe/">XML External Entity(XXE)</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 0kami-zj9s 的个人博客">0kami-zj9s</a></p>
         <p><span>发布时间:</span>2016年06月28日 - 16时33分</p>
-        <p><span>最后更新:</span>2016年07月04日 - 11时14分</p>
+        <p><span>最后更新:</span>2016年08月19日 - 19时32分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/06/28/xxe/" title="XML External Entity(XXE)">http://yoursite.com/2016/06/28/xxe/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/06/28/xxe/　　作者: 0kami-zj9s" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -509,7 +509,7 @@
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" >海贼到访数: 
+                        <span id="site-visit" >今日到访数: 
                             <span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>

@@ -5,32 +5,17 @@
   
   <title>wordpress SSRF &lt;4.5 漏洞分析 | 0kami&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="概述前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。
-ip地址的几种表示方式ip地址域名有多种表示方式，浏览器都能识别出来。
-
-常见的ip地址域名表示方法
-点分十进制表示法，例如192.168.1.2
-二进制表示法例如11000000101010000000000100000">
+  <meta name="description" content="概述前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="wordpress SSRF <4.5 漏洞分析">
 <meta property="og:url" content="http://yoursite.com/2016/08/19/wordpress-ssrf-4-4-2/index.html">
 <meta property="og:site_name" content="0kami's Blog">
-<meta property="og:description" content="概述前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。
-ip地址的几种表示方式ip地址域名有多种表示方式，浏览器都能识别出来。
-
-常见的ip地址域名表示方法
-点分十进制表示法，例如192.168.1.2
-二进制表示法例如11000000101010000000000100000">
+<meta property="og:description" content="概述前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。">
 <meta property="og:image" content="http://blog.0kami.cn/img/wordpress-ssrf.png">
-<meta property="og:updated_time" content="2016-08-19T09:53:34.922Z">
+<meta property="og:updated_time" content="2016-08-19T11:32:22.377Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="wordpress SSRF <4.5 漏洞分析">
-<meta name="twitter:description" content="概述前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。
-ip地址的几种表示方式ip地址域名有多种表示方式，浏览器都能识别出来。
-
-常见的ip地址域名表示方法
-点分十进制表示法，例如192.168.1.2
-二进制表示法例如11000000101010000000000100000">
+<meta name="twitter:description" content="概述前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。">
 <meta name="twitter:image" content="http://blog.0kami.cn/img/wordpress-ssrf.png">
   
     <link rel="alternative" href="/atom.xml" title="0kami&#39;s Blog" type="application/atom+xml">
@@ -279,7 +264,7 @@ ip地址的几种表示方式ip地址域名有多种表示方式，浏览器都�
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。</p>
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。<br><a id="more"></a></p>
 <h2 id="ip地址的几种表示方式"><a href="#ip地址的几种表示方式" class="headerlink" title="ip地址的几种表示方式"></a>ip地址的几种表示方式</h2><p>ip地址域名有多种表示方式，浏览器都能识别出来。</p>
 <ol>
 <li>常见的ip地址域名表示方法<br><ul>
@@ -314,7 +299,7 @@ ip地址的几种表示方式ip地址域名有多种表示方式，浏览器都�
         <p><span>本文标题:</span><a href="/2016/08/19/wordpress-ssrf-4-4-2/">wordpress SSRF &lt;4.5 漏洞分析</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 0kami-zj9s 的个人博客">0kami-zj9s</a></p>
         <p><span>发布时间:</span>2016年08月19日 - 15时05分</p>
-        <p><span>最后更新:</span>2016年08月19日 - 17时53分</p>
+        <p><span>最后更新:</span>2016年08月19日 - 19时32分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/08/19/wordpress-ssrf-4-4-2/" title="wordpress SSRF &lt;4.5 漏洞分析">http://yoursite.com/2016/08/19/wordpress-ssrf-4-4-2/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/08/19/wordpress-ssrf-4-4-2/　　作者: 0kami-zj9s" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -463,7 +448,7 @@ ip地址的几种表示方式ip地址域名有多种表示方式，浏览器都�
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" >海贼到访数: 
+                        <span id="site-visit" >今日到访数: 
                             <span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>

