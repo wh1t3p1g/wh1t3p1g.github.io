@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>0kami&#39;s Blog</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://blog.0kami.cn/"/>
+  <updated>2019-02-05T14:35:23.724Z</updated>
+  <id>http://blog.0kami.cn/</id>
+  
+  <author>
+    <name>wh1t3p1g</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【Code Analysis】thinkphp v5.x App.php s参数RCE</title>
+    <link href="http://blog.0kami.cn/2019/02/05/thinkphp-v5-x-App-php-rce/"/>
+    <id>http://blog.0kami.cn/2019/02/05/thinkphp-v5-x-App-php-rce/</id>
+    <published>2019-02-05T08:02:06.000Z</published>
+    <updated>2019-02-05T14:35:23.724Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;放假了，对thinkphp的几个RCE做一下分析，记录一下XD&lt;br&gt;
+    
+    </summary>
+    
+      <category term="codereview" scheme="http://blog.0kami.cn/categories/codereview/"/>
+    
+    
+      <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【CTF】SUCTF 2018 部分web writeup</title>
+    <link href="http://blog.0kami.cn/2018/05/28/suctf-part-web-writeup/"/>
+    <id>http://blog.0kami.cn/2018/05/28/suctf-part-web-writeup/</id>
+    <published>2018-05-28T02:46:06.000Z</published>
+    <updated>2019-02-05T13:54:20.486Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;SUCTF&quot;&gt;&lt;a href=&quot;#SUCTF&quot; class=&quot;headerlink&quot; title=&quot;SUCTF&quot;&gt;&lt;/a&gt;SUCTF&lt;/h1&gt;&lt;p&gt;抽了点时间做了2道SUCTF的web题，记录一下writeup。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="ctf" scheme="http://blog.0kami.cn/categories/ctf/"/>
+    
+    
+      <category term="suctf" scheme="http://blog.0kami.cn/tags/suctf/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【CTF】DDCTF 2018 web writeup</title>
+    <link href="http://blog.0kami.cn/2018/04/21/ddctf-2018-web-writeup/"/>
+    <id>http://blog.0kami.cn/2018/04/21/ddctf-2018-web-writeup/</id>
+    <published>2018-04-21T12:53:50.000Z</published>
+    <updated>2019-02-05T13:54:59.580Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;DDCTF-2018-2道WEB-Writeup&quot;&gt;&lt;a href=&quot;#DDCTF-2018-2道WEB-Writeup&quot; class=&quot;headerlink&quot; title=&quot;DDCTF 2018 2道WEB Writeup&quot;&gt;&lt;/a&gt;DDCTF 2018 2道WEB Writeup&lt;/h1&gt;
+    
+    </summary>
+    
+      <category term="ctf" scheme="http://blog.0kami.cn/categories/ctf/"/>
+    
+    
+      <category term="ddctf" scheme="http://blog.0kami.cn/tags/ddctf/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【CTF】HITB-XCTF 2018 web writeup</title>
+    <link href="http://blog.0kami.cn/2018/04/15/hitb-xctf-2018-portion-web-writeup/"/>
+    <id>http://blog.0kami.cn/2018/04/15/hitb-xctf-2018-portion-web-writeup/</id>
+    <published>2018-04-15T05:02:52.000Z</published>
+    <updated>2019-02-05T13:55:07.740Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;upload&quot;&gt;&lt;a href=&quot;#upload&quot; class=&quot;headerlink&quot; title=&quot;upload&quot;&gt;&lt;/a&gt;upload&lt;/h1&gt;
+    
+    </summary>
+    
+      <category term="ctf" scheme="http://blog.0kami.cn/categories/ctf/"/>
+    
+    
+      <category term="hitbxctf" scheme="http://blog.0kami.cn/tags/hitbxctf/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【Code Analysis】MovieGuide v2.0 SQLi</title>
+    <link href="http://blog.0kami.cn/2018/02/03/MovieGuide2SQLi/"/>
+    <id>http://blog.0kami.cn/2018/02/03/MovieGuide2SQLi/</id>
+    <published>2018-02-03T05:37:35.000Z</published>
+    <updated>2019-02-05T13:55:15.814Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;0x00&quot;&gt;&lt;a href=&quot;#0x00&quot; class=&quot;headerlink&quot; title=&quot;0x00&quot;&gt;&lt;/a&gt;0x00&lt;/h1&gt;&lt;p&gt;Detail: &lt;a href=&quot;https://www.exploit-db.com/exploits/43346/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Movie Guide v2.0 SQL Injection&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="codereview" scheme="http://blog.0kami.cn/categories/codereview/"/>
+    
+    
+      <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【Code Review】seacms v6.5 前台getshell</title>
+    <link href="http://blog.0kami.cn/2017/03/16/old-seacms-v6-5-getshell/"/>
+    <id>http://blog.0kami.cn/2017/03/16/old-seacms-v6-5-getshell/</id>
+    <published>2017-03-16T07:47:15.000Z</published>
+    <updated>2018-01-25T07:28:34.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;前段时间放在&lt;a href=&quot;https://forum.90sec.org/forum.php?mod=viewthread&amp;amp;tid=10291&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;90sec&lt;/a&gt;上的一篇代码审计，收拾一下放到自己博客上&lt;br&gt;
+    
+    </summary>
+    
+      <category term="codereview" scheme="http://blog.0kami.cn/categories/codereview/"/>
+    
+    
+      <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【CTF】NJCTF2017 writeup</title>
+    <link href="http://blog.0kami.cn/2017/03/15/old-njctf-2017/"/>
+    <id>http://blog.0kami.cn/2017/03/15/old-njctf-2017/</id>
+    <published>2017-03-15T03:29:05.000Z</published>
+    <updated>2018-01-25T07:31:22.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;辞职后没事情干，刚好赶上njctf，还是一样菜啊，只做了7道题，还要继续努力💪（ps:毕业设计什么鬼啊）写一下web的writeup，由于题目还开着，把没做出来的做一遍，纪录一下我觉得有必要记的题&lt;br&gt;
+    
+    </summary>
+    
+      <category term="ctf" scheme="http://blog.0kami.cn/categories/ctf/"/>
+    
+    
+      <category term="njctf" scheme="http://blog.0kami.cn/tags/njctf/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【OTHERS】php代码审计前的准备</title>
+    <link href="http://blog.0kami.cn/2017/02/03/old-code-review-pre-prepare/"/>
+    <id>http://blog.0kami.cn/2017/02/03/old-code-review-pre-prepare/</id>
+    <published>2017-02-03T05:00:57.000Z</published>
+    <updated>2018-01-25T07:36:01.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;所谓“工欲善其事,必先利其器”，在代码审计前，我们需要准备提高我们审计效率的工具。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="others" scheme="http://blog.0kami.cn/tags/others/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【Code Review】DM企业建站系统前台盲注</title>
+    <link href="http://blog.0kami.cn/2017/01/29/old-DM-sql-injection/"/>
+    <id>http://blog.0kami.cn/2017/01/29/old-DM-sql-injection/</id>
+    <published>2017-01-29T13:24:30.000Z</published>
+    <updated>2018-01-25T07:18:06.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;今天搞了一下动态调试的东西，然后顺便看了看上次下的&lt;a href=&quot;http://www.demososo.com/down.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;DM企业建站系统2017.01.23&lt;/a&gt;。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="codereview" scheme="http://blog.0kami.cn/categories/codereview/"/>
+    
+    
+      <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【VULNERABLITY】Struts2命令执行各版本记录</title>
+    <link href="http://blog.0kami.cn/2017/01/13/old-Struts2-history-payload/"/>
+    <id>http://blog.0kami.cn/2017/01/13/old-Struts2-history-payload/</id>
+    <published>2017-01-13T08:57:47.000Z</published>
+    <updated>2018-01-25T07:32:10.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;最近在写Struts2的一些PoC，记录一下各个版本的PoC方便到时候查阅。先提一下参考的前辈们的网址，感谢🙏&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【Code Review】bluecms v1.6 Sql Injection 分析</title>
+    <link href="http://blog.0kami.cn/2017/01/11/old-bluecms-v1-6-Sql-Injection/"/>
+    <id>http://blog.0kami.cn/2017/01/11/old-bluecms-v1-6-Sql-Injection/</id>
+    <published>2017-01-11T14:02:11.000Z</published>
+    <updated>2019-02-05T13:55:22.299Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;很久没有代码审计了，拿一套简单的找找感觉。bluecms是一套比较老的门户网站cms，网上也有很多关于它的漏洞还未修补，所以下文的漏洞也不算是最新的，仅当是练练手。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="codereview" scheme="http://blog.0kami.cn/categories/codereview/"/>
+    
+    
+      <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【VULNERABLITY】文件包含漏洞详解</title>
+    <link href="http://blog.0kami.cn/2016/12/19/old-file-include/"/>
+    <id>http://blog.0kami.cn/2016/12/19/old-file-include/</id>
+    <published>2016-12-19T05:44:33.000Z</published>
+    <updated>2018-01-25T07:20:01.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;很久没有归纳总结知识点了，学了那么多总感觉那么零散，所以准备开始总结这一系列的漏洞详解。一方面是总结一方面也是复习。这篇主要总结一下文件包含漏洞。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【CVE-2016-5195】Dirtycow</title>
+    <link href="http://blog.0kami.cn/2016/10/26/old-dirtycow-cve-2016-5195/"/>
+    <id>http://blog.0kami.cn/2016/10/26/old-dirtycow-cve-2016-5195/</id>
+    <published>2016-10-26T01:35:13.000Z</published>
+    <updated>2018-01-25T07:17:01.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;最近出来的dirtycow，影响版本:Linux kernel &amp;gt;= 2.6.22（2007年发行，到今年10月18日才修复）,用网上的EXP试了一下，记录一下过程&lt;br&gt;
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="cve" scheme="http://blog.0kami.cn/tags/cve/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【CVE-2016-6662】MYSQL提权分析</title>
+    <link href="http://blog.0kami.cn/2016/09/18/old-cve-2016-6663-mysql-exp/"/>
+    <id>http://blog.0kami.cn/2016/09/18/old-cve-2016-6663-mysql-exp/</id>
+    <published>2016-09-18T00:53:47.000Z</published>
+    <updated>2018-01-25T07:15:50.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;几天前出了mysql本地提权的0day，虽然现在官方已经出了补丁，但是受影响的主机还是挺多的。跟进操作一遍：）&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="cve" scheme="http://blog.0kami.cn/tags/cve/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【VULNERABLITY】python sandbox escape</title>
+    <link href="http://blog.0kami.cn/2016/09/16/old-python-sandbox-escape/"/>
+    <id>http://blog.0kami.cn/2016/09/16/old-python-sandbox-escape/</id>
+    <published>2016-09-16T03:33:11.000Z</published>
+    <updated>2018-01-25T07:27:54.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;前几天的华山杯出了一道python的沙盒逃逸，感觉挺有意思的。在网上搜索了一下，发现很早就出过这种类型的题，源码都差不多。学习了一下思路，这里总结一下：）&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【MOBILE】how to install drozer on mac</title>
+    <link href="http://blog.0kami.cn/2016/08/20/old-how-to-install-drozer-on-mac/"/>
+    <id>http://blog.0kami.cn/2016/08/20/old-how-to-install-drozer-on-mac/</id>
+    <published>2016-08-20T07:19:13.000Z</published>
+    <updated>2019-02-05T13:56:04.192Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;一：概述&quot;&gt;&lt;a href=&quot;#一：概述&quot; class=&quot;headerlink&quot; title=&quot;一：概述&quot;&gt;&lt;/a&gt;一：概述&lt;/h1&gt;&lt;p&gt;drozer是一款针对Android系统的安全测试框架。drozer可以帮助Android app和设备变得更安全，其提供了很多Android平台下的渗透测试exploit供你使用和分享。对于远程的exploit，它可以生成shellcode帮助你进行远程设备管理。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;更快的Android安全评估&lt;br&gt;drozer可以大大缩减Android安全评估的耗时，通过攻击测试暴露Android APP的漏洞。&lt;/li&gt;
+&lt;li&gt;基于真机的测试&lt;br&gt;drozer运行在Android模拟器和真实设备上，它只需要USB调试即可使用。&lt;/li&gt;
+&lt;li&gt;自动化和扩展&lt;br&gt;drozer有很多扩展模块，你可以找到他们进行测试以发现Android安全问题。&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="mobile" scheme="http://blog.0kami.cn/tags/mobile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【Code Analysis】wordpress SSRF &lt;4.5</title>
+    <link href="http://blog.0kami.cn/2016/08/19/old-wordpress-ssrf-4-4-2/"/>
+    <id>http://blog.0kami.cn/2016/08/19/old-wordpress-ssrf-4-4-2/</id>
+    <published>2016-08-19T07:05:19.000Z</published>
+    <updated>2018-01-25T07:32:42.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h3&gt;&lt;p&gt;前几天，wordpress爆出一个SSRF的漏洞，跟进一下，查阅了一下，网上并没有详细的利用方式。以前也没怎么接触过wordpress，看了一下受影响的代码，记录一下过程。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="codereview" scheme="http://blog.0kami.cn/categories/codereview/"/>
+    
+    
+      <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【VULNERABLITY】文件上传学习总结</title>
+    <link href="http://blog.0kami.cn/2016/07/04/old-file-upload/"/>
+    <id>http://blog.0kami.cn/2016/07/04/old-file-upload/</id>
+    <published>2016-07-04T01:43:32.000Z</published>
+    <updated>2018-01-25T07:20:16.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h3&gt;&lt;p&gt;这几天空下来根据&lt;a href=&quot;http://www.owasp.org.cn/OWASP_Training/Upload_Attack_Framework.pdf&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;上传攻击框架&lt;/a&gt;学习总结一下上传攻击。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【VULNERABLITY】XML External Entity(XXE)</title>
+    <link href="http://blog.0kami.cn/2016/06/28/old-xxe/"/>
+    <id>http://blog.0kami.cn/2016/06/28/old-xxe/</id>
+    <published>2016-06-28T08:33:43.000Z</published>
+    <updated>2018-01-25T07:33:15.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;描述&quot;&gt;&lt;a href=&quot;#描述&quot; class=&quot;headerlink&quot; title=&quot;描述&quot;&gt;&lt;/a&gt;描述&lt;/h3&gt;&lt;p&gt;XML的一些基础知识，摘自&lt;a href=&quot;https://security.tencent.com/index.php/blog/msg/69&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;security.tencent.com&lt;/a&gt;&lt;br&gt;
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【CTF】BCTF Crypto SpecialRSA writeup</title>
+    <link href="http://blog.0kami.cn/2016/03/20/old-CTF-BCTF-Crypto-SpecialRSA-writeup/"/>
+    <id>http://blog.0kami.cn/2016/03/20/old-CTF-BCTF-Crypto-SpecialRSA-writeup/</id>
+    <published>2016-03-20T02:20:26.000Z</published>
+    <updated>2018-01-25T07:11:46.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;http://blog.0kami.cn/images/bctf/specialRSA.jpg&quot; alt=&quot;题目描述&quot;&gt;&lt;br&gt;
+    
+    </summary>
+    
+      <category term="ctf" scheme="http://blog.0kami.cn/categories/ctf/"/>
+    
+    
+      <category term="bctf" scheme="http://blog.0kami.cn/tags/bctf/"/>
+    
+  </entry>
+  
+</feed>
