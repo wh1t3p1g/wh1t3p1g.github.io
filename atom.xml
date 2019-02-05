@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2019-02-05T14:35:23.724Z</updated>
+  <updated>2019-02-05T15:43:04.036Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -17,15 +17,35 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>encrypt-test</title>
+    <link href="http://blog.0kami.cn/2019/02/05/encrypt-test/"/>
+    <id>http://blog.0kami.cn/2019/02/05/encrypt-test/</id>
+    <published>2019-02-05T15:39:20.000Z</published>
+    <updated>2019-02-05T15:43:04.036Z</updated>
+    
+    <summary type="html">
+    
+      welcome to my blog, enter password to read.
+    
+    </summary>
+    
+      <category term="notes|codereview|ctf" scheme="http://blog.0kami.cn/categories/notes-codereview-ctf/"/>
+    
+    
+      <category term="xxxctf|cms|vul|others|cve" scheme="http://blog.0kami.cn/tags/xxxctf-cms-vul-others-cve/"/>
+    
+  </entry>
+  
+  <entry>
     <title>【Code Analysis】thinkphp v5.x App.php s参数RCE</title>
     <link href="http://blog.0kami.cn/2019/02/05/thinkphp-v5-x-App-php-rce/"/>
     <id>http://blog.0kami.cn/2019/02/05/thinkphp-v5-x-App-php-rce/</id>
     <published>2019-02-05T08:02:06.000Z</published>
-    <updated>2019-02-05T14:35:23.724Z</updated>
+    <updated>2019-02-05T15:43:30.818Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;放假了，对thinkphp的几个RCE做一下分析，记录一下XD&lt;br&gt;
+      &lt;h2 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h2&gt;&lt;p&gt;放假了，对thinkphp的几个RCE做一下分析，记录一下XD&lt;br&gt;
     
     </summary>
     
@@ -398,26 +418,6 @@
     
     
       <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【CTF】BCTF Crypto SpecialRSA writeup</title>
-    <link href="http://blog.0kami.cn/2016/03/20/old-CTF-BCTF-Crypto-SpecialRSA-writeup/"/>
-    <id>http://blog.0kami.cn/2016/03/20/old-CTF-BCTF-Crypto-SpecialRSA-writeup/</id>
-    <published>2016-03-20T02:20:26.000Z</published>
-    <updated>2018-01-25T07:11:46.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;http://blog.0kami.cn/images/bctf/specialRSA.jpg&quot; alt=&quot;题目描述&quot;&gt;&lt;br&gt;
-    
-    </summary>
-    
-      <category term="ctf" scheme="http://blog.0kami.cn/categories/ctf/"/>
-    
-    
-      <category term="bctf" scheme="http://blog.0kami.cn/tags/bctf/"/>
     
   </entry>
   
