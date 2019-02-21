@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2019-02-05T16:04:30.341Z</updated>
+  <updated>2019-02-21T13:11:47.195Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>temmoku home版 t1.15 前台sqli</title>
+    <link href="http://blog.0kami.cn/2019/02/21/temmoku-t1-15-sqli/"/>
+    <id>http://blog.0kami.cn/2019/02/21/temmoku-t1-15-sqli/</id>
+    <published>2019-02-21T13:09:44.000Z</published>
+    <updated>2019-02-21T13:11:47.195Z</updated>
+    
+    <summary type="html">
+    
+      welcome to my blog, enter password to read.
+    
+    </summary>
+    
+      <category term="codereview" scheme="http://blog.0kami.cn/categories/codereview/"/>
+    
+    
+      <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
+    
+  </entry>
   
   <entry>
     <title>【test】encrypt-test</title>
@@ -391,26 +411,6 @@
     <summary type="html">
     
       &lt;h3 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h3&gt;&lt;p&gt;这几天空下来根据&lt;a href=&quot;http://www.owasp.org.cn/OWASP_Training/Upload_Attack_Framework.pdf&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;上传攻击框架&lt;/a&gt;学习总结一下上传攻击。&lt;br&gt;
-    
-    </summary>
-    
-      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
-    
-    
-      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【VULNERABLITY】XML External Entity(XXE)</title>
-    <link href="http://blog.0kami.cn/2016/06/28/old-xxe/"/>
-    <id>http://blog.0kami.cn/2016/06/28/old-xxe/</id>
-    <published>2016-06-28T08:33:43.000Z</published>
-    <updated>2018-01-25T07:33:15.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;描述&quot;&gt;&lt;a href=&quot;#描述&quot; class=&quot;headerlink&quot; title=&quot;描述&quot;&gt;&lt;/a&gt;描述&lt;/h3&gt;&lt;p&gt;XML的一些基础知识，摘自&lt;a href=&quot;https://security.tencent.com/index.php/blog/msg/69&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;security.tencent.com&lt;/a&gt;&lt;br&gt;
     
     </summary>
     
