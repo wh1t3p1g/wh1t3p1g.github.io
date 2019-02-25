@@ -57,26 +57,6 @@
   </entry>
   
   <entry>
-    <title>【test】encrypt-test</title>
-    <link href="http://blog.0kami.cn/2019/02/05/encrypt-test/"/>
-    <id>http://blog.0kami.cn/2019/02/05/encrypt-test/</id>
-    <published>2019-02-05T15:39:20.000Z</published>
-    <updated>2019-02-05T16:04:30.341Z</updated>
-    
-    <summary type="html">
-    
-      welcome to my blog, enter password to read.
-    
-    </summary>
-    
-      <category term="notes|codereview|ctf" scheme="http://blog.0kami.cn/categories/notes-codereview-ctf/"/>
-    
-    
-      <category term="xxxctf|cms|vul|others|cve" scheme="http://blog.0kami.cn/tags/xxxctf-cms-vul-others-cve/"/>
-    
-  </entry>
-  
-  <entry>
     <title>【Code Analysis】thinkphp v5.x App.php s参数RCE</title>
     <link href="http://blog.0kami.cn/2019/02/05/thinkphp-v5-x-App-php-rce/"/>
     <id>http://blog.0kami.cn/2019/02/05/thinkphp-v5-x-App-php-rce/</id>
@@ -418,6 +398,26 @@
     
     
       <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【VULNERABLITY】文件上传学习总结</title>
+    <link href="http://blog.0kami.cn/2016/07/04/old-file-upload/"/>
+    <id>http://blog.0kami.cn/2016/07/04/old-file-upload/</id>
+    <published>2016-07-04T01:43:32.000Z</published>
+    <updated>2018-01-25T07:20:16.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h3&gt;&lt;p&gt;这几天空下来根据&lt;a href=&quot;http://www.owasp.org.cn/OWASP_Training/Upload_Attack_Framework.pdf&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;上传攻击框架&lt;/a&gt;学习总结一下上传攻击。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
     
   </entry>
   
