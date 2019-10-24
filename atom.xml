@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2019-10-24T14:17:10.034Z</updated>
+  <updated>2019-10-24T14:25:00.716Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -17,18 +17,15 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>study_java_deserialized_vulnerability.md</title>
+    <title>【notes】Java反序列化漏洞(上)</title>
     <link href="http://blog.0kami.cn/2019/10/24/study-java-deserialized-vulnerability/"/>
     <id>http://blog.0kami.cn/2019/10/24/study-java-deserialized-vulnerability/</id>
     <published>2019-10-24T14:15:25.000Z</published>
-    <updated>2019-10-24T14:17:10.034Z</updated>
+    <updated>2019-10-24T14:25:00.716Z</updated>
     
     <summary type="html">
     
-      
-      
-        &lt;h1 id=&quot;Java反序列化漏洞&quot;&gt;&lt;a href=&quot;#Java反序列化漏洞&quot; class=&quot;headerlink&quot; title=&quot;Java反序列化漏洞&quot;&gt;&lt;/a&gt;Java反序列化漏洞&lt;/h1&gt;&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class
-      
+      &lt;h1 id=&quot;Java反序列化漏洞&quot;&gt;&lt;a href=&quot;#Java反序列化漏洞&quot; class=&quot;headerlink&quot; title=&quot;Java反序列化漏洞&quot;&gt;&lt;/a&gt;Java反序列化漏洞&lt;/h1&gt;
     
     </summary>
     
@@ -44,14 +41,11 @@
     <link href="http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
     <id>http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-05T04:27:54.412Z</updated>
+    <updated>2019-10-24T14:23:41.166Z</updated>
     
     <summary type="html">
     
-      
-      
-        &lt;h1 id=&quot;thinkphp-v6-0-x-反序列化利用链挖掘&quot;&gt;&lt;a href=&quot;#thinkphp-v6-0-x-反序列化利用链挖掘&quot; class=&quot;headerlink&quot; title=&quot;thinkphp v6.0.x 反序列化利用链挖掘&quot;&gt;&lt;/a&gt;thinkphp v6
-      
+      &lt;h1 id=&quot;thinkphp-v6-0-x-反序列化利用链挖掘&quot;&gt;&lt;a href=&quot;#thinkphp-v6-0-x-反序列化利用链挖掘&quot; class=&quot;headerlink&quot; title=&quot;thinkphp v6.0.x 反序列化利用链挖掘&quot;&gt;&lt;/a&gt;thinkphp v6.0.x 反序列化利用链挖掘&lt;/h1&gt;
     
     </summary>
     
@@ -67,14 +61,11 @@
     <link href="http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
     <id>http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-05T04:27:56.931Z</updated>
+    <updated>2019-10-24T14:23:17.876Z</updated>
     
     <summary type="html">
     
-      
-      
-        &lt;h1 id=&quot;thinkphp-v5-2-x-反序列化利用链挖掘&quot;&gt;&lt;a href=&quot;#thinkphp-v5-2-x-反序列化利用链挖掘&quot; class=&quot;headerlink&quot; title=&quot;thinkphp v5.2.x 反序列化利用链挖掘&quot;&gt;&lt;/a&gt;thinkphp v5
-      
+      &lt;h1 id=&quot;thinkphp-v5-2-x-反序列化利用链挖掘&quot;&gt;&lt;a href=&quot;#thinkphp-v5-2-x-反序列化利用链挖掘&quot; class=&quot;headerlink&quot; title=&quot;thinkphp v5.2.x 反序列化利用链挖掘&quot;&gt;&lt;/a&gt;thinkphp v5.2.x 反序列化利用链挖掘&lt;/h1&gt;
     
     </summary>
     

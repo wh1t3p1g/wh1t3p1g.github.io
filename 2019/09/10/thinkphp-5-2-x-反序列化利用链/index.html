@@ -12,18 +12,18 @@
   <link rel="shortcut icon" href="/images/avatar.jpg">
   <link rel="alternate" href="/atom.xml" title="0kami's Blog">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="thinkphp v5.2.x 反序列化利用链挖掘0x00 前言上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。 后文主要包括两条链的利用分析（一条是我找的，也是题目的预期解，另一条是wonderkun师傅找的非预期解） 0x01 环境准备这里就不直接用题目的环境了，采用composer直接安装5.2.*-dev版本 1compose">
+  <meta name="description" content="thinkphp v5.2.x 反序列化利用链挖掘">
 <meta name="keywords" content="cms">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【Code Review】thinkphp v5.2.x 反序列化利用链挖掘">
 <meta property="og:url" content="http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-反序列化利用链/index.html">
 <meta property="og:site_name" content="0kami&#39;s Blog">
-<meta property="og:description" content="thinkphp v5.2.x 反序列化利用链挖掘0x00 前言上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。 后文主要包括两条链的利用分析（一条是我找的，也是题目的预期解，另一条是wonderkun师傅找的非预期解） 0x01 环境准备这里就不直接用题目的环境了，采用composer直接安装5.2.*-dev版本 1compose">
+<meta property="og:description" content="thinkphp v5.2.x 反序列化利用链挖掘">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-10-05T04:27:56.931Z">
+<meta property="og:updated_time" content="2019-10-24T14:23:17.876Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【Code Review】thinkphp v5.2.x 反序列化利用链挖掘">
-<meta name="twitter:description" content="thinkphp v5.2.x 反序列化利用链挖掘0x00 前言上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。 后文主要包括两条链的利用分析（一条是我找的，也是题目的预期解，另一条是wonderkun师傅找的非预期解） 0x01 环境准备这里就不直接用题目的环境了，采用composer直接安装5.2.*-dev版本 1compose">
+<meta name="twitter:description" content="thinkphp v5.2.x 反序列化利用链挖掘">
 
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
@@ -146,7 +146,8 @@
 	
 	<section class="article typo">
   	<div class="article-entry" itemprop="articleBody">
-    	<h1 id="thinkphp-v5-2-x-反序列化利用链挖掘"><a href="#thinkphp-v5-2-x-反序列化利用链挖掘" class="headerlink" title="thinkphp v5.2.x 反序列化利用链挖掘"></a>thinkphp v5.2.x 反序列化利用链挖掘</h1><h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。</p>
+    	<h1 id="thinkphp-v5-2-x-反序列化利用链挖掘"><a href="#thinkphp-v5-2-x-反序列化利用链挖掘" class="headerlink" title="thinkphp v5.2.x 反序列化利用链挖掘"></a>thinkphp v5.2.x 反序列化利用链挖掘</h1><a id="more"></a>
+<h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。</p>
 <p>后文主要包括两条链的利用分析（一条是我找的，也是题目的预期解，另一条是wonderkun师傅找的非预期解）</p>
 <h2 id="0x01-环境准备"><a href="#0x01-环境准备" class="headerlink" title="0x01 环境准备"></a>0x01 环境准备</h2><p>这里就不直接用题目的环境了，采用composer直接安装5.2.*-dev版本</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer create-project topthink/think=5.2.x-dev v5.2</span><br></pre></td></tr></table></figure>

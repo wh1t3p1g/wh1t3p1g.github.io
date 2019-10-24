@@ -12,18 +12,18 @@
   <link rel="shortcut icon" href="/images/avatar.jpg">
   <link rel="alternate" href="/atom.xml" title="0kami's Blog">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="thinkphp v6.0.x 反序列化利用链挖掘0x00 前言上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。 0x01 环境准备采用composer安装6.0.*-dev版本 1composer create-project topthink/think=6.0.x-dev v6.0 0x02 利用链分析背景回顾拿到v6">
+  <meta name="description" content="thinkphp v6.0.x 反序列化利用链挖掘">
 <meta name="keywords" content="cms">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【Code Review】thinkphp v6.0.x 反序列化利用链挖掘">
 <meta property="og:url" content="http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-反序列化利用链/index.html">
 <meta property="og:site_name" content="0kami&#39;s Blog">
-<meta property="og:description" content="thinkphp v6.0.x 反序列化利用链挖掘0x00 前言上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。 0x01 环境准备采用composer安装6.0.*-dev版本 1composer create-project topthink/think=6.0.x-dev v6.0 0x02 利用链分析背景回顾拿到v6">
+<meta property="og:description" content="thinkphp v6.0.x 反序列化利用链挖掘">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-10-05T04:27:54.412Z">
+<meta property="og:updated_time" content="2019-10-24T14:23:41.166Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【Code Review】thinkphp v6.0.x 反序列化利用链挖掘">
-<meta name="twitter:description" content="thinkphp v6.0.x 反序列化利用链挖掘0x00 前言上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。 0x01 环境准备采用composer安装6.0.*-dev版本 1composer create-project topthink/think=6.0.x-dev v6.0 0x02 利用链分析背景回顾拿到v6">
+<meta name="twitter:description" content="thinkphp v6.0.x 反序列化利用链挖掘">
 
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
@@ -146,7 +146,8 @@
 	
 	<section class="article typo">
   	<div class="article-entry" itemprop="articleBody">
-    	<h1 id="thinkphp-v6-0-x-反序列化利用链挖掘"><a href="#thinkphp-v6-0-x-反序列化利用链挖掘" class="headerlink" title="thinkphp v6.0.x 反序列化利用链挖掘"></a>thinkphp v6.0.x 反序列化利用链挖掘</h1><h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。</p>
+    	<h1 id="thinkphp-v6-0-x-反序列化利用链挖掘"><a href="#thinkphp-v6-0-x-反序列化利用链挖掘" class="headerlink" title="thinkphp v6.0.x 反序列化利用链挖掘"></a>thinkphp v6.0.x 反序列化利用链挖掘</h1><a id="more"></a>
+<h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。</p>
 <h2 id="0x01-环境准备"><a href="#0x01-环境准备" class="headerlink" title="0x01 环境准备"></a>0x01 环境准备</h2><p>采用composer安装6.0.*-dev版本</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer create-project topthink/think=6.0.x-dev v6.0</span><br></pre></td></tr></table></figure>
 <h2 id="0x02-利用链分析"><a href="#0x02-利用链分析" class="headerlink" title="0x02 利用链分析"></a>0x02 利用链分析</h2><h3 id="背景回顾"><a href="#背景回顾" class="headerlink" title="背景回顾"></a>背景回顾</h3><p>拿到v6.0.x版本，简单的看了一下，有一个好消息和一个坏消息。</p>
@@ -198,8 +199,8 @@
 	
 		<div class="art-item-footer">
 				
-					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2019/10/24/study-java-deserialized-vulnerability/" rel="prev" title="study_java_deserialized_vulnerability.md">
-						study_java_deserialized_vulnerability.md
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2019/10/24/study-java-deserialized-vulnerability/" rel="prev" title="【notes】Java反序列化漏洞(上)">
+						【notes】Java反序列化漏洞(上)
 					</a></span>
 				
 				
