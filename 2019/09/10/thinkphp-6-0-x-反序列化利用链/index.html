@@ -12,18 +12,18 @@
   <link rel="shortcut icon" href="/images/avatar.jpg">
   <link rel="alternate" href="/atom.xml" title="0kami's Blog">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="thinkphp v6.0.x 反序列化利用链挖掘">
+  <meta name="description" content="0x00 前言上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。">
 <meta name="keywords" content="cms">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【Code Review】thinkphp v6.0.x 反序列化利用链挖掘">
 <meta property="og:url" content="http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-反序列化利用链/index.html">
 <meta property="og:site_name" content="0kami&#39;s Blog">
-<meta property="og:description" content="thinkphp v6.0.x 反序列化利用链挖掘">
+<meta property="og:description" content="0x00 前言上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-10-24T14:23:41.166Z">
+<meta property="og:updated_time" content="2019-10-25T01:27:35.336Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【Code Review】thinkphp v6.0.x 反序列化利用链挖掘">
-<meta name="twitter:description" content="thinkphp v6.0.x 反序列化利用链挖掘">
+<meta name="twitter:description" content="0x00 前言上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。">
 
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
@@ -142,18 +142,17 @@
 
 	</section>
 	
-		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#thinkphp-v6-0-x-反序列化利用链挖掘"><span class="toc-number">1.</span> <span class="toc-text">thinkphp v6.0.x 反序列化利用链挖掘</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-前言"><span class="toc-number">1.1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-环境准备"><span class="toc-number">1.2.</span> <span class="toc-text">0x01 环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-利用链分析"><span class="toc-number">1.3.</span> <span class="toc-text">0x02 利用链分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#背景回顾"><span class="toc-number">1.3.1.</span> <span class="toc-text">背景回顾</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vendor-topthink-think-orm-src-Model-php-新起始触发点"><span class="toc-number">1.3.2.</span> <span class="toc-text">vendor/topthink/think-orm/src/Model.php 新起始触发点</span></a></li></ol></li></ol></li></ol></section>
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x00-前言"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-环境准备"><span class="toc-number">2.</span> <span class="toc-text">0x01 环境准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-利用链分析"><span class="toc-number">3.</span> <span class="toc-text">0x02 利用链分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景回顾"><span class="toc-number">3.1.</span> <span class="toc-text">背景回顾</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vendor-topthink-think-orm-src-Model-php-新起始触发点"><span class="toc-number">3.2.</span> <span class="toc-text">vendor/topthink/think-orm/src/Model.php 新起始触发点</span></a></li></ol></li></ol></section>
 	
 	<section class="article typo">
   	<div class="article-entry" itemprop="articleBody">
-    	<h1 id="thinkphp-v6-0-x-反序列化利用链挖掘"><a href="#thinkphp-v6-0-x-反序列化利用链挖掘" class="headerlink" title="thinkphp v6.0.x 反序列化利用链挖掘"></a>thinkphp v6.0.x 反序列化利用链挖掘</h1><a id="more"></a>
-<h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。</p>
-<h2 id="0x01-环境准备"><a href="#0x01-环境准备" class="headerlink" title="0x01 环境准备"></a>0x01 环境准备</h2><p>采用composer安装6.0.*-dev版本</p>
+    	<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。<br><a id="more"></a></p>
+<h1 id="0x01-环境准备"><a href="#0x01-环境准备" class="headerlink" title="0x01 环境准备"></a>0x01 环境准备</h1><p>采用composer安装6.0.*-dev版本</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer create-project topthink/think=6.0.x-dev v6.0</span><br></pre></td></tr></table></figure>
-<h2 id="0x02-利用链分析"><a href="#0x02-利用链分析" class="headerlink" title="0x02 利用链分析"></a>0x02 利用链分析</h2><h3 id="背景回顾"><a href="#背景回顾" class="headerlink" title="背景回顾"></a>背景回顾</h3><p>拿到v6.0.x版本，简单的看了一下，有一个好消息和一个坏消息。</p>
+<h1 id="0x02-利用链分析"><a href="#0x02-利用链分析" class="headerlink" title="0x02 利用链分析"></a>0x02 利用链分析</h1><h2 id="背景回顾"><a href="#背景回顾" class="headerlink" title="背景回顾"></a>背景回顾</h2><p>拿到v6.0.x版本，简单的看了一下，有一个好消息和一个坏消息。</p>
 <p>好消息是5.2.x版本函数动态调用的反序列化链后半部分，还可以利用。</p>
 <p>坏消息是前面5.1.x，5.2.x版本都基于触发点<code>Windows</code>类的<code>__destruct</code>,好巧不巧的是6.0.x版本取消了<code>Windows</code>类。这意味着我们得重新找一个合适的起始触发点，才能继续使用上面的好消息。</p>
-<h3 id="vendor-topthink-think-orm-src-Model-php-新起始触发点"><a href="#vendor-topthink-think-orm-src-Model-php-新起始触发点" class="headerlink" title="vendor/topthink/think-orm/src/Model.php 新起始触发点"></a>vendor/topthink/think-orm/src/Model.php 新起始触发点</h3><p>为了节省篇幅，后文不再重复介绍触发<code>__toString</code>函数后的利用链，这部分同5.2.x版本相同(不过wonderkun师傅的利用链已失效，动态函数调用的利用链还能用)。</p>
+<h2 id="vendor-topthink-think-orm-src-Model-php-新起始触发点"><a href="#vendor-topthink-think-orm-src-Model-php-新起始触发点" class="headerlink" title="vendor/topthink/think-orm/src/Model.php 新起始触发点"></a>vendor/topthink/think-orm/src/Model.php 新起始触发点</h2><p>为了节省篇幅，后文不再重复介绍触发<code>__toString</code>函数后的利用链，这部分同5.2.x版本相同(不过wonderkun师傅的利用链已失效，动态函数调用的利用链还能用)。</p>
 <p>通常最好的反序列化起始点为<code>__destruct</code>、<code>__wakeup</code>，因为这两个函数的调用在反序列化过程中都会自动调用，所以我们先来找此类函数。这里我找了<code>vendor/topthink/think-orm/src/Model.php</code>的<code>__destruct</code>函数。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;lazySave) &#123;<span class="comment">// 构造lazySave为true，进入save函数</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;save();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">save</span><span class="params">(array $data = [], string $sequence = null)</span>: <span class="title">bool</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;isEmpty() || <span class="keyword">false</span> === <span class="keyword">$this</span>-&gt;trigger(<span class="string">'BeforeWrite'</span>)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  $result = <span class="keyword">$this</span>-&gt;exists ? <span class="keyword">$this</span>-&gt;updateData() : <span class="keyword">$this</span>-&gt;insertData($sequence);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>首先构造<code>lazySave</code>的值为<code>true</code>,从而进入<code>save</code>函数。</p>
@@ -199,13 +198,13 @@
 	
 		<div class="art-item-footer">
 				
-					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2019/10/24/study-java-deserialized-vulnerability/" rel="prev" title="【notes】Java反序列化漏洞(上)">
-						【notes】Java反序列化漏洞(上)
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2019/09/10/thinkphp-5-2-x-反序列化利用链/" rel="prev" title="【Code Review】thinkphp v5.2.x 反序列化利用链挖掘">
+						【Code Review】thinkphp v5.2.x 反序列化利用链挖掘
 					</a></span>
 				
 				
-					<span class="art-item-right">next：<a href="/2019/09/10/thinkphp-5-2-x-反序列化利用链/" rel="next" title="【Code Review】thinkphp v5.2.x 反序列化利用链挖掘">
-						【Code Review】thinkphp v5.2.x 反序列化利用链挖掘
+					<span class="art-item-right">next：<a href="/2019/02/25/mycncart-v2-0-0-3-sqli/" rel="next" title="【Code Review】mycncart sqli">
+						【Code Review】mycncart sqli
 					</a><i class="icon icon-chevron-thin-right"></i></span>
 				
 		</div>
