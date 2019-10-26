@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="generator" content="Hexo 3.8.0">
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
   <title>【Code Review】bluecms v1.6 Sql Injection 分析 | 0kami&#39;s Blog</title>
   <meta name="description" content="A Web 🐶 &amp;&amp; Code Reviewer">
-  <meta name="keywords" content="">
+  <meta name="keywords" content>
   <meta name="HandheldFriendly" content="True">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="shortcut icon" href="/images/avatar.jpg">
@@ -50,60 +50,60 @@
 
   <script>setLoadingBarProgress(20)</script> 
   <header class="l_header">
-	<div class="wrapper">
+	<div class='wrapper'>
 		<div class="nav-main container container--flex">
-			<a class="logo flat-box" href="/">
+			<a class="logo flat-box" href='/' >
 				0kami's Blog
 			</a>
-			<div class="menu">
-				<ul class="h-list">
+			<div class='menu'>
+				<ul class='h-list'>
 					
 						<li>
-							<a class="flat-box nav-home" href="/">
+							<a class='flat-box nav-home' href='/'>
 								Home
 							</a>
 						</li>
 					
 						<li>
-							<a class="flat-box nav-archives" href="/archives">
+							<a class='flat-box nav-archives' href='/archives'>
 								Archives
 							</a>
 						</li>
 					
 						<li>
-							<a class="flat-box nav-about" href="/about">
+							<a class='flat-box nav-about' href='/about'>
 								About
 							</a>
 						</li>
 					
 				</ul>
-				<div class="underline"></div>
+				<div class='underline'></div>
 			</div>
 			
 				<div class="m_search">
 					<form name="searchform" class="form u-search-form">
-						<input type="text" class="input u-search-input" placeholder="Search">
+						<input type="text" class="input u-search-input" placeholder="Search" />
 						<span class="icon icon-search"></span>
 					</form>
 				</div>
 			
-			<ul class="switcher h-list">
+			<ul class='switcher h-list'>
 				
-					<li class="s-search"><a href="javascript:void(0)"><span class="icon icon-search flat-box"></span></a></li>
+					<li class='s-search'><a href='javascript:void(0)'><span class="icon icon-search flat-box"></span></a></li>
 				
-				<li class="s-menu"><a href="javascript:void(0)"><span class="icon icon-menu flat-box"></span></a></li>
+				<li class='s-menu'><a href='javascript:void(0)'><span class="icon icon-menu flat-box"></span></a></li>
 			</ul>
 		</div>
 		
-		<div class="nav-sub container container--flex">
-			<a class="logo" href="javascript:void(0)">
+		<div class='nav-sub container container--flex'>
+			<a class="logo" class="flat-box" href='javascript:void(0)'>
 				Word of Forks
 			</a>
 
-			<ul class="switcher h-list">
-				<li class="s-comment"><a href="javascript:void(0)"><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
-				<li class="s-top"><a href="javascript:void(0)"><span class="icon icon-arrow_upward flat-box"></span></a></li>
-				<li class="s-toc"><a href="javascript:void(0)"><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			<ul class='switcher h-list'>
+				<li class='s-comment'><a href='javascript:void(0)'><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class='s-top'><a href='javascript:void(0)'><span class="icon icon-arrow_upward flat-box"></span></a></li>
+				<li class='s-toc'><a href='javascript:void(0)'><span class="icon icon-format_list_numbered flat-box"></span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -130,8 +130,10 @@
   <div class="l_body">
     <div class='container clearfix'>
       <div class='l_main'>
-        <article id="post-old-bluecms-v1-6-Sql-Injection" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
-	<section class="meta">
+        <article id="post-old-bluecms-v1-6-Sql-Injection"
+  class="post white-box article-type-post"
+  itemscope itemprop="blogPost">
+	<section class='meta'>
 	<h2 class="title">
   	<a href="/2017/01/11/old-bluecms-v1-6-Sql-Injection/">
     	【Code Review】bluecms v1.6 Sql Injection 分析
@@ -142,7 +144,7 @@
 	</time>
 	
     
-    <div class="cats">
+    <div class='cats'>
         <a href="/categories/codereview/">codereview</a>
     </div>
 
@@ -183,13 +185,13 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function check_admin($name, $pwd)</span><br><span class="line">&#123;</span><br><span class="line">	global $db;</span><br><span class="line">	$row = $db-&gt;getone(&quot;SELECT COUNT(*) AS num FROM &quot;.table(&apos;admin&apos;).&quot; WHERE admin_name=&apos;$name&apos; and pwd = md5(&apos;$pwd&apos;)&quot;);</span><br><span class="line"> 	if($row[&apos;num&apos;] &gt; 0)</span><br><span class="line"> 	&#123;</span><br><span class="line"> 		return true;</span><br><span class="line"> 	&#125;</span><br><span class="line"> 	else</span><br><span class="line"> 	&#123;</span><br><span class="line"> 		return false;</span><br><span class="line"> 	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>可以看到这里发生了一次登陆验证，可以通过宽字节注入来做万能密码登陆。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user_name=admin%65%27+or+1%3D1%23&amp;pwd=123</span><br></pre></td></tr></table></figure>
-<p><img src="../../../../img/bluecms_code_review/bluecms_login_success.png" alt=""></p>
+<p><img src="../../../../img/bluecms_code_review/bluecms_login_success.png" alt></p>
 <h2 id="存入ip造成注入"><a href="#存入ip造成注入" class="headerlink" title="存入ip造成注入"></a>存入ip造成注入</h2><p>在common.inc.php中可以找到getip()函数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">function getip()</span><br><span class="line">&#123;</span><br><span class="line">	if (getenv(&apos;HTTP_CLIENT_IP&apos;))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(&apos;HTTP_CLIENT_IP&apos;);</span><br><span class="line">	&#125;</span><br><span class="line">	elseif (getenv(&apos;HTTP_X_FORWARDED_FOR&apos;))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(&apos;HTTP_X_FORWARDED_FOR&apos;);</span><br><span class="line">	&#125;</span><br><span class="line">	elseif (getenv(&apos;HTTP_X_FORWARDED&apos;))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(&apos;HTTP_X_FORWARDED&apos;);</span><br><span class="line">	&#125;</span><br><span class="line">	elseif (getenv(&apos;HTTP_FORWARDED_FOR&apos;))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(&apos;HTTP_FORWARDED_FOR&apos;);</span><br><span class="line">	&#125;</span><br><span class="line">	elseif (getenv(&apos;HTTP_FORWARDED&apos;))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(&apos;HTTP_FORWARDED&apos;);</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = $_SERVER[&apos;REMOTE_ADDR&apos;];</span><br><span class="line">	&#125;</span><br><span class="line">	return $ip;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>再看看调用他的位置<br><img src="../../../../img/bluecms_code_review/bluecms_getip.png" alt=""></p>
-<p>online_ip调用处<br><img src="../../../../img/bluecms_code_review/bluecms_online_ip.png" alt=""></p>
+<p>再看看调用他的位置<br><img src="../../../../img/bluecms_code_review/bluecms_getip.png" alt></p>
+<p>online_ip调用处<br><img src="../../../../img/bluecms_code_review/bluecms_online_ip.png" alt></p>
 <p>看看guest_book.php处存在insert注入，并且可以通过覆盖后面的content，造成数据回显。通过xff传入注入语句或者client ip传入。</p>
-<p><img src="../../../../img/bluecms_code_review/bluecms_ip_injection.png" alt=""><br>结果可以看到<br><img src="../../../../img/bluecms_code_review/bluecms_ip_results.png" alt=""></p>
+<p><img src="../../../../img/bluecms_code_review/bluecms_ip_injection.png" alt><br>结果可以看到<br><img src="../../../../img/bluecms_code_review/bluecms_ip_results.png" alt></p>
 <p>其他位置的注入，不能回显，就不分析了。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总体来说，直接可以grep到<code>$_GET</code>、<code>$_POST</code>、<code>$_REQUEST</code>的cms，审计起来会比较轻松。可以先从入口看起，将common,config等文件看一遍，再查找危险函数，数据入口就可审计出几个漏洞来。bluecms暂时审计到这一步，主要找的是SQL注入的漏洞。其他漏洞打算准备另外一套cms来审计:)</p>
 
@@ -205,12 +207,12 @@
 	
 		<div class="art-item-footer">
 				
-					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2017/01/13/old-Struts2-history-payload/" rel="prev" title="【VULNERABLITY】Struts2命令执行各版本记录">
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2017/01/13/old-Struts2-history-payload/" rel="prev"  title="【VULNERABLITY】Struts2命令执行各版本记录">
 						【VULNERABLITY】Struts2命令执行各版本记录
 					</a></span>
 				
 				
-					<span class="art-item-right">next：<a href="/2016/12/19/old-file-include/" rel="next" title="【VULNERABLITY】文件包含漏洞详解">
+					<span class="art-item-right">next：<a href="/2016/12/19/old-file-include/" rel="next"  title="【VULNERABLITY】文件包含漏洞详解">
 						【VULNERABLITY】文件包含漏洞详解
 					</a><i class="icon icon-chevron-thin-right"></i></span>
 				
@@ -233,46 +235,46 @@
       </div>
       <aside class='l_side'>
         
-  <section class="m_widget about">
+  <section class='m_widget about'>
 
-<div class="header">wh1t3p1g</div>
-<div class="content">
-<div class="desc">A Web 🐶 &amp;&amp; Code Reviewer</div>
+<div class='header'>wh1t3p1g</div>
+<div class='content'>
+<div class='desc'>A Web 🐶 &amp;&amp; Code Reviewer</div>
 </div>
 </section>
 
-  <section class="m_widget links">
-<div class="header">Links</div>
-<div class="content">
+  <section class='m_widget links'>
+<div class='header'>Links</div>
+<div class='content'>
     <ul class="entry">
     
         <li><a class="flat-box" target="_blank" href="http://blog.orleven.com">
-            <div class="name">orleven</div>
+            <div class='name'>orleven</div>
         </a></li>
     
         <li><a class="flat-box" target="_blank" href="http://www.warmeng.com">
-            <div class="name">warmeng</div>
+            <div class='name'>warmeng</div>
         </a></li>
     
         <li><a class="flat-box" target="_blank" href="http://fr4nk.0kami.cn">
-            <div class="name">fr4nk</div>
+            <div class='name'>fr4nk</div>
         </a></li>
     
     </ul>
 </div>
 </section>
 
-  <section class="m_widget categories">
-<div class="header">Categories</div>
-<div class="content">
+  <section class='m_widget categories'>
+<div class='header'>Categories</div>
+<div class='content'>
     
     <ul class="entry">
     
-        <li><a class="flat-box" href="/categories/codereview/"><div class="name">codereview</div><div class="badget">10</div></a></li>
+        <li><a class="flat-box" href="/categories/codereview/"><div class='name'>codereview</div><div class='badget'>10</div></a></li>
     
-        <li><a class="flat-box" href="/categories/ctf/"><div class="name">ctf</div><div class="badget">5</div></a></li>
+        <li><a class="flat-box" href="/categories/ctf/"><div class='name'>ctf</div><div class='badget'>5</div></a></li>
     
-        <li><a class="flat-box" href="/categories/notes/"><div class="name">notes</div><div class="badget">12</div></a></li>
+        <li><a class="flat-box" href="/categories/notes/"><div class='name'>notes</div><div class='badget'>12</div></a></li>
     
     </ul>
     
@@ -282,7 +284,7 @@
   
 <div class="m_widget tagcloud">
     <div class="header">Tags</div>
-    <div class="content">
+    <div class='content'>
         <a href="/tags/bctf/" style="font-size: 14px; color: #808080">bctf</a> <a href="/tags/cms/" style="font-size: 20px; color: #000">cms</a> <a href="/tags/cve/" style="font-size: 16px; color: #555">cve</a> <a href="/tags/ddctf/" style="font-size: 14px; color: #808080">ddctf</a> <a href="/tags/hitbxctf/" style="font-size: 14px; color: #808080">hitbxctf</a> <a href="/tags/mobile/" style="font-size: 14px; color: #808080">mobile</a> <a href="/tags/njctf/" style="font-size: 14px; color: #808080">njctf</a> <a href="/tags/others/" style="font-size: 16px; color: #555">others</a> <a href="/tags/suctf/" style="font-size: 14px; color: #808080">suctf</a> <a href="/tags/vul/" style="font-size: 18px; color: #2b2b2b">vul</a>
     </div>
 </div>
@@ -298,18 +300,20 @@
 	<div class="social-wrapper">
   	
       
-        <a href="https://github.com/wh1t3p1g" class="social github" target="_blank" rel="external">
+        <a href="https://github.com/wh1t3p1g" class="social github"
+          target="_blank" rel="external">
           <span class="icon icon-github"></span>
         </a>
       
-        <a href="/atom.xml" class="social rss" target="_blank" rel="external">
+        <a href="/atom.xml" class="social rss"
+          target="_blank" rel="external">
           <span class="icon icon-rss"></span>
         </a>
       
     
   </div>
   
-  <div>Theme <a href="https://github.com/stkevintan/hexo-theme-material-flow" class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
+  <div>Theme <a href='https://github.com/stkevintan/hexo-theme-material-flow' class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
   
 </footer>
 
@@ -332,7 +336,7 @@
 
 
 <script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/node-waves/0.7.5/waves.min.js"></script>
+<script src='//cdn.bootcss.com/node-waves/0.7.5/waves.min.js'></script>
 <script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
 <script src="/js/jquery.fitvids.js"></script>
 <script>
