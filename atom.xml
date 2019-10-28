@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2019-10-26T13:19:03.132Z</updated>
+  <updated>2019-10-28T08:23:46.318Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -17,11 +17,31 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>【notes】Java反序列化漏洞(上)</title>
+    <title>【notes】Java反序列化利用链挖掘之CommonsCollections3</title>
+    <link href="http://blog.0kami.cn/2019/10/28/study-java-deserialized-commonscollections3/"/>
+    <id>http://blog.0kami.cn/2019/10/28/study-java-deserialized-commonscollections3/</id>
+    <published>2019-10-28T08:20:06.000Z</published>
+    <updated>2019-10-28T08:23:46.318Z</updated>
+    
+    <summary type="html">
+    
+      welcome to my blog, enter password to read.
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【notes】Java反序列化利用链挖掘之CommonsCollections1</title>
     <link href="http://blog.0kami.cn/2019/10/24/study-java-deserialized-vulnerability/"/>
     <id>http://blog.0kami.cn/2019/10/24/study-java-deserialized-vulnerability/</id>
     <published>2019-10-24T14:15:25.000Z</published>
-    <updated>2019-10-26T13:19:03.132Z</updated>
+    <updated>2019-10-28T08:23:30.535Z</updated>
     
     <summary type="html">
     
@@ -393,26 +413,6 @@
     
     
       <category term="cve" scheme="http://blog.0kami.cn/tags/cve/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【VULNERABLITY】python sandbox escape</title>
-    <link href="http://blog.0kami.cn/2016/09/16/old-python-sandbox-escape/"/>
-    <id>http://blog.0kami.cn/2016/09/16/old-python-sandbox-escape/</id>
-    <published>2016-09-16T03:33:11.000Z</published>
-    <updated>2018-01-25T07:27:54.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;前几天的华山杯出了一道python的沙盒逃逸，感觉挺有意思的。在网上搜索了一下，发现很早就出过这种类型的题，源码都差不多。学习了一下思路，这里总结一下：）&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
-    
-    
-      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
     
   </entry>
   
