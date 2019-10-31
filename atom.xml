@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2019-10-28T08:30:16.989Z</updated>
+  <updated>2019-10-31T11:49:45.598Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【notes】Java反序列化利用链挖掘之CommonsCollections5,6,7,9,10</title>
+    <link href="http://blog.0kami.cn/2019/10/31/study-java-deserialized-commonscollections-others/"/>
+    <id>http://blog.0kami.cn/2019/10/31/study-java-deserialized-commonscollections-others/</id>
+    <published>2019-10-31T11:40:44.000Z</published>
+    <updated>2019-10-31T11:49:45.598Z</updated>
+    
+    <summary type="html">
+    
+      welcome to my blog, enter password to read.
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
   
   <entry>
     <title>【notes】Java反序列化利用链挖掘之CommonsCollections3</title>
@@ -386,26 +406,6 @@
     <summary type="html">
     
       &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;最近出来的dirtycow，影响版本:Linux kernel &amp;gt;= 2.6.22（2007年发行，到今年10月18日才修复）,用网上的EXP试了一下，记录一下过程&lt;br&gt;
-    
-    </summary>
-    
-      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
-    
-    
-      <category term="cve" scheme="http://blog.0kami.cn/tags/cve/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【CVE-2016-6662】MYSQL提权分析</title>
-    <link href="http://blog.0kami.cn/2016/09/18/old-cve-2016-6663-mysql-exp/"/>
-    <id>http://blog.0kami.cn/2016/09/18/old-cve-2016-6663-mysql-exp/</id>
-    <published>2016-09-18T00:53:47.000Z</published>
-    <updated>2018-01-25T07:15:50.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;几天前出了mysql本地提权的0day，虽然现在官方已经出了补丁，但是受影响的主机还是挺多的。跟进操作一遍：）&lt;/p&gt;
     
     </summary>
     
