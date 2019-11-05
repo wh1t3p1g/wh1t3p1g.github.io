@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2019-10-31T11:52:10.741Z</updated>
+  <updated>2019-11-05T13:26:10.819Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -17,9 +17,29 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>【notes】Java反序列化利用链挖掘之CommonsCollections2,4,8</title>
+    <link href="http://blog.0kami.cn/2019/11/05/study-java-deserialized-commonscollections4/"/>
+    <id>http://blog.0kami.cn/2019/11/05/study-java-deserialized-commonscollections4/</id>
+    <published>2019-11-05T08:55:51.000Z</published>
+    <updated>2019-11-05T13:26:10.819Z</updated>
+    
+    <summary type="html">
+    
+      welcome to my blog, enter password to read.
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
+  
+  <entry>
     <title>【notes】Java反序列化利用链挖掘之CommonsCollections5,6,7,9,10</title>
-    <link href="http://blog.0kami.cn/2019/10/31/study-java-deserialized-commonscollections-others/"/>
-    <id>http://blog.0kami.cn/2019/10/31/study-java-deserialized-commonscollections-others/</id>
+    <link href="http://blog.0kami.cn/2019/10/31/study-java-deserialized-commonscollections3-others/"/>
+    <id>http://blog.0kami.cn/2019/10/31/study-java-deserialized-commonscollections3-others/</id>
     <published>2019-10-31T11:40:44.000Z</published>
     <updated>2019-10-31T11:52:10.741Z</updated>
     
@@ -38,8 +58,8 @@
   
   <entry>
     <title>【notes】Java反序列化利用链挖掘之CommonsCollections3</title>
-    <link href="http://blog.0kami.cn/2019/10/28/study-java-deserialized-commonscollections3/"/>
-    <id>http://blog.0kami.cn/2019/10/28/study-java-deserialized-commonscollections3/</id>
+    <link href="http://blog.0kami.cn/2019/10/28/study-java-deserialized-commonscollections3-3/"/>
+    <id>http://blog.0kami.cn/2019/10/28/study-java-deserialized-commonscollections3-3/</id>
     <published>2019-10-28T08:20:06.000Z</published>
     <updated>2019-10-28T08:30:16.989Z</updated>
     
@@ -58,8 +78,8 @@
   
   <entry>
     <title>【notes】Java反序列化利用链挖掘之CommonsCollections1</title>
-    <link href="http://blog.0kami.cn/2019/10/24/study-java-deserialized-vulnerability/"/>
-    <id>http://blog.0kami.cn/2019/10/24/study-java-deserialized-vulnerability/</id>
+    <link href="http://blog.0kami.cn/2019/10/24/study-java-deserialized-commonscollections3-1/"/>
+    <id>http://blog.0kami.cn/2019/10/24/study-java-deserialized-commonscollections3-1/</id>
     <published>2019-10-24T14:15:25.000Z</published>
     <updated>2019-10-29T01:19:12.956Z</updated>
     
@@ -77,15 +97,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:28:38.670Z</updated>
+    <updated>2019-10-25T01:27:35.336Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
     
     </summary>
     
@@ -97,15 +117,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:27:35.336Z</updated>
+    <updated>2019-10-25T01:28:38.670Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
     
     </summary>
     
@@ -393,26 +413,6 @@
     
     
       <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【CVE-2016-5195】Dirtycow</title>
-    <link href="http://blog.0kami.cn/2016/10/26/old-dirtycow-cve-2016-5195/"/>
-    <id>http://blog.0kami.cn/2016/10/26/old-dirtycow-cve-2016-5195/</id>
-    <published>2016-10-26T01:35:13.000Z</published>
-    <updated>2018-01-25T07:17:01.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;最近出来的dirtycow，影响版本:Linux kernel &amp;gt;= 2.6.22（2007年发行，到今年10月18日才修复）,用网上的EXP试了一下，记录一下过程&lt;br&gt;
-    
-    </summary>
-    
-      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
-    
-    
-      <category term="cve" scheme="http://blog.0kami.cn/tags/cve/"/>
     
   </entry>
   
