@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2019-11-10T07:38:38.812Z</updated>
+  <updated>2020-01-08T02:04:13.438Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -21,11 +21,11 @@
     <link href="http://blog.0kami.cn/2019/11/10/study-java-deserialized-shiro-1-2-4/"/>
     <id>http://blog.0kami.cn/2019/11/10/study-java-deserialized-shiro-1-2-4/</id>
     <published>2019-11-10T07:32:03.000Z</published>
-    <updated>2019-11-10T07:38:38.812Z</updated>
+    <updated>2020-01-08T02:04:13.438Z</updated>
     
     <summary type="html">
     
-      welcome to my blog, enter password to read.
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;在跟了一遍commons-collections系列的payload后，终于可以开始解决一下当时对shiro反序列化模凌两可的认识了。&lt;/p&gt;
     
     </summary>
     
@@ -41,11 +41,11 @@
     <link href="http://blog.0kami.cn/2019/11/05/study-java-deserialized-commonscollections4/"/>
     <id>http://blog.0kami.cn/2019/11/05/study-java-deserialized-commonscollections4/</id>
     <published>2019-11-05T08:55:51.000Z</published>
-    <updated>2019-11-06T09:13:37.506Z</updated>
+    <updated>2020-01-08T02:03:27.768Z</updated>
     
     <summary type="html">
     
-      welcome to my blog, enter password to read.
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;前面几篇文章，分析了CommonsCollections:3.2.1版本以下存在的反序列化链。今天将继续分析CommonsCollections:4.0版本，主要讲述CommonsCollections2，4，8的利用链构造。&lt;/p&gt;
     
     </summary>
     
@@ -61,11 +61,11 @@
     <link href="http://blog.0kami.cn/2019/10/31/study-java-deserialized-commonscollections3-others/"/>
     <id>http://blog.0kami.cn/2019/10/31/study-java-deserialized-commonscollections3-others/</id>
     <published>2019-10-31T11:40:44.000Z</published>
-    <updated>2019-10-31T11:52:10.741Z</updated>
+    <updated>2020-01-08T02:03:11.526Z</updated>
     
     <summary type="html">
     
-      welcome to my blog, enter password to read.
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;本文继续分析CommonsCollections的相关反序列化利用链，这次主要分析CommonsCollections5,6,7，以及我找的一个新利用链，这里暂且将其称为10.&lt;/p&gt;
     
     </summary>
     
@@ -81,11 +81,11 @@
     <link href="http://blog.0kami.cn/2019/10/28/study-java-deserialized-commonscollections3-3/"/>
     <id>http://blog.0kami.cn/2019/10/28/study-java-deserialized-commonscollections3-3/</id>
     <published>2019-10-28T08:20:06.000Z</published>
-    <updated>2019-10-28T08:30:16.989Z</updated>
+    <updated>2020-01-08T02:05:41.604Z</updated>
     
     <summary type="html">
     
-      welcome to my blog, enter password to read.
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;前面分析了ysoserial的CommonsCollections1，熟悉了一点Java反序列化。本文将继续分析ysoserial的利用，今天的主角是CommonsCollections3.&lt;/p&gt;
     
     </summary>
     
@@ -117,15 +117,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:27:35.336Z</updated>
+    <updated>2019-10-25T01:28:38.670Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
     
     </summary>
     
@@ -137,15 +137,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:28:38.670Z</updated>
+    <updated>2019-10-25T01:27:35.336Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
     
     </summary>
     
