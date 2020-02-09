@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2020-02-06T07:28:25.488Z</updated>
+  <updated>2020-02-09T13:46:51.766Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【notes】JNDI with RMI</title>
+    <link href="http://blog.0kami.cn/2020/02/09/jndi-with-rmi/"/>
+    <id>http://blog.0kami.cn/2020/02/09/jndi-with-rmi/</id>
+    <published>2020-02-09T13:42:18.000Z</published>
+    <updated>2020-02-09T13:46:51.766Z</updated>
+    
+    <summary type="html">
+    
+      welcome to my blog, enter password to read.
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
   
   <entry>
     <title>【notes】浅谈RMI Registry反序列化问题</title>
@@ -393,26 +413,6 @@
     
     
       <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【VULNERABLITY】Struts2命令执行各版本记录</title>
-    <link href="http://blog.0kami.cn/2017/01/13/old-Struts2-history-payload/"/>
-    <id>http://blog.0kami.cn/2017/01/13/old-Struts2-history-payload/</id>
-    <published>2017-01-13T08:57:47.000Z</published>
-    <updated>2018-01-25T07:32:10.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;最近在写Struts2的一些PoC，记录一下各个版本的PoC方便到时候查阅。先提一下参考的前辈们的网址，感谢🙏&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
-    
-    
-      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
     
   </entry>
   
