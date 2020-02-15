@@ -37,15 +37,15 @@
   </entry>
   
   <entry>
-    <title>【notes】浅谈RMI Registry反序列化问题</title>
+    <title>【notes】浅谈Java RMI Registry反序列化安全问题</title>
     <link href="http://blog.0kami.cn/2020/02/06/rmi-registry-security-problem/"/>
     <id>http://blog.0kami.cn/2020/02/06/rmi-registry-security-problem/</id>
     <published>2020-02-06T07:23:36.000Z</published>
-    <updated>2020-02-15T10:18:35.039Z</updated>
+    <updated>2020-02-15T10:20:54.201Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;浅谈Java-RMI-Registry反序列化安全问题&quot;&gt;&lt;a href=&quot;#浅谈Java-RMI-Registry反序列化安全问题&quot; class=&quot;headerlink&quot; title=&quot;浅谈Java RMI Registry反序列化安全问题&quot;&gt;&lt;/a&gt;浅谈Java RMI Registry反序列化安全问题&lt;/h1&gt;&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h2&gt;&lt;p&gt;本文讲述了Java RMI Registry 远程bind对象所带来的反序列化问题，包括两个level，具体见下面&lt;/p&gt;
+      &lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h2&gt;&lt;p&gt;本文讲述了Java RMI Registry 远程bind对象所带来的反序列化问题，包括两个level，具体见下面&lt;/p&gt;
     
     </summary>
     
