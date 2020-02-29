@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2020-02-15T10:22:39.293Z</updated>
+  <updated>2020-02-29T07:35:19.370Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -21,11 +21,11 @@
     <link href="http://blog.0kami.cn/2020/02/09/jndi-with-rmi/"/>
     <id>http://blog.0kami.cn/2020/02/09/jndi-with-rmi/</id>
     <published>2020-02-09T13:42:18.000Z</published>
-    <updated>2020-02-15T10:22:39.293Z</updated>
+    <updated>2020-02-29T07:35:19.370Z</updated>
     
     <summary type="html">
     
-      welcome to my blog, enter password to read.
+      &lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h2&gt;&lt;p&gt;在现实环境中，遇到RMI Registry的机会很少，而结合反序列化漏洞的JNDI注入则常见了许多。本文将介绍RMI结合JNDI后可以做哪些事情XD&lt;/p&gt;
     
     </summary>
     
