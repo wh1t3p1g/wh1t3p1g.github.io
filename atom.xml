@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2020-03-01T11:23:04.069Z</updated>
+  <updated>2020-03-01T11:24:48.855Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://blog.0kami.cn/2020/03/01/jndi-with-ldap/"/>
     <id>http://blog.0kami.cn/2020/03/01/jndi-with-ldap/</id>
     <published>2020-03-01T11:22:01.000Z</published>
-    <updated>2020-03-01T11:23:04.069Z</updated>
+    <updated>2020-03-01T11:24:48.855Z</updated>
     
     <summary type="html">
     
@@ -29,10 +29,10 @@
     
     </summary>
     
-      <category term="notes|codereview|ctf" scheme="http://blog.0kami.cn/categories/notes-codereview-ctf/"/>
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
     
     
-      <category term="xxxctf|cms|vul|others|cve" scheme="http://blog.0kami.cn/tags/xxxctf-cms-vul-others-cve/"/>
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
     
   </entry>
   
