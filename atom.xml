@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2020-02-29T07:35:19.370Z</updated>
+  <updated>2020-03-01T11:23:04.069Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【notes】JNDI with LDAP</title>
+    <link href="http://blog.0kami.cn/2020/03/01/jndi-with-ldap/"/>
+    <id>http://blog.0kami.cn/2020/03/01/jndi-with-ldap/</id>
+    <published>2020-03-01T11:22:01.000Z</published>
+    <updated>2020-03-01T11:23:04.069Z</updated>
+    
+    <summary type="html">
+    
+      welcome to my blog, enter password to read.
+    
+    </summary>
+    
+      <category term="notes|codereview|ctf" scheme="http://blog.0kami.cn/categories/notes-codereview-ctf/"/>
+    
+    
+      <category term="xxxctf|cms|vul|others|cve" scheme="http://blog.0kami.cn/tags/xxxctf-cms-vul-others-cve/"/>
+    
+  </entry>
   
   <entry>
     <title>【notes】JNDI with RMI</title>
@@ -393,26 +413,6 @@
     
     
       <category term="others" scheme="http://blog.0kami.cn/tags/others/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【Code Review】DM企业建站系统前台盲注</title>
-    <link href="http://blog.0kami.cn/2017/01/29/old-DM-sql-injection/"/>
-    <id>http://blog.0kami.cn/2017/01/29/old-DM-sql-injection/</id>
-    <published>2017-01-29T13:24:30.000Z</published>
-    <updated>2018-01-25T07:18:06.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;今天搞了一下动态调试的东西，然后顺便看了看上次下的&lt;a href=&quot;http://www.demososo.com/down.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;DM企业建站系统2017.01.23&lt;/a&gt;。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="codereview" scheme="http://blog.0kami.cn/categories/codereview/"/>
-    
-    
-      <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
     
   </entry>
   
