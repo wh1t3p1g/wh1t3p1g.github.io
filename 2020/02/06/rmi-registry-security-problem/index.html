@@ -46,7 +46,7 @@
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200317203347230.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200317203723497.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200317203838431.png">
-<meta property="og:updated_time" content="2020-03-17T12:41:56.956Z">
+<meta property="og:updated_time" content="2020-03-18T06:28:03.067Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【notes】浅谈Java RMI Registry反序列化安全问题">
 <meta name="twitter:description" content="0x00 前言本文讲述了Java RMI Registry 远程bind对象所带来的反序列化问题，包括两个level，具体见下面">
@@ -186,7 +186,7 @@
 <p>正确的地方在于：确实是这个位置调用触发了readObject，但需要合适的版本。</p>
 <p>错误的地方在于：在实际的readObject之前，会经过<code>RegistryImpl.checkAccess</code>，这部分调用将否决非当前本机地址的绑定，这里也就意味着我们如果攻击一台主机的Registry，无法直接到达Remote的readObject阶段。</p>
 <p>（ps：之前调试攻击的时候，用的都是同一个主机，所以他也没报这个错误）</p>
-<p>（ps：出问题的地方在于JDK8u131版本之后，新增加了RegistryImpl_Skel，而以前都是动态生成的，如下图，他是没有做access检查的） </p>
+<p>（ps：出问题的地方在于JDK8u141版本之后，新增加了RegistryImpl_Skel，而以前都是动态生成的，如下图，他是没有做access检查的） </p>
 <p><img src="/assets/rmi-registry-security-problem-20200206//image-20200317175519024.png" alt="image-20200317175519024"></p>
 <p>然后什么时候对host进行检查呢？</p>
 <p><img src="/assets/rmi-registry-security-problem-20200206/image-20200317175608779.png" alt="image-20200317175608779"></p>
