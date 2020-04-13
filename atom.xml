@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2020-03-18T08:15:37.511Z</updated>
+  <updated>2020-04-13T11:31:49.457Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -17,11 +17,31 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>【notes】浅谈fastjson反序列化漏洞</title>
+    <link href="http://blog.0kami.cn/2020/04/13/talk-about-fastjson-deserialization/"/>
+    <id>http://blog.0kami.cn/2020/04/13/talk-about-fastjson-deserialization/</id>
+    <published>2020-04-13T08:31:09.000Z</published>
+    <updated>2020-04-13T11:31:49.457Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;最近又碰上了fastjson的题目，想着是时候分析一波这个漏洞了，跟上师傅们的脚步。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
+  
+  <entry>
     <title>【notes】攻击Java JMX-RMI</title>
     <link href="http://blog.0kami.cn/2020/03/10/java-jmx-rmi/"/>
     <id>http://blog.0kami.cn/2020/03/10/java-jmx-rmi/</id>
     <published>2020-03-10T12:51:30.000Z</published>
-    <updated>2020-03-18T08:15:37.511Z</updated>
+    <updated>2020-04-13T08:36:55.282Z</updated>
     
     <summary type="html">
     
@@ -197,15 +217,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:28:38.670Z</updated>
+    <updated>2019-10-25T01:27:35.336Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
     
     </summary>
     
@@ -217,15 +237,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:27:35.336Z</updated>
+    <updated>2019-10-25T01:28:38.670Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
     
     </summary>
     
@@ -393,26 +413,6 @@
     
     
       <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【CTF】NJCTF2017 writeup</title>
-    <link href="http://blog.0kami.cn/2017/03/15/old-njctf-2017/"/>
-    <id>http://blog.0kami.cn/2017/03/15/old-njctf-2017/</id>
-    <published>2017-03-15T03:29:05.000Z</published>
-    <updated>2018-01-25T07:31:22.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;辞职后没事情干，刚好赶上njctf，还是一样菜啊，只做了7道题，还要继续努力💪（ps:毕业设计什么鬼啊）写一下web的writeup，由于题目还开着，把没做出来的做一遍，纪录一下我觉得有必要记的题&lt;br&gt;
-    
-    </summary>
-    
-      <category term="ctf" scheme="http://blog.0kami.cn/categories/ctf/"/>
-    
-    
-      <category term="njctf" scheme="http://blog.0kami.cn/tags/njctf/"/>
     
   </entry>
   
