@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2020-04-13T11:31:49.457Z</updated>
+  <updated>2020-04-18T11:46:16.653Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【notes】回顾XStream反序列化漏洞</title>
+    <link href="http://blog.0kami.cn/2020/04/18/talk-about-xstream-deserialization/"/>
+    <id>http://blog.0kami.cn/2020/04/18/talk-about-xstream-deserialization/</id>
+    <published>2020-04-18T11:44:58.000Z</published>
+    <updated>2020-04-18T11:46:16.653Z</updated>
+    
+    <summary type="html">
+    
+      welcome to my blog, enter password to read.
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
   
   <entry>
     <title>【notes】浅谈fastjson反序列化漏洞</title>
@@ -386,26 +406,6 @@
     <summary type="html">
     
       &lt;h1 id=&quot;0x00&quot;&gt;&lt;a href=&quot;#0x00&quot; class=&quot;headerlink&quot; title=&quot;0x00&quot;&gt;&lt;/a&gt;0x00&lt;/h1&gt;&lt;p&gt;Detail: &lt;a href=&quot;https://www.exploit-db.com/exploits/43346/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Movie Guide v2.0 SQL Injection&lt;/a&gt;&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="codereview" scheme="http://blog.0kami.cn/categories/codereview/"/>
-    
-    
-      <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【Code Review】seacms v6.5 前台getshell</title>
-    <link href="http://blog.0kami.cn/2017/03/16/old-seacms-v6-5-getshell/"/>
-    <id>http://blog.0kami.cn/2017/03/16/old-seacms-v6-5-getshell/</id>
-    <published>2017-03-16T07:47:15.000Z</published>
-    <updated>2018-01-25T07:28:34.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;前段时间放在&lt;a href=&quot;https://forum.90sec.org/forum.php?mod=viewthread&amp;amp;tid=10291&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;90sec&lt;/a&gt;上的一篇代码审计，收拾一下放到自己博客上&lt;br&gt;
     
     </summary>
     
