@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
-  <title>【notes】浅谈Java RMI Registry反序列化安全问题 | 0kami&#39;s Blog</title>
+  <title>【notes】浅谈Java RMI Registry安全问题 | 0kami&#39;s Blog</title>
   <meta name="description" content="A Web 🐶 &amp;&amp; Code Reviewer">
   <meta name="keywords" content>
   <meta name="HandheldFriendly" content="True">
@@ -12,18 +12,19 @@
   <link rel="shortcut icon" href="/images/avatar.jpg">
   <link rel="alternate" href="/atom.xml" title="0kami's Blog">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00 前言本文讲述了Java RMI Registry 远程bind对象所带来的反序列化问题，包括两个level，具体见下面">
+  <meta name="description" content="0x00 前言本文讲述了Java RMI Registry相关的反序列化问题，主讲Registry，后续补充了Client端和Server端的利用">
 <meta name="keywords" content="vul">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【notes】浅谈Java RMI Registry反序列化安全问题">
+<meta property="og:title" content="【notes】浅谈Java RMI Registry安全问题">
 <meta property="og:url" content="http://blog.0kami.cn/2020/02/06/rmi-registry-security-problem/index.html">
 <meta property="og:site_name" content="0kami&#39;s Blog">
-<meta property="og:description" content="0x00 前言本文讲述了Java RMI Registry 远程bind对象所带来的反序列化问题，包括两个level，具体见下面">
+<meta property="og:description" content="0x00 前言本文讲述了Java RMI Registry相关的反序列化问题，主讲Registry，后续补充了Client端和Server端的利用">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200317175519024.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206//image-20200317175519024.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200317175608779.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200317181813002.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200512141031125.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200512141411217.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200110145154688.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200110145346319.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200131185848839.png">
@@ -35,6 +36,9 @@
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200110220150019.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200110220710690.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200110220823670.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200512145332476.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200512145824806.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200512150213665.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200118182504042.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200202161819982.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200202163234429.png">
@@ -46,10 +50,10 @@
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200317203347230.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200317203723497.png">
 <meta property="og:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200317203838431.png">
-<meta property="og:updated_time" content="2020-03-18T06:28:03.067Z">
+<meta property="og:updated_time" content="2020-05-12T07:18:31.533Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【notes】浅谈Java RMI Registry反序列化安全问题">
-<meta name="twitter:description" content="0x00 前言本文讲述了Java RMI Registry 远程bind对象所带来的反序列化问题，包括两个level，具体见下面">
+<meta name="twitter:title" content="【notes】浅谈Java RMI Registry安全问题">
+<meta name="twitter:description" content="0x00 前言本文讲述了Java RMI Registry相关的反序列化问题，主讲Registry，后续补充了Client端和Server端的利用">
 <meta name="twitter:image" content="http://blog.0kami.cn/assets/rmi-registry-security-problem-20200206/image-20200317175519024.png">
 
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
@@ -157,7 +161,7 @@
 	<section class='meta'>
 	<h2 class="title">
   	<a href="/2020/02/06/rmi-registry-security-problem/">
-    	【notes】浅谈Java RMI Registry反序列化安全问题
+    	【notes】浅谈Java RMI Registry安全问题
     </a>
   </h2>
 	<time>
@@ -171,30 +175,34 @@
 
 	</section>
 	
-		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-前言"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-原理"><span class="toc-number">2.</span> <span class="toc-text">0x01 原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#20200317-错误更新"><span class="toc-number">2.1.</span> <span class="toc-text">20200317 错误更新</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-Level-1"><span class="toc-number">3.</span> <span class="toc-text">0x02 Level 1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简单看一下ysoserial-exploit-RMIRegisterExploit的原理"><span class="toc-number">3.1.</span> <span class="toc-text">简单看一下ysoserial.exploit.RMIRegisterExploit的原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-Level-2"><span class="toc-number">4.</span> <span class="toc-text">0x03 Level 2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-UnicastRef对象"><span class="toc-number">4.1.</span> <span class="toc-text">1. UnicastRef对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-RemoteObjectInvocationHandler对象"><span class="toc-number">4.2.</span> <span class="toc-text">2. RemoteObjectInvocationHandler对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-RMIConnectionImpl-Stub对象"><span class="toc-number">4.3.</span> <span class="toc-text">3. RMIConnectionImpl_Stub对象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-后续"><span class="toc-number">5.</span> <span class="toc-text">0x04 后续</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-番外：ysoserial中的JRMPListener与JRMPClient"><span class="toc-number">6.</span> <span class="toc-text">0x05 番外：ysoserial中的JRMPListener与JRMPClient</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-总结"><span class="toc-number">7.</span> <span class="toc-text">0x06 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x07-20200303更新-UnicastRemoteObject-Gadget"><span class="toc-number">8.</span> <span class="toc-text">0x07 20200303更新 UnicastRemoteObject Gadget</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x08-RMI-DGC实现问题-JRMPClient"><span class="toc-number">9.</span> <span class="toc-text">0x08 RMI DGC实现问题(JRMPClient)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x09-总结中第二种方式的触发点（20200317-更新）"><span class="toc-number">10.</span> <span class="toc-text">0x09 总结中第二种方式的触发点（20200317 更新）</span></a></li></ol></section>
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-前言"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-原理"><span class="toc-number">2.</span> <span class="toc-text">0x01 原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#情景一：Registry-接收bind-rebind请求"><span class="toc-number">2.1.</span> <span class="toc-text">情景一：Registry 接收bind/rebind请求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#注意：bind-rebind请求的限制"><span class="toc-number">2.1.1.</span> <span class="toc-text">注意：bind/rebind请求的限制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#情景二：Registry接收lookup请求"><span class="toc-number">2.2.</span> <span class="toc-text">情景二：Registry接收lookup请求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-攻击Registry-jdk-lt-8u121"><span class="toc-number">3.</span> <span class="toc-text">0x02 攻击Registry jdk&lt;8u121</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简单看一下ysoserial-exploit-RMIRegisterExploit的原理"><span class="toc-number">3.1.</span> <span class="toc-text">简单看一下ysoserial.exploit.RMIRegisterExploit的原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-攻击Registry-jdk-lt-8u232-b09"><span class="toc-number">4.</span> <span class="toc-text">0x03 攻击Registry jdk&lt;8u232_b09</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-UnicastRef对象"><span class="toc-number">4.1.</span> <span class="toc-text">1. UnicastRef对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-RemoteObjectInvocationHandler对象"><span class="toc-number">4.2.</span> <span class="toc-text">2. RemoteObjectInvocationHandler对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-RMIConnectionImpl-Stub对象"><span class="toc-number">4.3.</span> <span class="toc-text">3. RMIConnectionImpl_Stub对象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-后续-jdk-gt-8u232-b09"><span class="toc-number">5.</span> <span class="toc-text">0x04 后续 jdk&gt;=8u232_b09</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一：RegistryImpl-Skel"><span class="toc-number">5.1.</span> <span class="toc-text">一：RegistryImpl_Skel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二：DGCImpl-Stub"><span class="toc-number">5.2.</span> <span class="toc-text">二：DGCImpl_Stub</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-番外：ysoserial中的JRMPListener与JRMPClient"><span class="toc-number">6.</span> <span class="toc-text">0x05 番外：ysoserial中的JRMPListener与JRMPClient</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-总结"><span class="toc-number">7.</span> <span class="toc-text">0x06 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x07-20200303更新-UnicastRemoteObject-Gadget"><span class="toc-number">8.</span> <span class="toc-text">0x07 20200303更新 UnicastRemoteObject Gadget</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x08-RMI-DGC实现问题-ysoserial-expliots-JRMPClient"><span class="toc-number">9.</span> <span class="toc-text">0x08 RMI DGC实现问题(ysoserial.expliots.JRMPClient)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x09-总结中第二种方式的触发点（20200317-更新）"><span class="toc-number">10.</span> <span class="toc-text">0x09 总结中第二种方式的触发点（20200317 更新）</span></a></li></ol></section>
 	
 	<section class="article typo">
   	<div class="article-entry" itemprop="articleBody">
-    	<h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>本文讲述了Java RMI Registry 远程bind对象所带来的反序列化问题，包括两个level，具体见下面</p>
+    	<h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>本文讲述了Java RMI Registry相关的反序列化问题，主讲Registry，后续补充了Client端和Server端的利用</p>
 <a id="more"></a>
-<h2 id="0x01-原理"><a href="#0x01-原理" class="headerlink" title="0x01 原理"></a>0x01 原理</h2><p> Java RMI流程可参考<a href="https://xz.aliyun.com/t/2223" target="_blank" rel="noopener">1</a>，出问题的位置在于：</p>
-<p> 从Client接收到的bind或rebind的<code>remote obj</code>，将由<code>sun/rmi/registry/RegistryImpl_Skel.java#dispatch</code>处理</p>
+<h2 id="0x01-原理"><a href="#0x01-原理" class="headerlink" title="0x01 原理"></a>0x01 原理</h2><p>Java RMI流程可参考<a href="https://xz.aliyun.com/t/2223" target="_blank" rel="noopener">1</a>，出问题的位置在于：</p>
+<h3 id="情景一：Registry-接收bind-rebind请求"><a href="#情景一：Registry-接收bind-rebind请求" class="headerlink" title="情景一：Registry 接收bind/rebind请求"></a>情景一：Registry 接收bind/rebind请求</h3><p> 从Client接收到的bind或rebind的<code>remote obj</code>，将由<code>sun/rmi/registry/RegistryImpl_Skel.java#dispatch</code>处理</p>
+<p>（下图为JDK8u141之前的版本的实现）</p>
 <p><img src="/assets/rmi-registry-security-problem-20200206/image-20200317175519024.png" alt="image-20200317175519024"></p>
 <p>可以看到获取到的序列化数据直接调用了readObject函数，导致了常规的Java反序列化漏洞的触发。</p>
 <p>这里我们只需要写一个bind或rebind的操作，即可攻击到RMI Registry。</p>
-<h3 id="20200317-错误更新"><a href="#20200317-错误更新" class="headerlink" title="20200317 错误更新"></a>20200317 错误更新</h3><p>在前面的版本，我指出实际触发的位置为<code>sun/rmi/registry/RegistryImpl_Skel.java#dispatch</code>，这里也错也对。</p>
-<p>正确的地方在于：确实是这个位置调用触发了readObject，但需要合适的版本。</p>
-<p>错误的地方在于：在实际的readObject之前，会经过<code>RegistryImpl.checkAccess</code>，这部分调用将否决非当前本机地址的绑定，这里也就意味着我们如果攻击一台主机的Registry，无法直接到达Remote的readObject阶段。</p>
-<p>（ps：之前调试攻击的时候，用的都是同一个主机，所以他也没报这个错误）</p>
-<p>（ps：出问题的地方在于JDK8u141版本之后，新增加了RegistryImpl_Skel，而以前都是动态生成的，如下图，他是没有做access检查的） </p>
-<p><img src="/assets/rmi-registry-security-problem-20200206//image-20200317175519024.png" alt="image-20200317175519024"></p>
-<p>然后什么时候对host进行检查呢？</p>
+<h4 id="注意：bind-rebind请求的限制"><a href="#注意：bind-rebind请求的限制" class="headerlink" title="注意：bind/rebind请求的限制"></a>注意：bind/rebind请求的限制</h4><p>Registry对于bind/rebind的请求，会去检查这个请求是否为本地请求，对于外部的请求，Registry会拒绝该请求。</p>
+<p>这里思路是正确的，可以防止外部的恶意绑定，但是他在实现上存在问题。</p>
+<p>JDK 8u141之前，首先会去接收传送过来的对象，并将其进行<code>readObject</code>反序列化，实际判断是否为本地请求，是在put新的绑定对象之前进行的。这意味着在checkAccess之前我们就可以完成反序列化操作，该限制并没有起到相应的作用。</p>
 <p><img src="/assets/rmi-registry-security-problem-20200206/image-20200317175608779.png" alt="image-20200317175608779"></p>
-<p>这里实际是在put新的obj之前进行的host检查（emmm，所以我以为后续的版本他的检查也是这样的）。</p>
-<p>而JDK8u141开始，单独新增了RegistryImpl_Skel.java（这里我翻了网上的各个版本，发现141开始有这个文件，具体<a href="http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/rev/c92d704420d7" target="_blank" rel="noopener">版本</a>），而不再是以前的动态生成的方式来做。</p>
-<p>新增后，我们可以看到在实际的readObject就会进行检查host（第69行），如果host非本地的，那么也就没有后续的readObject调用了。</p>
+<p>而在JDK 8u141版本之后，<code>sun/rmi/registry/RegistryImpl_Skel.java#dispatch</code></p>
 <p><img src="/assets/rmi-registry-security-problem-20200206/image-20200317181813002.png" alt="image-20200317181813002"></p>
-<h2 id="0x02-Level-1"><a href="#0x02-Level-1" class="headerlink" title="0x02 Level 1"></a>0x02 Level 1</h2><p>Level1 使用的是jdk8u111，该版本下的RMI Registry接收的remote obj只要继承了Remote类即可（原理见<a href="https://www.freebuf.com/vuls/126499.html" target="_blank" rel="noopener">2</a>），没有其他的限制。</p>
+<p>这里会先去判断是否为本地绑定请求，然后再进行反序列化。</p>
+<p>所以如果要使用bind/rebind请求来远程攻击Registry，JDK版本必须在8u141之前</p>
+<h3 id="情景二：Registry接收lookup请求"><a href="#情景二：Registry接收lookup请求" class="headerlink" title="情景二：Registry接收lookup请求"></a>情景二：Registry接收lookup请求</h3><p>由于bind/rebind请求在141后续版本存在限制，所以为了攻击Registry我们必须找其他的方法。</p>
+<p>在RMI里客户端向Registry发起lookup请求是不限制请求源的，那么lookup是否可以被我们利用呢？</p>
+<p>答案是肯定的，来看<code>sun.rmi.registry.RegistryImpl_Skel#dispatch</code>对于lookup请求的处理</p>
+<p><img src="/assets/rmi-registry-security-problem-20200206/image-20200512141031125.png" alt="image-20200512141031125"></p>
+<p>可以看到在这里，接收到lookup发送过来的内容时，也是直接对其进行反序列化操作。但是这里并没有bind/rebind的请求源限制，所以我们可以直接lookup发起对141版本之后的registry的攻击。</p>
+<p>我们在构造lookup函数请求时，只需重新实现一下lookup函数的实现就可以了（这里将Naming.lookup和RegistryImpl_Stub.lookup进行了合并，并将传送过去的内容改成了任意的Object对象）。</p>
+<p><img src="/assets/rmi-registry-security-problem-20200206/image-20200512141411217.png" alt="image-20200512141411217"></p>
+<h2 id="0x02-攻击Registry-jdk-lt-8u121"><a href="#0x02-攻击Registry-jdk-lt-8u121" class="headerlink" title="0x02 攻击Registry jdk&lt;8u121"></a>0x02 攻击Registry jdk&lt;8u121</h2><p>环境使用jdk8u111，该版本下的RMI Registry接收的remote obj只要继承了Remote类即可（原理见<a href="https://www.freebuf.com/vuls/126499.html" target="_blank" rel="noopener">2</a>），没有其他的限制。</p>
 <p>ysoserial工具中的<code>ysoserial.exploit.RMIRegisterExploit</code>采用了代理Remote类的方式来解决这个限制。</p>
 <p>使用如下命令即可</p>
 <p><code>java -cp ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.RMIRegistryExploit RMIRegisterHost RMIRegisterPort CommonsCollections7 &quot;open /System/Applications/Calculator.app&quot;</code></p>
@@ -202,10 +210,10 @@
 <p><img src="/assets/rmi-registry-security-problem-20200206/image-20200110145154688.png" alt="image-20200110145154688"></p>
 <p>接下来，远程bind对象将构造好的remote对象传过去即可，来看一下这个代码</p>
 <p><img src="/assets/rmi-registry-security-problem-20200206/image-20200110145346319.png" alt="image-20200110145346319"></p>
-<h2 id="0x03-Level-2"><a href="#0x03-Level-2" class="headerlink" title="0x03 Level 2"></a>0x03 Level 2</h2><p>Level2采用的是修复后的版本jdk8u121，修复后的版本里，对反序列化的类做了白名单限制，见<code>sun/rmi/registry/RegistryImpl.java#registryFilter</code></p>
+<h2 id="0x03-攻击Registry-jdk-lt-8u232-b09"><a href="#0x03-攻击Registry-jdk-lt-8u232-b09" class="headerlink" title="0x03 攻击Registry jdk&lt;8u232_b09"></a>0x03 攻击Registry jdk&lt;8u232_b09</h2><p>jdk8u121修复后的版本里，对反序列化的类做了白名单限制，见<code>sun/rmi/registry/RegistryImpl.java#registryFilter</code></p>
 <p>这个白名单包括：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (String.class == clazz</span><br><span class="line">        || java.lang.Number.class.isAssignableFrom(clazz)</span><br><span class="line">        || Remote.class.isAssignableFrom(clazz)</span><br><span class="line">        || java.lang.reflect.Proxy.class.isAssignableFrom(clazz)</span><br><span class="line">        || UnicastRef.class.isAssignableFrom(clazz)</span><br><span class="line">        || RMIClientSocketFactory.class.isAssignableFrom(clazz)</span><br><span class="line">        || RMIServerSocketFactory.class.isAssignableFrom(clazz)</span><br><span class="line">        || java.rmi.activation.ActivationID.class.isAssignableFrom(clazz)</span><br><span class="line">        || java.rmi.server.UID.class.isAssignableFrom(clazz)) &#123;</span><br><span class="line">    <span class="keyword">return</span> ObjectInputFilter.Status.ALLOWED;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> ObjectInputFilter.Status.REJECTED;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Level1中发送的对象是代理后的AnnotationInvocationHandler对象，并不在上述允许的类里面，这导致原先ysoserial工具中的ysoserial.exploit.RMIRegisterExploit无法利用。这里我们参考<a href="http://www.codersec.net/2018/09/一次攻击内网rmi服务的深思/" target="_blank" rel="noopener">3</a>的方法来达成利用。</p>
+<p>0x02中发送的对象是代理后的AnnotationInvocationHandler对象，并不在上述允许的类里面，这导致原先ysoserial工具中的ysoserial.exploit.RMIRegisterExploit无法利用。这里我们参考<a href="http://www.codersec.net/2018/09/一次攻击内网rmi服务的深思/" target="_blank" rel="noopener">3</a>的方法来达成利用。</p>
 <p>首先思路比较明确的是，如果要绕过这个限制，我们需要在上述的白名单里找到可以利用的对象。</p>
 <p>在白名单里我们注意一下两个特殊对象Remote对象和UnicastRef对象</p>
 <h3 id="1-UnicastRef对象"><a href="#1-UnicastRef对象" class="headerlink" title="1. UnicastRef对象"></a>1. UnicastRef对象</h3><p>我们都知道RMI过程中存在客户端与服务器端之间的交互，那么在代码层面，我们需要怎么去创造这样一个链接呢？</p>
@@ -245,13 +253,19 @@
 <h3 id="3-RMIConnectionImpl-Stub对象"><a href="#3-RMIConnectionImpl-Stub对象" class="headerlink" title="3. RMIConnectionImpl_Stub对象"></a>3. RMIConnectionImpl_Stub对象</h3><p>前面提到了两种思路，还有一种就是找到一个实现了Remote接口并且封装了ref的对象，这里RMIConnectionImpl_Stub对象就是</p>
 <p>RemoteObjectInvocationHandler后续的触发主要依靠RemoteObject对象的readObject函数的重新填充，而RMIConnectionImpl_Stub对象也继承了RemoteObject所以后面的一些调用过程跟第二个对象一样，不再叙述。</p>
 <p>其实顺着思路找还能发现<code>DGCImpl_Stub</code>、<code>RMIServerImpl_Stub</code>、<code>RegistryImpl_Stub</code>、<code>ReferenceWrapper_Stub</code>都可以</p>
-<h2 id="0x04-后续"><a href="#0x04-后续" class="headerlink" title="0x04 后续"></a>0x04 后续</h2><p>（除了下面的限制外，也就<a href="http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/rev/c92d704420d7" target="_blank" rel="noopener">141后续版本</a>是无法进行远程利用的，只能在本地进行利用）</p>
-<p>其实到最新版的jdk8仍然没有处理这个绕过的问题，是不是很开心？</p>
-<p>虽然没有解决rmi服务端的反序列化，但是在发起新的RMI连接时，<code>sun/rmi/transport/DGCImpl_Stub.java#leaseFilter</code></p>
+<h2 id="0x04-后续-jdk-gt-8u232-b09"><a href="#0x04-后续-jdk-gt-8u232-b09" class="headerlink" title="0x04 后续 jdk&gt;=8u232_b09"></a>0x04 后续 jdk&gt;=8u232_b09</h2><p>jdk版本8u232_b09修复了前面使用反向发起JRMP连接的利用。修复点包括两个</p>
+<h3 id="一：RegistryImpl-Skel"><a href="#一：RegistryImpl-Skel" class="headerlink" title="一：RegistryImpl_Skel"></a>一：RegistryImpl_Skel</h3><p><code>sun.rmi.registry.RegistryImpl_Skel#dispatcher</code>，这里截了lookup函数的处理，bind/rebind函数的处理是一样的</p>
+<p><img src="/assets/rmi-registry-security-problem-20200206/image-20200512145332476.png" alt="image-20200512145332476"></p>
+<p>当发生反序列化错误或者类型转换错误时，会调用<code>call.discardPendingRefs</code>，将现有的JRMP连接清除掉。也就意味着这里我们无法用JRMP反向链接的方式来达成利用了。</p>
+<h3 id="二：DGCImpl-Stub"><a href="#二：DGCImpl-Stub" class="headerlink" title="二：DGCImpl_Stub"></a>二：DGCImpl_Stub</h3><p>当Registry处理JRMP反连的时候，会调用<code>DGCImpl_Stub#dirty</code>，而<code>ref.invoke</code>会最终调用<code>sun.rmi.transport.StreamRemoteCall#executeCall</code>来处理返回的异常，这里会最终导致反序列化(详细见0x05番外)</p>
+<p><img src="/assets/rmi-registry-security-problem-20200206/image-20200512145824806.png" alt="image-20200512145824806"></p>
+<p>而在232版本，将原本在后面注册的<code>leaseFilter</code>提到了前面</p>
+<p><img src="/assets/rmi-registry-security-problem-20200206/image-20200512150213665.png" alt="image-20200512150213665"></p>
+<p>看看该过滤器的限制<code>sun/rmi/transport/DGCImpl_Stub.java#leaseFilter</code></p>
 <p><img src="/assets/rmi-registry-security-problem-20200206/image-20200118182504042.png" alt="image-20200118182504042"></p>
-<p>新添加了对于返回的序列化对象的过滤条件，只允许上面的几种类型，而现有的反序列化利用链中HashSet、HashTable等类都是通不过的。也就意味着JRMP这种利用方式在jdk8u232_b09及以上的版本都是不行的（在调用dirty的时候注册了leaseFilter）。</p>
-<p>ps: 其实上诉的过滤很早就有了，甚至还跟严格，但是他的生效仅在jdk8u232_b09上，见<a href="http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/rev/523d48606333#l4.38" target="_blank" rel="noopener">http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/rev/523d48606333#l4.38</a></p>
-<p>ps:这里用的<code>DGCImpl_Stub</code>相对应的还有接收Client发起的连接的处理<code>DGCImpl_Skel</code>，skel这里也存在反序列化漏洞，具体见0x08</p>
+<p>对于返回的序列化对象，只允许上面的几种类型，而现有的反序列化利用链中HashSet、HashTable等类都是通不过的。</p>
+<p>所以在Registry发起的反向连接是无法利用成功的。</p>
+<p>ps:这里用的<code>DGCImpl_Stub</code>是客户端发起时使用的，相对应的还有server端接收Client发起的连接的处理<code>DGCImpl_Skel</code>，skel这里也存在反序列化漏洞，具体见0x08</p>
 <h2 id="0x05-番外：ysoserial中的JRMPListener与JRMPClient"><a href="#0x05-番外：ysoserial中的JRMPListener与JRMPClient" class="headerlink" title="0x05 番外：ysoserial中的JRMPListener与JRMPClient"></a>0x05 番外：ysoserial中的JRMPListener与JRMPClient</h2><p>看了上面可能你会疑惑，为什么server端发起一个RMI的连接就会触发java反序列化？</p>
 <p>前文我们将的是RMI Registry在接收远程绑定对象时所发生的反序列化漏洞，那么RMI Client在接收Server端的数据时是否也会发生反序列化漏洞呢？答案是肯定的，毕竟RMI交互过程中的数据采用的是序列化的数据，也就意味着存在着一个反序列化的过程。</p>
 <p>看一下JRMPListener的代码，简单来说，其实现了与RMI Client的交互流程。这里我们直接看重点的代码</p>
@@ -262,7 +276,7 @@
 <p>在这里我们看到了熟悉的readObject函数，其用于将前面的Exception进行反序列化。</p>
 <p>到这里就可以串起来了，Client发起RMI连接，连接到我们的恶意Listener上面。而我们的Listener将返回一个构造好的Exception，旨在Client接收到ExceptionalReturn的信号时进行还原，从而造成了RMI Client端也受到反序列化漏洞的攻击。</p>
 <h2 id="0x06-总结"><a href="#0x06-总结" class="headerlink" title="0x06 总结"></a>0x06 总结</h2><p>前文主要讲诉了RMI的相关反序列化问题，包括RMI Registry和RMI Client接收到反序列化数据时产生的反序列化漏洞。</p>
-<p>全文所使用的JDK版本为JDK8，在分析过程中，发现在最近的JDK8u版本上，已无法使用JRMPListener的这种方式来利用了，但其在JDK8u232_b09之前的版本还是可以的。</p>
+<p>全文所使用的JDK版本为JDK8，在分析过程中，发现在最近的JDK8u版本上，已无法对RMI Registry发起攻击，但其在JDK8u232_b09之前的版本还是可以的。</p>
 <p>本文主要攻击的是RMI Registry，而RMI的攻击面不单单文中提到的这种方式，还存在</p>
 <ol>
 <li>针对codebase的攻击见<a href="https://github.com/vulhub/vulhub/blob/master/java/rmi-codebase/README.md，加载我们构造好的class。当然现在这种情况比较少了。" target="_blank" rel="noopener">https://github.com/vulhub/vulhub/blob/master/java/rmi-codebase/README.md，加载我们构造好的class。当然现在这种情况比较少了。</a></li>
@@ -275,7 +289,8 @@
 <p><img src="/assets/rmi-registry-security-problem-20200206/image-20200303203931864.png" alt="image-20200303203931864"></p>
 <p>原来的对象会被转化成上面的一个结构，这里直接丢掉了UnicastRemoteObject，自然在Registry端无法从UnicastRemoteObject的readObject函数开始，这样这个Gadget就无法成功利用了。</p>
 <p>要想利用这个链来绕过限制，我们可能得自己写一个bind的过程才可以，把getTarget的过程去掉直接发过去。这个Gadget利用价值比较低XD</p>
-<h2 id="0x08-RMI-DGC实现问题-JRMPClient"><a href="#0x08-RMI-DGC实现问题-JRMPClient" class="headerlink" title="0x08 RMI DGC实现问题(JRMPClient)"></a>0x08 RMI DGC实现问题(JRMPClient)</h2><p>在JEP290之前，RMI的DGCImpl_skel#dipatch接收处，获取到数据后，直接readObject造成的。</p>
+<p>ps：貌似可以通过重写的方式来解决这个问题，这里有空再分析XD</p>
+<h2 id="0x08-RMI-DGC实现问题-ysoserial-expliots-JRMPClient"><a href="#0x08-RMI-DGC实现问题-ysoserial-expliots-JRMPClient" class="headerlink" title="0x08 RMI DGC实现问题(ysoserial.expliots.JRMPClient)"></a>0x08 RMI DGC实现问题(ysoserial.expliots.JRMPClient)</h2><p>在JEP290之前，RMI的DGCImpl_skel#dipatch接收处，获取到数据后，直接readObject造成的。</p>
 <p><img src="/assets/rmi-registry-security-problem-20200206/image-20200306202106633.png" alt="image-20200306202106633"></p>
 <p>在JEP290之后，反序列化前做了校验，见DGCImpl</p>
 <p><img src="/assets/rmi-registry-security-problem-20200206/image-20200306202539911.png" alt="image-20200306202539911"></p>
@@ -323,7 +338,7 @@
 </article>
 <script>
 	window.subData = {
-		title: '【notes】浅谈Java RMI Registry反序列化安全问题',
+		title: '【notes】浅谈Java RMI Registry安全问题',
 		tools: true
 	}
 </script>

@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2020-04-22T15:26:44.248Z</updated>
+  <updated>2020-05-12T07:19:15.999Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -21,11 +21,12 @@
     <link href="http://blog.0kami.cn/2020/04/18/talk-about-xstream-deserialization/"/>
     <id>http://blog.0kami.cn/2020/04/18/talk-about-xstream-deserialization/</id>
     <published>2020-04-18T11:44:58.000Z</published>
-    <updated>2020-04-22T15:26:44.248Z</updated>
+    <updated>2020-05-12T07:19:15.999Z</updated>
     
     <summary type="html">
     
-      welcome to my blog, enter password to read.
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;hr&gt;
+&lt;p&gt;&lt;a href=&quot;https://x-stream.github.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;XStream&lt;/a&gt;也是一款用的比较多的序列化组件，可以将object转化为XML并能完整的还原回来。他也曾经出现过反序列化漏洞，本文主要整理XStream相关的安全问题XD&lt;/p&gt;
     
     </summary>
     
@@ -117,15 +118,15 @@
   </entry>
   
   <entry>
-    <title>【notes】浅谈Java RMI Registry反序列化安全问题</title>
+    <title>【notes】浅谈Java RMI Registry安全问题</title>
     <link href="http://blog.0kami.cn/2020/02/06/rmi-registry-security-problem/"/>
     <id>http://blog.0kami.cn/2020/02/06/rmi-registry-security-problem/</id>
     <published>2020-02-06T07:23:36.000Z</published>
-    <updated>2020-03-18T06:28:03.067Z</updated>
+    <updated>2020-05-12T07:18:31.533Z</updated>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h2&gt;&lt;p&gt;本文讲述了Java RMI Registry 远程bind对象所带来的反序列化问题，包括两个level，具体见下面&lt;/p&gt;
+      &lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h2&gt;&lt;p&gt;本文讲述了Java RMI Registry相关的反序列化问题，主讲Registry，后续补充了Client端和Server端的利用&lt;/p&gt;
     
     </summary>
     
@@ -237,15 +238,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:28:38.670Z</updated>
+    <updated>2019-10-25T01:27:35.336Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
     
     </summary>
     
@@ -257,15 +258,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/thinkphp-6-0-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/thinkphp-5-2-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:27:35.336Z</updated>
+    <updated>2019-10-25T01:28:38.670Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
     
     </summary>
     
