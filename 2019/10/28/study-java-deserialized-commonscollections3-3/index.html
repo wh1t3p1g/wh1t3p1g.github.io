@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>【notes】Java反序列化利用链挖掘之CommonsCollections3 | 0kami&#39;s Blog</title>
+  <meta name="description" content="A Web 🐶 &amp;&amp; Code Reviewer">
+  <meta name="keywords" content>
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" href="/images/avatar.jpg">
+  <link rel="alternate" href="/atom.xml" title="0kami's Blog">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="0x00 前言前面分析了ysoserial的CommonsCollections1，熟悉了一点Java反序列化。本文将继续分析ysoserial的利用，今天的主角是CommonsCollections3.">
+<meta name="keywords" content="vul">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【notes】Java反序列化利用链挖掘之CommonsCollections3">
+<meta property="og:url" content="http://blog.0kami.cn/2019/10/28/study-java-deserialized-commonscollections3-3/index.html">
+<meta property="og:site_name" content="0kami&#39;s Blog">
+<meta property="og:description" content="0x00 前言前面分析了ysoserial的CommonsCollections1，熟悉了一点Java反序列化。本文将继续分析ysoserial的利用，今天的主角是CommonsCollections3.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025190617899.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025215544053.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025215631300.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025215358907.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025215202858.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025215052940.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191028155646352.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections3-3-20191028/image-20191104193635375.png">
+<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections3-3-20191028/image-20191104194440916.png">
+<meta property="og:updated_time" content="2020-01-08T02:12:33.696Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【notes】Java反序列化利用链挖掘之CommonsCollections3">
+<meta name="twitter:description" content="0x00 前言前面分析了ysoserial的CommonsCollections1，熟悉了一点Java反序列化。本文将继续分析ysoserial的利用，今天的主角是CommonsCollections3.">
+<meta name="twitter:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025190617899.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href="//cdn.bootcss.com/node-waves/0.7.5/waves.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+</head>
+</html>
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class='wrapper'>
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href='/' >
+				0kami's Blog
+			</a>
+			<div class='menu'>
+				<ul class='h-list'>
+					
+						<li>
+							<a class='flat-box nav-home' href='/'>
+								Home
+							</a>
+						</li>
+					
+						<li>
+							<a class='flat-box nav-archives' href='/archives'>
+								Archives
+							</a>
+						</li>
+					
+						<li>
+							<a class='flat-box nav-about' href='/about'>
+								About
+							</a>
+						</li>
+					
+				</ul>
+				<div class='underline'></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="Search" />
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class='switcher h-list'>
+				
+					<li class='s-search'><a href='javascript:void(0)'><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class='s-menu'><a href='javascript:void(0)'><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class='nav-sub container container--flex'>
+			<a class="logo" class="flat-box" href='javascript:void(0)'>
+				Word of Forks
+			</a>
+
+			<ul class='switcher h-list'>
+				<li class='s-comment'><a href='javascript:void(0)'><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class='s-top'><a href='javascript:void(0)'><span class="icon icon-arrow_upward flat-box"></span></a></li>
+				<li class='s-toc'><a href='javascript:void(0)'><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/" class="nav-home nav">
+				Home
+			</a>
+		
+			<a href="/archives" class="nav-archives nav">
+				Archives
+			</a>
+		
+			<a href="/about" class="nav-about nav">
+				About
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        <article id="post-study-java-deserialized-commonscollections3-3"
+  class="post white-box article-type-post"
+  itemscope itemprop="blogPost">
+	<section class='meta'>
+	<h2 class="title">
+  	<a href="/2019/10/28/study-java-deserialized-commonscollections3-3/">
+    	【notes】Java反序列化利用链挖掘之CommonsCollections3
+    </a>
+  </h2>
+	<time>
+	  Oct 28, 2019
+	</time>
+	
+    
+    <div class='cats'>
+        <a href="/categories/notes/">notes</a>
+    </div>
+
+	</section>
+	
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x00-前言"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-环境准备"><span class="toc-number">2.</span> <span class="toc-text">0x01 环境准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-基础知识"><span class="toc-number">3.</span> <span class="toc-text">0x02 基础知识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x03-利用链分析"><span class="toc-number">4.</span> <span class="toc-text">0x03 利用链分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-前景回顾"><span class="toc-number">4.1.</span> <span class="toc-text">1. 前景回顾</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-新的命令执行利用链"><span class="toc-number">4.2.</span> <span class="toc-text">2. 新的命令执行利用链</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x04-总结"><span class="toc-number">5.</span> <span class="toc-text">0x04 总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#20191104-补充"><span class="toc-number">5.0.1.</span> <span class="toc-text">20191104 补充</span></a></li></ol></li></ol></li></ol></section>
+	
+	<section class="article typo">
+  	<div class="article-entry" itemprop="articleBody">
+    	<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>前面分析了ysoserial的CommonsCollections1，熟悉了一点Java反序列化。本文将继续分析ysoserial的利用，今天的主角是CommonsCollections3.</p>
+<a id="more"></a>
+<h1 id="0x01-环境准备"><a href="#0x01-环境准备" class="headerlink" title="0x01 环境准备"></a>0x01 环境准备</h1><p>首先由于override的原因，环境使用的是jdk7u80。利用ysoserial生成payload，并载入调试。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar ysoserial-master-30099844c6-1.jar CommonsCollections3 <span class="string">"open /System/Applications/Calculator.app"</span> &gt; commonscollections3.ser</span><br></pre></td></tr></table></figure>
+<h1 id="0x02-基础知识"><a href="#0x02-基础知识" class="headerlink" title="0x02 基础知识"></a>0x02 基础知识</h1><p>在分析开始前，先补充一下基础知识</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticBlockTest</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cracker</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] generate()&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            String code = <span class="string">"&#123;java.lang.Runtime.getRuntime().exec(\"open /System/Applications/Calculator.app\");&#125;"</span>;</span><br><span class="line">            ClassPool pool = ClassPool.getDefault();</span><br><span class="line">            CtClass clazz = pool.get(StaticBlockTest<span class="class">.<span class="keyword">class</span>.<span class="title">getName</span>())</span>;</span><br><span class="line">            clazz.setName(<span class="string">"demo"</span>);</span><br><span class="line">            clazz.makeClassInitializer().insertAfter(code);</span><br><span class="line">            <span class="keyword">return</span> clazz.toBytecode();</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] clazz = generate();</span><br><span class="line">        DefiningClassLoader loader = <span class="keyword">new</span> DefiningClassLoader();</span><br><span class="line">        Class cls = loader.defineClass(<span class="string">"demo"</span>,clazz);<span class="comment">// 从字节数组中恢复类</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            cls.newInstance(); <span class="comment">// 实例化该类时会自动调用静态块内的代码</span></span><br><span class="line">        &#125; </span><br><span class="line">      	<span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过上面这个例子，我们可以获得的知识点主要为两点：</p>
+<p>​        a. defineClass可以从byte数组中恢复一个Class</p>
+<p>​       b. static initializer在类实例化时将自动执行（静态块内的代码）</p>
+<p>Java中动态调用的另一种方式是<code>defineClass</code></p>
+<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025190617899.png" alt="image-20191025190617899"></p>
+<p>Java提供了ClassLoader从bytes数组中还原Class的方法，defineClass函数就是完成这一过程的函数。</p>
+<p>理论上，如果代码中使用了这种方式，且byte数据的内容可控，我们可以执行任意Java代码。为什么呢？</p>
+<p>这里就用到了Java类的另一个特性，static block在类实例化时会自动执行块内的代码。我们可以通过javassist对静态块注入任意代码，该类被恢复并实例化时就会调用注入的代码，后文的利用链主要就是用到了这两个知识点。</p>
+<h1 id="0x03-利用链分析"><a href="#0x03-利用链分析" class="headerlink" title="0x03 利用链分析"></a>0x03 利用链分析</h1><h2 id="1-前景回顾"><a href="#1-前景回顾" class="headerlink" title="1. 前景回顾"></a>1. 前景回顾</h2><p>这里选择CommonsCollections3是因为他的前半段触发的利用链跟CommonsCollections1是一样的，所以这里只需要分析后半段命令执行的构造即可。回顾一下前半段利用链</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sun.reflect.annotation.AnnotationInvocationHandler.readObject()</span><br><span class="line">	-&gt; memberValues.entrySet()</span><br><span class="line">	-&gt; AnnotationInvocationHandler.invoke()</span><br><span class="line">	-&gt; memberValues.get() =&gt; LazyMap.get()</span><br><span class="line">	-&gt; factory.transform() =&gt; ChainedTransformer.transform()</span><br><span class="line">	-&gt; iTransformers[].transform()</span><br></pre></td></tr></table></figure>
+<p>CommonsCollections1中ChainedTransformer.transform()会循环调用iTransformers数组里的对象的transform函数。CommonsCollections1用的是InvokerTransformer的transform，因为该函数实现了反射调用任意类的功能。那么除了使用InvokerTransformer还有没有其他的方法？答案当然是肯定的！</p>
+<h2 id="2-新的命令执行利用链"><a href="#2-新的命令执行利用链" class="headerlink" title="2. 新的命令执行利用链"></a>2. 新的命令执行利用链</h2><p>来看一下CommonsCollections3的payloads构造</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Object templatesImpl = Gadgets.createTemplatesImpl(command);</span><br><span class="line"></span><br><span class="line"><span class="comment">// real chain for after setup</span></span><br><span class="line"><span class="keyword">final</span> Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">      <span class="keyword">new</span> ConstantTransformer(TrAXFilter<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line"><span class="class">      <span class="title">new</span> <span class="title">InstantiateTransformer</span>(</span></span><br><span class="line">            new Class[] &#123; Templates.class &#125;,</span><br><span class="line">            <span class="keyword">new</span> Object[] &#123; templatesImpl &#125; )&#125;;</span><br><span class="line"><span class="comment">// 后续类似 省略</span></span><br></pre></td></tr></table></figure>
+<p><code>ConstantTransformer</code>上一篇已经说过了，其<code>transform</code>会返回构造时的对象，这里就是<code>TrAXFilter.class</code>对象。</p>
+<p>我们重点来看<code>InstaniateTransformer</code>的<code>transform</code>函数</p>
+<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025215544053.png" alt="image-20191025215544053"></p>
+<p>简单来看，该函数对输入的input（这里就是TrAXFilter.class）做实例化的操作。这里看起来，其实有点像php中找对应的__constructs，在Java里我们就去找构造函数里做了危险操作的class。</p>
+<p>来看一下<code>TrAXFilter</code>类的构造函数</p>
+<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025215631300.png" alt="image-20191025215631300"></p>
+<p>这里的<code>templates</code>就是上面exp中构造的<code>templatesImpl</code>.</p>
+<p>继续看TransformerImpl的newTransformer函数</p>
+<p><code>org.apache.xalan.internal.xsltc.trax.TemplatesImpl.java:newTransformer:481</code></p>
+<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025215358907.png" alt="image-20191025215358907"></p>
+<p>继续看<code>getTransletInstance</code></p>
+<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025215202858.png" alt="image-20191025215202858"></p>
+<p>再继续<code>defineTransletClasses</code></p>
+<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025215052940.png" alt="image-20191025215052940"></p>
+<p>看到这里是不是有点熟悉，没错，这里用到了0x02中的两个基础知识。<code>defineTransletClasses</code>还原出类，<code>getTransletInstance</code>进行实例化。那么我们只需要构造一个合适的<code>_bytecodes</code>即可执行任意Java代码。</p>
+<p>下面补充一下，在构造exp时需要满足的条件：</p>
+<ol>
+<li>植入的<code>templates</code>为<code>TransformerImpl</code>类，从而调用后续的<code>newTransformer</code>函数</li>
+<li>植入的<code>templates</code>实例，<code>_name</code>不为<code>null</code>,<code>_class</code>为<code>null</code></li>
+<li>植入的<code>templates</code>实例，<code>_bytecodes</code>不为<code>null</code>,<code>_tfactory</code>为<code>TransformerFactoryImpl</code>对象</li>
+<li>植入的<code>templates._bytecodes</code>数组，其最终还原的对象父类为<code>com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet</code></li>
+</ol>
+<p>那么怎么才能满足这些条件呢？这里神奇的javassist又要上场啦！</p>
+<p>来看一下ysoserial的操作</p>
+<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191028155646352.png" alt="image-20191028155646352"></p>
+<p>上面的代码不做省略，我们应该好好学习一下javassist的基本操作，代码可以在<code>Gadgets.createTemplatesImpl</code>找到！</p>
+<p>这里框了两个框，第一个框是通过javassist注入静态块，静态块的内容就是我们需要执行的命令。第二个框是ysoserail框架自己封装的一个反射工具类，通过这个类我们可以动态的操作<code>templates</code>实例的类属性内容。这里主要就是在满足上述的几个条件。</p>
+<p>这里有一点可以提一下，该利用链的作者在填充<code>_bytecodes</code>时，额外填充了一个无关的类(上图第130行)。这个类主要用于满足<code>_auxClasses</code>,让这个<code>getTransletInstance</code>函数能正常走完。</p>
+<p>经过上面的分析，其实我们可以知道<code>getTransletInstance</code>的第408行，对<code>_class</code>做实例化时我们想要执行的代码就已经执行了。所以这里额外填充的类其实是可有可无的。</p>
+<h1 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h1><p>到这里，整一个CommonsCollections3就分析结束了。</p>
+<p>CommonsCollections3主要利用了可控的byte数组从defineClass函数中还原出恶意构造的Class。并且在后续的调用中，这个Class被实例化，从而执行了注入的静态块的代码，实现了任意Java代码执行。</p>
+<p>到这篇为止，我们已经知道了两种Java的任意代码执行的构造方式</p>
+<ol>
+<li>利用可控的反射机制。具体的Class、Method等均可控时，利用反射机制，可以构造出任意的类调用、类函数调用</li>
+<li>利用可控的defineClass函数的byte数组。构造恶意的Class字节码数组，常于静态块注入恶意代码</li>
+</ol>
+<h3 id="20191104-补充"><a href="#20191104-补充" class="headerlink" title="20191104 补充"></a>20191104 补充</h3><p>前面的分析并没有提到3.2.2版本发生了啥事，导致了利用链的失效，这里简单提一下</p>
+<p><img src="/assets/study-java-deserialized-commonscollections3-3-20191028/image-20191104193635375.png" alt="image-20191104193635375"></p>
+<p>3.2.2版本对InvokerTransformer增加了readObject函数，并且做了是否允许反序列化的检查，在<code>FunctorUtils.checkUnsafeSerialization</code>函数内。</p>
+<p><img src="/assets/study-java-deserialized-commonscollections3-3-20191028/image-20191104194440916.png" alt="image-20191104194440916"></p>
+<p>这里UNSAFE_SERIALIZABLE_PROPERTY的值默认为false，如果需要为true，需要在运行时指定。</p>
+<p>所以在使用InvokerTransformer作为反序列化利用链的一部分时，会throw一个exception。除了InvokerTransformer类外，还有CloneTransformer, ForClosure, InstantiateFactory, InstantiateTransformer, InvokerTransformer,<br>PrototypeCloneFactory, PrototypeSerializationFactory, WhileClosure。所以在3.2.2版本以上，基本上利用链都已经废了。</p>
+<p>当然，这种方法治标不治本，如果可以在这些类以外，构造一个利用链同样可以达到前面的效果。</p>
+
+  	</div>
+	  
+	  <div class="article-tags tags">
+      
+        <a href="/tags/vul/">vul</a>
+      
+	  </div>
+    
+
+	
+		<div class="art-item-footer">
+				
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2019/10/31/study-java-deserialized-commonscollections3-others/" rel="prev"  title="【notes】Java反序列化利用链挖掘之CommonsCollections5,6,7,9,10">
+						【notes】Java反序列化利用链挖掘之CommonsCollections5,6,7,9,10
+					</a></span>
+				
+				
+					<span class="art-item-right">next：<a href="/2019/10/24/study-java-deserialized-commonscollections3-1/" rel="next"  title="【notes】Java反序列化利用链挖掘之CommonsCollections1">
+						【notes】Java反序列化利用链挖掘之CommonsCollections1
+					</a><i class="icon icon-chevron-thin-right"></i></span>
+				
+		</div>
+	
+	</section>
+	
+		<section id="comments">
+			<div id="disqus_thread"></div>
+		</section>
+	
+</article>
+<script>
+	window.subData = {
+		title: '【notes】Java反序列化利用链挖掘之CommonsCollections3',
+		tools: true
+	}
+</script>
+
+      </div>
+      <aside class='l_side'>
+        
+  <section class='m_widget about'>
+
+<div class='header'>wh1t3p1g</div>
+<div class='content'>
+<div class='desc'>A Web 🐶 &amp;&amp; Code Reviewer</div>
+</div>
+</section>
+
+  <section class='m_widget links'>
+<div class='header'>Links</div>
+<div class='content'>
+    <ul class="entry">
+    
+        <li><a class="flat-box" target="_blank" href="http://blog.orleven.com">
+            <div class='name'>orleven</div>
+        </a></li>
+    
+        <li><a class="flat-box" target="_blank" href="http://www.warmeng.com">
+            <div class='name'>warmeng</div>
+        </a></li>
+    
+    </ul>
+</div>
+</section>
+
+  <section class='m_widget categories'>
+<div class='header'>Categories</div>
+<div class='content'>
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/codereview/"><div class='name'>codereview</div><div class='badget'>10</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/ctf/"><div class='name'>ctf</div><div class='badget'>5</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/notes/"><div class='name'>notes</div><div class='badget'>23</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">Tags</div>
+    <div class='content'>
+        <a href="/tags/bctf/" style="font-size: 14px; color: #808080">bctf</a> <a href="/tags/cms/" style="font-size: 18px; color: #2b2b2b">cms</a> <a href="/tags/cve/" style="font-size: 16px; color: #555">cve</a> <a href="/tags/ddctf/" style="font-size: 14px; color: #808080">ddctf</a> <a href="/tags/hitbxctf/" style="font-size: 14px; color: #808080">hitbxctf</a> <a href="/tags/mobile/" style="font-size: 14px; color: #808080">mobile</a> <a href="/tags/njctf/" style="font-size: 14px; color: #808080">njctf</a> <a href="/tags/others/" style="font-size: 16px; color: #555">others</a> <a href="/tags/suctf/" style="font-size: 14px; color: #808080">suctf</a> <a href="/tags/vul/" style="font-size: 20px; color: #000">vul</a>
+    </div>
+</div>
+
+
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/wh1t3p1g" class="social github"
+          target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+        <a href="/atom.xml" class="social rss"
+          target="_blank" rel="external">
+          <span class="icon icon-rss"></span>
+        </a>
+      
+    
+  </div>
+  
+  <div>Theme <a href='https://github.com/stkevintan/hexo-theme-material-flow' class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+<script>
+  var disqus_shortname = '0kami';
+  
+  var disqus_url = 'http://blog.0kami.cn/2019/10/28/study-java-deserialized-commonscollections3-3/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src='//cdn.bootcss.com/node-waves/0.7.5/waves.min.js'></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+<script src="/js/jquery.fitvids.js"></script>
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+<script src="/js/search.js"></script>
+<script src="/js/app.js"></script>
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
