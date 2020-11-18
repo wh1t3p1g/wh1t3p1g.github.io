@@ -20,21 +20,21 @@
 <meta property="og:site_name" content="0kami&#39;s Blog">
 <meta property="og:description" content="0x00 前言easyjava的设计思路主要来源于现实环境中遇到的一些问题，以及最近刚出的mybatis二级缓存反序列化的安全问题的一种设想。题目的设计目的主要考察选手对于实操性的漏洞的利用以及源码审计能力。">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/image-20201102151033808.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/image-20201102151347649.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/image-20201102151503000.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/image-20201102152300777.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/image-20201102152617085.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/image-20201102153339331.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/image-20201102154259827.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/image-20201102155335403.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/image-20201102155950724.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/image-20201102164333062.png">
-<meta property="og:updated_time" content="2020-11-02T08:58:38.305Z">
+<meta property="og:image" content="http://blog.0kami.cn/images/xnuca-2020-easyjava/image-20201102151033808.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/xnuca-2020-easyjava/image-20201102151347649.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/xnuca-2020-easyjava/image-20201102151503000.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/xnuca-2020-easyjava/image-20201102152300777.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/xnuca-2020-easyjava/image-20201102152617085.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/xnuca-2020-easyjava/image-20201102153339331.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/xnuca-2020-easyjava/image-20201102154259827.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/xnuca-2020-easyjava/image-20201102155335403.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/xnuca-2020-easyjava/image-20201102155950724.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/xnuca-2020-easyjava/image-20201102164333062.png">
+<meta property="og:updated_time" content="2020-11-18T14:35:36.612Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【CTF】xnuca2020 easyjava">
 <meta name="twitter:description" content="0x00 前言easyjava的设计思路主要来源于现实环境中遇到的一些问题，以及最近刚出的mybatis二级缓存反序列化的安全问题的一种设想。题目的设计目的主要考察选手对于实操性的漏洞的利用以及源码审计能力。">
-<meta name="twitter:image" content="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/image-20201102151033808.png">
+<meta name="twitter:image" content="http://blog.0kami.cn/images/xnuca-2020-easyjava/image-20201102151033808.png">
 
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
@@ -170,28 +170,28 @@
 </ol>
 <h2 id="0x01-预期题解"><a href="#0x01-预期题解" class="headerlink" title="0x01 预期题解"></a>0x01 预期题解</h2><p>题目本身设计的功能点比较少，主要是jpg图片签名，下载和验签功能</p>
 <h3 id="1-源码获取"><a href="#1-源码获取" class="headerlink" title="#1 源码获取"></a>#1 源码获取</h3><p>这里首先关注下载的接口</p>
-<p><img src="image-20201102151033808.png" alt="image-20201102151033808"></p>
+<p><img src="/images/xnuca-2020-easyjava/image-20201102151033808.png" alt="image-20201102151033808"></p>
 <p>在返回包里存在Check字段，于get请求中的sign字段是一样的内容，尝试修改filename为<code>../../../../../../etc/passwd</code></p>
-<p><img src="image-20201102151347649.png" alt="image-20201102151347649"></p>
-<p><img src="image-20201102151503000.png" alt="image-20201102151503000"></p>
+<p><img src="/images/xnuca-2020-easyjava/image-20201102151347649.png" alt="image-20201102151347649"></p>
+<p><img src="/images/xnuca-2020-easyjava/image-20201102151503000.png" alt="image-20201102151503000"></p>
 <p>check字段返回了不一样的内容，这里判断可能sign值用于校验，通过才返回结果，那么修改sign字段，即可获取到当前请求的内容。接下来，由于是linux系统，我们可以通过暴力fd值来获取到当前运行的jar包内容，如<code>/proc/self/fd/4</code>来获取jar包</p>
 <h3 id="2-mybatis-SQL注入"><a href="#2-mybatis-SQL注入" class="headerlink" title="#2 mybatis SQL注入"></a>#2 mybatis SQL注入</h3><p>拿到jar反编译后先看pom，其中比较容易关注的主要是两个jar包，一个是mybatis的springboot包，另一个是xstream的包</p>
-<p><img src="image-20201102152300777.png" alt="image-20201102152300777"></p>
+<p><img src="/images/xnuca-2020-easyjava/image-20201102152300777.png" alt="image-20201102152300777"></p>
 <p>如果关注cve动态的话，可以知道最近刚出的漏洞<a href="https://nvd.nist.gov/vuln/detail/CVE-2020-26945" target="_blank" rel="noopener">CVE-2020-26945</a>，虽然mybatis的版本已经进行了升级，但spring的mybatis包中的mybatis依赖并没有升级，仍然是3.5.5版本，再确定一下，是否启用了cache</p>
-<p><img src="image-20201102152617085.png" alt="image-20201102152617085"></p>
+<p><img src="/images/xnuca-2020-easyjava/image-20201102152617085.png" alt="image-20201102152617085"></p>
 <p>从mapper对应的xml配置里可以看到开启了cache配置，并且<code>findByHashAndSecret</code>接口存在注入。</p>
 <p>到这里就简单了，我们只要找一下，调用点确认是否可控，即可确认是否存在注入</p>
 <p><code>nese.game.controller.CheckController</code>存在链路，从文件中获取内容，并进行数据库查询，所以这边我们能达到一个注入的效果</p>
-<p><img src="image-20201102153339331.png" alt="image-20201102153339331"></p>
+<p><img src="/images/xnuca-2020-easyjava/image-20201102153339331.png" alt="image-20201102153339331"></p>
 <h3 id="3-mybatis二级缓存反序列化漏洞"><a href="#3-mybatis二级缓存反序列化漏洞" class="headerlink" title="#3 mybatis二级缓存反序列化漏洞"></a>#3 mybatis二级缓存反序列化漏洞</h3><p>接下来，继续进行审计，关注一下另一个点xstream包的安全问题。在<code>nese.game.entity.Picture</code>对象上，调用了xstream的fromXML函数，并且在<code>readObject</code>函数处对字符串类型的xml进行还原</p>
-<p><img src="image-20201102154259827.png" alt="image-20201102154259827"></p>
+<p><img src="/images/xnuca-2020-easyjava/image-20201102154259827.png" alt="image-20201102154259827"></p>
 <p>到这里就比较清晰了，我们需要利用前面发现的SQL注入点，进行注入构造任意的xml数据</p>
 <p>并利用mybatis的默认二级缓存使用serialization的原理（如下图官方文档所示），来触发xstream反序列化漏洞</p>
-<p><img src="image-20201102155335403.png" alt="image-20201102155335403"></p>
+<p><img src="/images/xnuca-2020-easyjava/image-20201102155335403.png" alt="image-20201102155335403"></p>
 <p>接下来，就根据题目的签名实现，来注入任意数据，以如下代码为例，生成存在注入语句的jpg文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">try&#123;</span><br><span class="line">    String payload = &quot;evil xml&quot;;</span><br><span class="line">    File file = new File(&quot;xxxx.jpg&quot;);</span><br><span class="line">    File dest = new File(&quot;xxxx.jpg&quot;);</span><br><span class="line">    InputStream inputStream = new FileInputStream(file);</span><br><span class="line">    byte[] bytes = new byte[(int)file.length()];</span><br><span class="line">    inputStream.read(bytes);</span><br><span class="line">    InputStream destInputStream = new FileInputStream(dest);</span><br><span class="line">    String secret=&quot;&apos; union select 13,&apos;wh1t3p1g&apos;,&apos;wh1t3p1g&apos;,&apos;&quot;+payload+&quot;&apos;,&apos;aed2bebb781ae32d94c5e67185e35149&quot;;</span><br><span class="line">    String hash = &quot;aed2bebb781ae32d94c5e67185e35149&quot;;</span><br><span class="line">    ImageUtil.transferTo(inputStream, bytes, null, dest, secret, hash);</span><br><span class="line">&#125;catch (Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>提交后可以看到具体的效果，重复提交两次，即可触发xml的反序列化</p>
-<p><img src="image-20201102155950724.png" alt="image-20201102155950724"></p>
+<p><img src="/images/xnuca-2020-easyjava/image-20201102155950724.png" alt="image-20201102155950724"></p>
 <h3 id="4-XStream正则waf绕过"><a href="#4-XStream正则waf绕过" class="headerlink" title="#4 XStream正则waf绕过"></a>#4 XStream正则waf绕过</h3><p>从题目上来看，XStream的实现需要绕过两个点：</p>
 <ol>
 <li><p>PureJavaReflectionProvider</p>
@@ -247,7 +247,7 @@
 <h3 id="5-高版本JNDI注入的利用"><a href="#5-高版本JNDI注入的利用" class="headerlink" title="#5 高版本JNDI注入的利用"></a>#5 高版本JNDI注入的利用</h3><p>在生成具体的exp后，可以对外发起JNDI连接，到这一步，我们需要去判断其为高版本jdk还是低版本的jdk。如果是低版本的jdk，我们可以直接利用codebase加载任意的class来达到命令执行的效果，而高版本的jdk只能依赖本地ObjectFactory或本地利用链来进行攻击，参考<a href="https://paper.seebug.org/942/" target="_blank" rel="noopener">KINGX的文章</a>。</p>
 <p>而本题考查的为高版本jdk环境下的利用，那么就有两种选择，一为本地利用链触发命令来执行，二为本地ObjectFactory达成代码执行。</p>
 <p>从题目的依赖来看，我们并不能找到一个合适的本地利用链来达成利用，那么考察的就是第二个方法的利用了。因为题目用的是spring boot embedded tomcat，所以我们能直接利用KINGX师傅文章中提到的方法，具体的利用过程不提了，可以用我的ysomap来达成命令执行的效果</p>
-<p><img src="image-20201102164333062.png" alt="image-20201102164333062"></p>
+<p><img src="/images/xnuca-2020-easyjava/image-20201102164333062.png" alt="image-20201102164333062"></p>
 <h2 id="0x02-exp"><a href="#0x02-exp" class="headerlink" title="0x02 exp"></a>0x02 exp</h2><p><a href="https://github.com/NeSE-Team/XNUCA2020Qualifier/blob/main/Web/easyjava/ImageUtil.java" target="_blank" rel="noopener">exp.java</a></p>
 
   	</div>

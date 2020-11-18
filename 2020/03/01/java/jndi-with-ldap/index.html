@@ -20,13 +20,13 @@
 <meta property="og:site_name" content="0kami&#39;s Blog">
 <meta property="og:description" content="0x00 前言JNDI的SPI层除了RMI外，还可以跟LDAP交互。与RMI类似，LDAP也能同样返回一个Reference给JNDI的Naming Manager，本文将讲述JNDI使用ldap协议的两个攻击面XD">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://blog.0kami.cn/2020/03/01/java/jndi-with-ldap/image-20200301142213589.png">
-<meta property="og:image" content="http://blog.0kami.cn/2020/03/01/java/jndi-with-ldap/image-20200301144715061.png">
-<meta property="og:updated_time" content="2020-11-18T14:04:53.974Z">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-ldap-20200301/image-20200301142213589.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/jndi-with-ldap-20200301/image-20200301144715061.png">
+<meta property="og:updated_time" content="2020-11-18T14:29:38.735Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【notes】JNDI with LDAP">
 <meta name="twitter:description" content="0x00 前言JNDI的SPI层除了RMI外，还可以跟LDAP交互。与RMI类似，LDAP也能同样返回一个Reference给JNDI的Naming Manager，本文将讲述JNDI使用ldap协议的两个攻击面XD">
-<meta name="twitter:image" content="http://blog.0kami.cn/2020/03/01/java/jndi-with-ldap/image-20200301142213589.png">
+<meta name="twitter:image" content="http://blog.0kami.cn/images/jndi-with-ldap-20200301/image-20200301142213589.png">
 
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
@@ -163,7 +163,7 @@
 <p>后文用的LDAP Server参考的是<a href="https://github.com/mbechler/marshalsec/blob/master/src/main/java/marshalsec/jndi/LDAPRefServer.java" target="_blank" rel="noopener">mbechler 实现的LDAPRefServer</a>，连接的客户端Client直接用JNDI的lookup完成，jdk版本jdk8u162</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Context ctx = <span class="keyword">new</span> InitialContext();</span><br><span class="line">ctx.lookup(<span class="string">"ldap://127.0.0.1:1389/EvilObj"</span>);</span><br><span class="line">ctx.close();</span><br></pre></td></tr></table></figure>
 <h2 id="0x02-LDAP-with-JDNI-References"><a href="#0x02-LDAP-with-JDNI-References" class="headerlink" title="0x02 LDAP with JDNI References"></a>0x02 LDAP with JDNI References</h2><p>JNDI发起ldap的lookup后，将有如下的调用流程，这里我们直接来关注，获得远程LDAP Server的Entry之后，Client这边是怎么做处理的</p>
-<p><img src="image-20200301142213589.png" alt="image-20200301142213589"></p>
+<p><img src="/images/jndi-with-ldap-20200301/image-20200301142213589.png" alt="image-20200301142213589"></p>
 <p>跟进com/sun/jndi/ldap/Obj.java#decodeObject，按照该函数的注释来看，其主要功能是解码从LDAP Server来的对象，该对象可能是序列化的对象，也可能是一个Reference对象。关于序列化对象的处理，我们看后面一节。这里摘取了Reference的处理方式：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> Object <span class="title">decodeObject</span><span class="params">(Attributes attrs)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> NamingException </span>&#123;</span><br><span class="line">    Attribute attr;</span><br><span class="line">    <span class="comment">// Get codebase, which is used in all 3 cases.</span></span><br><span class="line">    String[] codebases = getCodebases(attrs.get(JAVA_ATTRIBUTES[CODEBASE]));</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        attr = attrs.get(JAVA_ATTRIBUTES[OBJECT_CLASS]);<span class="comment">// "objectClass"</span></span><br><span class="line">        <span class="keyword">if</span> (attr != <span class="keyword">null</span> &amp;&amp;</span><br><span class="line">            (attr.contains(JAVA_OBJECT_CLASSES[REF_OBJECT]) || <span class="comment">// "javaNamingReference"</span></span><br><span class="line">                attr.contains(JAVA_OBJECT_CLASSES_LOWER[REF_OBJECT]))) &#123; <span class="comment">// "javanamingreference"</span></span><br><span class="line">            <span class="keyword">return</span> decodeReference(attrs, codebases);</span><br><span class="line">        &#125;</span><br><span class="line">      <span class="comment">//...</span></span><br></pre></td></tr></table></figure>
 <p>如果LDAP Server返回的属性里包括了<code>objectClass</code>和<code>javaNamingReference</code>，将进入Reference的处理函数decodeReference上</p>
@@ -171,7 +171,7 @@
 <p>decodeReference再从属性中提取出<code>javaClassName</code>和<code>javaFactory</code>，最后将生成一个Reference。这里如果看过我前面的那篇<a href="http://blog.0kami.cn/2020/02/09/jndi-with-rmi/">jndi-with-rmi</a>，可以看到其实这里生成的ref就是我们在RMI返回的那个ReferenceWrapper，后面这个ref将会传递给Naming Manager去处理，包括从codebase中获取class文件并载入。</p>
 <p>而这里LDAP也类似，处理ref的对象是NamingManager的子类javax/naming/spi/DirectoryManager.java，因为跟RMI有点类似不具体分析了，最后同样由javax/naming/spi/NamingManager.java#getObjectFactoryFromReference来处理。</p>
 <p>到这里，我们再来看mbechler 实现的LDAPRefServer就比较清楚了</p>
-<p><img src="image-20200301144715061.png" alt="image-20200301144715061"></p>
+<p><img src="/images/jndi-with-ldap-20200301/image-20200301144715061.png" alt="image-20200301144715061"></p>
 <p>当其获取到LDAP连接时，将填充如上的几个属性及其对应的值，就是为了满足上面的条件而生成一个Reference对象。</p>
 <h2 id="0x03-LDAP-with-Serialized-Object"><a href="#0x03-LDAP-with-Serialized-Object" class="headerlink" title="0x03 LDAP with Serialized Object"></a>0x03 LDAP with Serialized Object</h2><p>JNDI对于属性中的序列化数据的处理一共有两个地方，我们先来顺着前面的JNDI Reference的思路说下去</p>
 <h4 id="第一处：com-sun-jndi-ldap-Obj-java-decodeObject"><a href="#第一处：com-sun-jndi-ldap-Obj-java-decodeObject" class="headerlink" title="第一处：com/sun/jndi/ldap/Obj.java#decodeObject"></a>第一处：com/sun/jndi/ldap/Obj.java#decodeObject</h4><p>在com/sun/jndi/ldap/Obj.java#decodeObject上还存在一个判断</p>

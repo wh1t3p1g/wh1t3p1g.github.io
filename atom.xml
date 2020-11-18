@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2020-11-02T08:58:38.305Z</updated>
+  <updated>2020-11-18T14:35:36.612Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/"/>
     <id>http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/</id>
     <published>2020-11-02T04:04:34.000Z</published>
-    <updated>2020-11-02T08:58:38.305Z</updated>
+    <updated>2020-11-18T14:35:36.612Z</updated>
     
     <summary type="html">
     
@@ -41,7 +41,7 @@
     <link href="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/"/>
     <id>http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/</id>
     <published>2020-05-22T09:14:38.000Z</published>
-    <updated>2020-11-18T14:06:51.906Z</updated>
+    <updated>2020-11-18T14:32:33.635Z</updated>
     
     <summary type="html">
     
@@ -62,7 +62,7 @@
     <link href="http://blog.0kami.cn/2020/04/18/java/talk-about-xstream-deserialization/"/>
     <id>http://blog.0kami.cn/2020/04/18/java/talk-about-xstream-deserialization/</id>
     <published>2020-04-18T11:44:58.000Z</published>
-    <updated>2020-11-18T14:07:03.087Z</updated>
+    <updated>2020-11-18T14:32:46.928Z</updated>
     
     <summary type="html">
     
@@ -83,7 +83,7 @@
     <link href="http://blog.0kami.cn/2020/04/13/java/talk-about-fastjson-deserialization/"/>
     <id>http://blog.0kami.cn/2020/04/13/java/talk-about-fastjson-deserialization/</id>
     <published>2020-04-13T08:31:09.000Z</published>
-    <updated>2020-11-18T14:07:18.957Z</updated>
+    <updated>2020-11-18T14:33:06.736Z</updated>
     
     <summary type="html">
     
@@ -103,7 +103,7 @@
     <link href="http://blog.0kami.cn/2020/03/10/java/java-jmx-rmi/"/>
     <id>http://blog.0kami.cn/2020/03/10/java/java-jmx-rmi/</id>
     <published>2020-03-10T12:51:30.000Z</published>
-    <updated>2020-11-18T14:04:27.643Z</updated>
+    <updated>2020-11-18T14:30:01.415Z</updated>
     
     <summary type="html">
     
@@ -123,7 +123,7 @@
     <link href="http://blog.0kami.cn/2020/03/01/java/jndi-with-ldap/"/>
     <id>http://blog.0kami.cn/2020/03/01/java/jndi-with-ldap/</id>
     <published>2020-03-01T11:22:01.000Z</published>
-    <updated>2020-11-18T14:04:53.974Z</updated>
+    <updated>2020-11-18T14:29:38.735Z</updated>
     
     <summary type="html">
     
@@ -143,7 +143,7 @@
     <link href="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/"/>
     <id>http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/</id>
     <published>2020-02-09T13:42:18.000Z</published>
-    <updated>2020-11-18T14:05:13.072Z</updated>
+    <updated>2020-11-18T14:29:18.865Z</updated>
     
     <summary type="html">
     
@@ -163,7 +163,7 @@
     <link href="http://blog.0kami.cn/2020/02/06/java/rmi-registry-security-problem/"/>
     <id>http://blog.0kami.cn/2020/02/06/java/rmi-registry-security-problem/</id>
     <published>2020-02-06T07:23:36.000Z</published>
-    <updated>2020-11-18T14:08:17.564Z</updated>
+    <updated>2020-11-18T14:27:51.150Z</updated>
     
     <summary type="html">
     
@@ -183,7 +183,7 @@
     <link href="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/"/>
     <id>http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/</id>
     <published>2019-11-10T07:32:03.000Z</published>
-    <updated>2020-11-18T14:07:31.483Z</updated>
+    <updated>2020-11-18T14:33:24.602Z</updated>
     
     <summary type="html">
     
@@ -203,7 +203,7 @@
     <link href="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/"/>
     <id>http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/</id>
     <published>2019-11-05T08:55:51.000Z</published>
-    <updated>2020-11-18T14:07:43.140Z</updated>
+    <updated>2020-11-18T14:32:00.442Z</updated>
     
     <summary type="html">
     
@@ -223,7 +223,7 @@
     <link href="http://blog.0kami.cn/2019/10/31/java/study-java-deserialized-commonscollections3-others/"/>
     <id>http://blog.0kami.cn/2019/10/31/java/study-java-deserialized-commonscollections3-others/</id>
     <published>2019-10-31T11:40:44.000Z</published>
-    <updated>2020-11-18T14:06:07.678Z</updated>
+    <updated>2020-11-18T14:30:35.931Z</updated>
     
     <summary type="html">
     
@@ -243,7 +243,7 @@
     <link href="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/"/>
     <id>http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/</id>
     <published>2019-10-28T08:20:06.000Z</published>
-    <updated>2020-11-18T14:07:54.558Z</updated>
+    <updated>2020-11-18T14:31:23.156Z</updated>
     
     <summary type="html">
     
@@ -263,7 +263,7 @@
     <link href="http://blog.0kami.cn/2019/10/24/java/study-java-deserialized-commonscollections3-1/"/>
     <id>http://blog.0kami.cn/2019/10/24/java/study-java-deserialized-commonscollections3-1/</id>
     <published>2019-10-24T14:15:25.000Z</published>
-    <updated>2020-11-18T14:08:06.136Z</updated>
+    <updated>2020-11-18T14:30:54.639Z</updated>
     
     <summary type="html">
     
@@ -279,15 +279,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/php-thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/php-thinkphp-5-2-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/php-thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/php-thinkphp-6-0-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:28:38.670Z</updated>
+    <updated>2019-10-25T01:27:35.336Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
     
     </summary>
     
@@ -299,15 +299,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/php-thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/php-thinkphp-6-0-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/php-thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/php-thinkphp-5-2-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:27:35.336Z</updated>
+    <updated>2019-10-25T01:28:38.670Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
     
     </summary>
     
