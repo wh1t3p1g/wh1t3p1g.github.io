@@ -41,7 +41,7 @@
     <link href="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/"/>
     <id>http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/</id>
     <published>2020-05-22T09:14:38.000Z</published>
-    <updated>2020-08-14T06:00:25.559Z</updated>
+    <updated>2020-11-18T14:06:51.906Z</updated>
     
     <summary type="html">
     
@@ -62,7 +62,7 @@
     <link href="http://blog.0kami.cn/2020/04/18/java/talk-about-xstream-deserialization/"/>
     <id>http://blog.0kami.cn/2020/04/18/java/talk-about-xstream-deserialization/</id>
     <published>2020-04-18T11:44:58.000Z</published>
-    <updated>2020-05-12T07:19:15.999Z</updated>
+    <updated>2020-11-18T14:07:03.087Z</updated>
     
     <summary type="html">
     
@@ -83,7 +83,7 @@
     <link href="http://blog.0kami.cn/2020/04/13/java/talk-about-fastjson-deserialization/"/>
     <id>http://blog.0kami.cn/2020/04/13/java/talk-about-fastjson-deserialization/</id>
     <published>2020-04-13T08:31:09.000Z</published>
-    <updated>2020-04-13T11:31:49.457Z</updated>
+    <updated>2020-11-18T14:07:18.957Z</updated>
     
     <summary type="html">
     
@@ -103,7 +103,7 @@
     <link href="http://blog.0kami.cn/2020/03/10/java/java-jmx-rmi/"/>
     <id>http://blog.0kami.cn/2020/03/10/java/java-jmx-rmi/</id>
     <published>2020-03-10T12:51:30.000Z</published>
-    <updated>2020-04-17T02:49:41.350Z</updated>
+    <updated>2020-11-18T14:04:27.643Z</updated>
     
     <summary type="html">
     
@@ -123,7 +123,7 @@
     <link href="http://blog.0kami.cn/2020/03/01/java/jndi-with-ldap/"/>
     <id>http://blog.0kami.cn/2020/03/01/java/jndi-with-ldap/</id>
     <published>2020-03-01T11:22:01.000Z</published>
-    <updated>2020-04-12T12:10:52.633Z</updated>
+    <updated>2020-11-18T14:04:53.974Z</updated>
     
     <summary type="html">
     
@@ -143,7 +143,7 @@
     <link href="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/"/>
     <id>http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/</id>
     <published>2020-02-09T13:42:18.000Z</published>
-    <updated>2020-03-03T12:45:47.637Z</updated>
+    <updated>2020-11-18T14:05:13.072Z</updated>
     
     <summary type="html">
     
@@ -163,7 +163,7 @@
     <link href="http://blog.0kami.cn/2020/02/06/java/rmi-registry-security-problem/"/>
     <id>http://blog.0kami.cn/2020/02/06/java/rmi-registry-security-problem/</id>
     <published>2020-02-06T07:23:36.000Z</published>
-    <updated>2020-06-17T16:32:48.169Z</updated>
+    <updated>2020-11-18T14:08:17.564Z</updated>
     
     <summary type="html">
     
@@ -183,7 +183,7 @@
     <link href="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/"/>
     <id>http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/</id>
     <published>2019-11-10T07:32:03.000Z</published>
-    <updated>2020-01-09T11:40:03.821Z</updated>
+    <updated>2020-11-18T14:07:31.483Z</updated>
     
     <summary type="html">
     
@@ -203,7 +203,7 @@
     <link href="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/"/>
     <id>http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/</id>
     <published>2019-11-05T08:55:51.000Z</published>
-    <updated>2020-01-08T02:03:27.768Z</updated>
+    <updated>2020-11-18T14:07:43.140Z</updated>
     
     <summary type="html">
     
@@ -223,7 +223,7 @@
     <link href="http://blog.0kami.cn/2019/10/31/java/study-java-deserialized-commonscollections3-others/"/>
     <id>http://blog.0kami.cn/2019/10/31/java/study-java-deserialized-commonscollections3-others/</id>
     <published>2019-10-31T11:40:44.000Z</published>
-    <updated>2020-01-08T02:03:11.526Z</updated>
+    <updated>2020-11-18T14:06:07.678Z</updated>
     
     <summary type="html">
     
@@ -243,7 +243,7 @@
     <link href="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/"/>
     <id>http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/</id>
     <published>2019-10-28T08:20:06.000Z</published>
-    <updated>2020-07-26T07:23:59.492Z</updated>
+    <updated>2020-11-18T14:07:54.558Z</updated>
     
     <summary type="html">
     
@@ -263,7 +263,7 @@
     <link href="http://blog.0kami.cn/2019/10/24/java/study-java-deserialized-commonscollections3-1/"/>
     <id>http://blog.0kami.cn/2019/10/24/java/study-java-deserialized-commonscollections3-1/</id>
     <published>2019-10-24T14:15:25.000Z</published>
-    <updated>2019-10-29T01:19:12.956Z</updated>
+    <updated>2020-11-18T14:08:06.136Z</updated>
     
     <summary type="html">
     

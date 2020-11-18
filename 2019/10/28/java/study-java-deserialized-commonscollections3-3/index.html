@@ -20,20 +20,20 @@
 <meta property="og:site_name" content="0kami&#39;s Blog">
 <meta property="og:description" content="0x00 前言前面分析了ysoserial的CommonsCollections1，熟悉了一点Java反序列化。本文将继续分析ysoserial的利用，今天的主角是CommonsCollections3.">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025190617899.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025215544053.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025215631300.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025215358907.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025215202858.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025215052940.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191028155646352.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections3-3-20191028/image-20191104193635375.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections3-3-20191028/image-20191104194440916.png">
-<meta property="og:updated_time" content="2020-07-26T07:23:59.492Z">
+<meta property="og:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/image-20191025190617899.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/image-20191025215544053.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/image-20191025215631300.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/image-20191025215358907.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/image-20191025215202858.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/image-20191025215052940.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/image-20191028155646352.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/image-20191104193635375.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/image-20191104194440916.png">
+<meta property="og:updated_time" content="2020-11-18T14:07:54.558Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【notes】Java反序列化利用链挖掘之CommonsCollections3">
 <meta name="twitter:description" content="0x00 前言前面分析了ysoserial的CommonsCollections1，熟悉了一点Java反序列化。本文将继续分析ysoserial的利用，今天的主角是CommonsCollections3.">
-<meta name="twitter:image" content="http://blog.0kami.cn/assets/java-deserialized-commonscollections3-20191028/image-20191025190617899.png">
+<meta name="twitter:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/image-20191025190617899.png">
 
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
@@ -169,7 +169,7 @@
 <p>​        a. defineClass可以从byte数组中恢复一个Class</p>
 <p>​       b. static initializer在类载入时将自动执行（静态块内的代码）</p>
 <p>Java中动态调用的另一种方式是<code>defineClass</code></p>
-<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025190617899.png" alt="image-20191025190617899"></p>
+<p><img src="image-20191025190617899.png" alt="image-20191025190617899"></p>
 <p>Java提供了ClassLoader从bytes数组中还原Class的方法，defineClass函数就是完成这一过程的函数。</p>
 <p>理论上，如果代码中使用了这种方式，且byte数据的内容可控，我们可以执行任意Java代码。为什么呢？</p>
 <p>这里就用到了Java类的另一个特性，static block在类载入时自动执行块内的代码。我们可以通过javassist对静态块注入任意代码，该类被恢复并载入时会调用注入的代码，后文的利用链主要就是用到了这两个知识点。</p>
@@ -180,18 +180,18 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Object templatesImpl = Gadgets.createTemplatesImpl(command);</span><br><span class="line"></span><br><span class="line"><span class="comment">// real chain for after setup</span></span><br><span class="line"><span class="keyword">final</span> Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">      <span class="keyword">new</span> ConstantTransformer(TrAXFilter<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line"><span class="class">      <span class="title">new</span> <span class="title">InstantiateTransformer</span>(</span></span><br><span class="line">            new Class[] &#123; Templates.class &#125;,</span><br><span class="line">            <span class="keyword">new</span> Object[] &#123; templatesImpl &#125; )&#125;;</span><br><span class="line"><span class="comment">// 后续类似 省略</span></span><br></pre></td></tr></table></figure>
 <p><code>ConstantTransformer</code>上一篇已经说过了，其<code>transform</code>会返回构造时的对象，这里就是<code>TrAXFilter.class</code>对象。</p>
 <p>我们重点来看<code>InstaniateTransformer</code>的<code>transform</code>函数</p>
-<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025215544053.png" alt="image-20191025215544053"></p>
+<p><img src="image-20191025215544053.png" alt="image-20191025215544053"></p>
 <p>简单来看，该函数对输入的input（这里就是TrAXFilter.class）做实例化的操作。这里看起来，其实有点像php中找对应的__constructs，在Java里我们就去找构造函数里做了危险操作的class。</p>
 <p>来看一下<code>TrAXFilter</code>类的构造函数</p>
-<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025215631300.png" alt="image-20191025215631300"></p>
+<p><img src="image-20191025215631300.png" alt="image-20191025215631300"></p>
 <p>这里的<code>templates</code>就是上面exp中构造的<code>templatesImpl</code>.</p>
 <p>继续看TransformerImpl的newTransformer函数</p>
 <p><code>org.apache.xalan.internal.xsltc.trax.TemplatesImpl.java:newTransformer:481</code></p>
-<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025215358907.png" alt="image-20191025215358907"></p>
+<p><img src="image-20191025215358907.png" alt="image-20191025215358907"></p>
 <p>继续看<code>getTransletInstance</code></p>
-<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025215202858.png" alt="image-20191025215202858"></p>
+<p><img src="image-20191025215202858.png" alt="image-20191025215202858"></p>
 <p>再继续<code>defineTransletClasses</code></p>
-<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191025215052940.png" alt="image-20191025215052940"></p>
+<p><img src="image-20191025215052940.png" alt="image-20191025215052940"></p>
 <p>看到这里是不是有点熟悉，没错，这里用到了0x02中的两个基础知识。<code>defineTransletClasses</code>还原出类，<code>getTransletInstance</code>进行实例化。那么我们只需要构造一个合适的<code>_bytecodes</code>即可执行任意Java代码。</p>
 <p>下面补充一下，在构造exp时需要满足的条件：</p>
 <ol>
@@ -202,7 +202,7 @@
 </ol>
 <p>那么怎么才能满足这些条件呢？这里神奇的javassist又要上场啦！</p>
 <p>来看一下ysoserial的操作</p>
-<p><img src="/assets/java-deserialized-commonscollections3-20191028/image-20191028155646352.png" alt="image-20191028155646352"></p>
+<p><img src="image-20191028155646352.png" alt="image-20191028155646352"></p>
 <p>上面的代码不做省略，我们应该好好学习一下javassist的基本操作，代码可以在<code>Gadgets.createTemplatesImpl</code>找到！</p>
 <p>这里框了两个框，第一个框是通过javassist注入静态块，静态块的内容就是我们需要执行的命令。第二个框是ysoserail框架自己封装的一个反射工具类，通过这个类我们可以动态的操作<code>templates</code>实例的类属性内容。这里主要就是在满足上述的几个条件。</p>
 <p>这里有一点可以提一下，该利用链的作者在填充<code>_bytecodes</code>时，额外填充了一个无关的类(上图第130行)。这个类主要用于满足<code>_auxClasses</code>,让这个<code>getTransletInstance</code>函数能正常走完。</p>
@@ -215,9 +215,9 @@
 <li>利用可控的defineClass函数的byte数组。构造恶意的Class字节码数组，常于静态块注入恶意代码</li>
 </ol>
 <h3 id="20191104-补充"><a href="#20191104-补充" class="headerlink" title="20191104 补充"></a>20191104 补充</h3><p>前面的分析并没有提到3.2.2版本发生了啥事，导致了利用链的失效，这里简单提一下</p>
-<p><img src="/assets/study-java-deserialized-commonscollections3-3-20191028/image-20191104193635375.png" alt="image-20191104193635375"></p>
+<p><img src="image-20191104193635375.png" alt="image-20191104193635375"></p>
 <p>3.2.2版本对InvokerTransformer增加了readObject函数，并且做了是否允许反序列化的检查，在<code>FunctorUtils.checkUnsafeSerialization</code>函数内。</p>
-<p><img src="/assets/study-java-deserialized-commonscollections3-3-20191028/image-20191104194440916.png" alt="image-20191104194440916"></p>
+<p><img src="image-20191104194440916.png" alt="image-20191104194440916"></p>
 <p>这里UNSAFE_SERIALIZABLE_PROPERTY的值默认为false，如果需要为true，需要在运行时指定。</p>
 <p>所以在使用InvokerTransformer作为反序列化利用链的一部分时，会throw一个exception。除了InvokerTransformer类外，还有CloneTransformer, ForClosure, InstantiateFactory, InstantiateTransformer, InvokerTransformer,<br>PrototypeCloneFactory, PrototypeSerializationFactory, WhileClosure。所以在3.2.2版本以上，基本上利用链都已经废了。</p>
 <p>当然，这种方法治标不治本，如果可以在这些类以外，构造一个利用链同样可以达到前面的效果。</p>

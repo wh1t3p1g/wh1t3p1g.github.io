@@ -20,22 +20,22 @@
 <meta property="og:site_name" content="0kami&#39;s Blog">
 <meta property="og:description" content="0x00 前言前面几篇文章，分析了CommonsCollections:3.2.1版本以下存在的反序列化链。今天将继续分析CommonsCollections:4.0版本，主要讲述CommonsCollections2，4，8的利用链构造。">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections4-20191105/image-20191105144356952.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections4-20191105/image-20191105144742407.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections4-20191105/image-20191105144814493.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections4-20191105/image-20191105145042981.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections4-20191105/image-20191105145452819.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections4-20191105/image-20191105154637160.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study_java_deseriablized_4/image-20191105155805597.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections4-20191105/image-20191105155659102.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections4-20191105/image-20191105155936014.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections4-20191105/image-20191105161531047.png">
-<meta property="og:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections4-20191105/image-20191105161550587.png">
-<meta property="og:updated_time" content="2020-01-08T02:03:27.768Z">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105144356952.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105144742407.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105144814493.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105145042981.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105145452819.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105154637160.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105155805597.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105155659102.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105155936014.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105161531047.png">
+<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105161550587.png">
+<meta property="og:updated_time" content="2020-11-18T14:07:43.140Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【notes】Java反序列化利用链挖掘之CommonsCollections2,4,8">
 <meta name="twitter:description" content="0x00 前言前面几篇文章，分析了CommonsCollections:3.2.1版本以下存在的反序列化链。今天将继续分析CommonsCollections:4.0版本，主要讲述CommonsCollections2，4，8的利用链构造。">
-<meta name="twitter:image" content="http://blog.0kami.cn/assets/study-java-deserialized-commonscollections4-20191105/image-20191105144356952.png">
+<meta name="twitter:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/image-20191105144356952.png">
 
   <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
@@ -167,15 +167,15 @@
 <p>将innerMap改成键值对的申明方式即可，但是大家是不是还记得，除了用LazyMap的方式，CommonsCollections3曾提到过使用<code>TrAXFilter</code>类初始化的方式来载入任意的class bytes数组。</p>
 <p>commons-collections:4.0版本下的利用链，用的都是TemplatesImpl作为最终的命令执行的代码调用，由于前面分析过这个利用方式，后文不再复述。</p>
 <h1 id="0x02-利用链分析"><a href="#0x02-利用链分析" class="headerlink" title="0x02 利用链分析"></a>0x02 利用链分析</h1><h2 id="1-CommonsCollections2-4"><a href="#1-CommonsCollections2-4" class="headerlink" title="1. CommonsCollections2,4"></a>1. CommonsCollections2,4</h2><p>CommonsCollections2,4都用到了一个新的类<code>PriorityQueue</code>的<code>Comparator</code>来触发<code>transform</code>函数，两者的区别在于中间的桥接用的不同的Transformer对象。先来看一下<code>PriorityQueue.readObject</code></p>
-<p><img src="/assets/study-java-deserialized-commonscollections4-20191105/image-20191105144356952.png" alt="image-20191105144356952"></p>
+<p><img src="image-20191105144356952.png" alt="image-20191105144356952"></p>
 <p>框框里的主要工作为反序列化恢复该对象的数据，我们重点关注<code>heapify()</code></p>
-<p><img src="/assets/study-java-deserialized-commonscollections4-20191105/image-20191105144742407.png" alt="image-20191105144742407"></p>
+<p><img src="image-20191105144742407.png" alt="image-20191105144742407"></p>
 <p>继续跟进<code>siftDown</code></p>
-<p><img src="/assets/study-java-deserialized-commonscollections4-20191105/image-20191105144814493.png" alt="image-20191105144814493"></p>
+<p><img src="image-20191105144814493.png" alt="image-20191105144814493"></p>
 <p>当我们在实例化对象时提供了<code>comparator</code>，将会来到我们最终触发compare的位置，看一下<code>siftDownUsingComparator</code></p>
-<p><img src="/assets/study-java-deserialized-commonscollections4-20191105/image-20191105145042981.png" alt="image-20191105145042981"></p>
+<p><img src="image-20191105145042981.png" alt="image-20191105145042981"></p>
 <p>这里调用了我们传入的comparator，并调用其compare，利用链中使用了<code>TransformingComparator</code>,来看一下它的compare函数</p>
-<p><img src="/assets/study-java-deserialized-commonscollections4-20191105/image-20191105145452819.png" alt="image-20191105145452819"></p>
+<p><img src="image-20191105145452819.png" alt="image-20191105145452819"></p>
 <p>调用了当前的transformer的transform函数，看到这里，其实已经很熟了，前面分析的很多利用链都跟transform有关，并且4.0版本并没有拉黑相关的transformer。所以接下来，我们就可以用前面的一些思路了。</p>
 <ol>
 <li><p>CommonsCollections2</p>
@@ -189,22 +189,22 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">CommonsCollection2:</span><br><span class="line">PriorityQueue.readObject</span><br><span class="line">	-&gt; PriorityQueue.heapify()</span><br><span class="line">	-&gt; PriorityQueue.siftDown()</span><br><span class="line">	-&gt; PriorityQueue.siftDownUsingComparator()</span><br><span class="line">	-&gt; TransformingComparator.compare()</span><br><span class="line">	-&gt; InvokerTransformer.transform()</span><br><span class="line">	-&gt; TemplatesImpl.newTransformer()</span><br><span class="line">	... templates Gadgets ...</span><br><span class="line">	-&gt; Runtime.getRuntime().exec()</span><br><span class="line"></span><br><span class="line">CommonsCollection4:</span><br><span class="line">PriorityQueue.readObject</span><br><span class="line">	-&gt; PriorityQueue.heapify()</span><br><span class="line">	-&gt; PriorityQueue.siftDown()</span><br><span class="line">	-&gt; PriorityQueue.siftDownUsingComparator()</span><br><span class="line">	-&gt; TransformingComparator.compare()</span><br><span class="line">	-&gt; ChainedTransformer.transform()</span><br><span class="line">	-&gt; InstantiateTransformer.transform()</span><br><span class="line">	-&gt; TemplatesImpl.newTransformer()</span><br><span class="line">	... templates Gadgets ...</span><br><span class="line">	-&gt; Runtime.getRuntime().exec()</span><br></pre></td></tr></table></figure>
 <h2 id="2-CommonsCollections8"><a href="#2-CommonsCollections8" class="headerlink" title="2.CommonsCollections8"></a>2.CommonsCollections8</h2><p>CommonsCollections8是今年<strong><a href="https://github.com/navalorenzo" target="_blank" rel="noopener">navalorenzo</a></strong>推送到ysoserial上的，8与2，4的区别在于使用了新的readObject触发点<code>TreeBag</code></p>
 <p>来看一下<code>TreeBag.readObject</code></p>
-<p><img src="/assets/study-java-deserialized-commonscollections4-20191105/image-20191105154637160.png" alt="image-20191105154637160"></p>
+<p><img src="image-20191105154637160.png" alt="image-20191105154637160"></p>
 <p>这里的两个关键点<code>TreeBag</code>的父类的<code>doReadObject</code>函数和<code>TreeMap</code>.</p>
 <p>看一下<code>doReadObject</code></p>
-<p><img src="/assets/study_java_deseriablized_4/image-20191105155805597.png" alt="image-20191105155805597.png"></p>
+<p><img src="image-20191105155805597.png" alt="image-20191105155805597.png"></p>
 <p>这里对传入的TreeMap调用了<code>put</code>函数</p>
-<p><img src="/assets/study-java-deserialized-commonscollections4-20191105/image-20191105155659102.png" alt="image-20191105155659102"></p>
+<p><img src="image-20191105155659102.png" alt="image-20191105155659102"></p>
 <p>继续跟进<code>compare</code>函数</p>
-<p><img src="/assets/study-java-deserialized-commonscollections4-20191105/image-20191105155936014.png" alt="image-20191105155936014"></p>
+<p><img src="image-20191105155936014.png" alt="image-20191105155936014"></p>
 <p>这里又回到了熟悉的<code>comparator.compare</code>函数，其中<code>comparator</code>就是我们构造的<code>TransformingComparator</code></p>
 <p>后续跟CommonsCollections2相同，就不复述了。</p>
 <p>整理一下利用链</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TreeBag.readObject()</span><br><span class="line">	-&gt; AbstractMapBag.doReadObject()</span><br><span class="line">	-&gt; TreeMap.put()</span><br><span class="line">	-&gt; TransformingComparator.compare()</span><br><span class="line">	-&gt; InvokerTransformer.transform()</span><br><span class="line">	-&gt; TemplatesImpl.newTransformer()</span><br><span class="line">	... templates Gadgets ...</span><br><span class="line">	-&gt; Runtime.getRuntime().exec()</span><br></pre></td></tr></table></figure>
 <h2 id="3-commons-collections-4-1及以上的改变"><a href="#3-commons-collections-4-1及以上的改变" class="headerlink" title="3. commons-collections:4.1及以上的改变"></a>3. commons-collections:4.1及以上的改变</h2><p>前面提到的CommonsCollections2,4,8，都是在commons-collections:4.0版本下才可以使用的。这里我们来看看为什么在4.1及以上版本无法利用！</p>
 <p>前面我们用到了InvokerTransformer和InstantiateTransformer作为中转，很真实，4.1版本这两个类都没有实现Serializable接口，导致我们在序列化时就无法利用这两个类。emmmmm，直接干掉了上面的2，4，8。</p>
-<p><img src="/assets/study-java-deserialized-commonscollections4-20191105/image-20191105161531047.png" alt="image-20191105161531047"></p>
-<p><img src="/assets/study-java-deserialized-commonscollections4-20191105/image-20191105161550587.png" alt="image-20191105161550587"></p>
+<p><img src="image-20191105161531047.png" alt="image-20191105161531047"></p>
+<p><img src="image-20191105161550587.png" alt="image-20191105161550587"></p>
 <p>这个改变意味着我们需要从其他可操作危险方法的对象了。</p>
 <h1 id="0x03-总结"><a href="#0x03-总结" class="headerlink" title="0x03 总结"></a>0x03 总结</h1><p>分析完ysoserial里的commons-collections系列的payloads，我们可以简单总结一下Java的反序列化挖掘思路（不涉及技术点，个人的一些想法）。</p>
 <h2 id="1-最终的利用效果"><a href="#1-最终的利用效果" class="headerlink" title="1. 最终的利用效果"></a>1. 最终的利用效果</h2><p>在利用链构造中，我们肯定希望最终可以达到任意命令执行或者是任意代码执行的效果，这样会使得反序列化漏洞的威力最大化。所以我们很开心能看到InvokerTransformer的transform函数，他利用反射机制来调用任意的代码，也意味着我们能控制任意类的调用执行。但是在实际的挖掘中，除了对反射机制的挖掘和defineClass类型的挖掘，我们也应该注意到其他可能会存在的危险利用，如任意文件写入，任意文件删除等等。</p>
