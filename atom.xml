@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2020-11-18T14:35:36.612Z</updated>
+  <updated>2021-01-05T03:05:19.220Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>XStream 1.4.15 Blacklist Bypass</title>
+    <link href="http://blog.0kami.cn/2021/01/03/java-xstream-blacklist-bypass/"/>
+    <id>http://blog.0kami.cn/2021/01/03/java-xstream-blacklist-bypass/</id>
+    <published>2021-01-03T14:43:16.000Z</published>
+    <updated>2021-01-05T03:05:19.220Z</updated>
+    
+    <summary type="html">
+    
+      welcome to my blog, enter password to read.
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="cve" scheme="http://blog.0kami.cn/tags/cve/"/>
+    
+  </entry>
   
   <entry>
     <title>【CTF】xnuca2020 easyjava</title>
@@ -41,7 +61,7 @@
     <link href="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/"/>
     <id>http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/</id>
     <published>2020-05-22T09:14:38.000Z</published>
-    <updated>2020-11-18T14:32:33.635Z</updated>
+    <updated>2020-12-08T15:15:08.560Z</updated>
     
     <summary type="html">
     
@@ -395,26 +415,6 @@
     
     
       <category term="suctf" scheme="http://blog.0kami.cn/tags/suctf/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【CTF】DDCTF 2018 web writeup</title>
-    <link href="http://blog.0kami.cn/2018/04/21/ctf/ddctf-2018-web-writeup/"/>
-    <id>http://blog.0kami.cn/2018/04/21/ctf/ddctf-2018-web-writeup/</id>
-    <published>2018-04-21T12:53:50.000Z</published>
-    <updated>2020-11-02T04:03:25.222Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;DDCTF-2018-2道WEB-Writeup&quot;&gt;&lt;a href=&quot;#DDCTF-2018-2道WEB-Writeup&quot; class=&quot;headerlink&quot; title=&quot;DDCTF 2018 2道WEB Writeup&quot;&gt;&lt;/a&gt;DDCTF 2018 2道WEB Writeup&lt;/h1&gt;
-    
-    </summary>
-    
-      <category term="ctf" scheme="http://blog.0kami.cn/categories/ctf/"/>
-    
-    
-      <category term="ddctf" scheme="http://blog.0kami.cn/tags/ddctf/"/>
     
   </entry>
   
