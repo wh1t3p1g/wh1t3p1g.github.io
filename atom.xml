@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.0kami.cn/"/>
-  <updated>2021-01-05T03:08:25.388Z</updated>
+  <updated>2021-03-14T07:10:02.498Z</updated>
   <id>http://blog.0kami.cn/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>如何高效的挖掘Java反序列化利用链？</title>
+    <link href="http://blog.0kami.cn/2021/01/03/java-how-to-find-gadget-chains/"/>
+    <id>http://blog.0kami.cn/2021/01/03/java-how-to-find-gadget-chains/</id>
+    <published>2021-01-03T14:43:16.000Z</published>
+    <updated>2021-03-14T07:10:02.498Z</updated>
+    
+    <summary type="html">
+    
+      welcome to my blog, enter password to read.
+    
+    </summary>
+    
+      <category term="notes" scheme="http://blog.0kami.cn/categories/notes/"/>
+    
+    
+      <category term="vul" scheme="http://blog.0kami.cn/tags/vul/"/>
+    
+  </entry>
   
   <entry>
     <title>XStream 1.4.15 Blacklist Bypass</title>
@@ -299,15 +319,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/php-thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/php-thinkphp-5-2-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/php-thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/php-thinkphp-6-0-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:28:38.670Z</updated>
+    <updated>2019-10-25T01:27:35.336Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
     
     </summary>
     
@@ -319,15 +339,15 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
-    <link href="http://blog.0kami.cn/2019/09/10/php-thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
-    <id>http://blog.0kami.cn/2019/09/10/php-thinkphp-6-0-x-反序列化利用链/</id>
+    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
+    <link href="http://blog.0kami.cn/2019/09/10/php-thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
+    <id>http://blog.0kami.cn/2019/09/10/php-thinkphp-5-2-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:27:35.336Z</updated>
+    <updated>2019-10-25T01:28:38.670Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。&lt;br&gt;
+      &lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。&lt;br&gt;
     
     </summary>
     
@@ -395,26 +415,6 @@
     
     
       <category term="cms" scheme="http://blog.0kami.cn/tags/cms/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【CTF】SUCTF 2018 部分web writeup</title>
-    <link href="http://blog.0kami.cn/2018/05/28/ctf/suctf-part-web-writeup/"/>
-    <id>http://blog.0kami.cn/2018/05/28/ctf/suctf-part-web-writeup/</id>
-    <published>2018-05-28T02:46:06.000Z</published>
-    <updated>2019-02-05T13:54:20.486Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;SUCTF&quot;&gt;&lt;a href=&quot;#SUCTF&quot; class=&quot;headerlink&quot; title=&quot;SUCTF&quot;&gt;&lt;/a&gt;SUCTF&lt;/h1&gt;&lt;p&gt;抽了点时间做了2道SUCTF的web题，记录一下writeup。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="ctf" scheme="http://blog.0kami.cn/categories/ctf/"/>
-    
-    
-      <category term="suctf" scheme="http://blog.0kami.cn/tags/suctf/"/>
     
   </entry>
   
