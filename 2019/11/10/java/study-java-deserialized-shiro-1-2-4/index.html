@@ -31,7 +31,7 @@
 <meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191110143737549.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-shiro-1-2-4-20191110/image-20200109193558744.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191110151222301.png">
-<meta property="og:updated_time" content="2020-11-18T14:33:24.602Z">
+<meta property="og:updated_time" content="2021-03-16T01:51:54.159Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【notes】Java反序列化利用链挖掘之Shiro反序列化">
 <meta name="twitter:description" content="0x00 前言在跟了一遍commons-collections系列的payload后，终于可以开始解决一下当时对shiro反序列化模凌两可的认识了。">
@@ -162,7 +162,7 @@
   	<div class="article-entry" itemprop="articleBody">
     	<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>在跟了一遍commons-collections系列的payload后，终于可以开始解决一下当时对shiro反序列化模凌两可的认识了。</p>
 <a id="more"></a>
-<p>当前，不管是国内实际的xx行动还是ctf比赛，shiro反序列化会经常看到。但在实际利用这个漏洞的时候，会发现我们无法在tomcat下直接利用shiro原生的<code>commons-collections:3.2.1</code>（原因后面说）。</p>
+<p>当前，不管是国内实际的xx行动还是ctf比赛，shiro反序列化会经常看到。但在实际利用这个漏洞的时候，会发现我们无法在tomcat下直接利用shiro-sample中的<code>commons-collections:3.2.1</code>（2021-03-16更新，这里经p牛指正，shiro并没有依赖cc库，<a href="https://t.zsxq.com/372nM7y" target="_blank" rel="noopener">详情</a>）。</p>
 <p>我们前面已经对commons-collections系列利用链的分析，今天就来根据学到的知识来解决这个问题。</p>
 <p>本文讨论了shiro-1.2.4版本无法直接利用现有的ysoserial利用链，并提出了相应的解决方案。</p>
 <h1 id="0x01-环境准备"><a href="#0x01-环境准备" class="headerlink" title="0x01 环境准备"></a>0x01 环境准备</h1><p>这里用的是<a href="!https://github.com/apache/shiro">shiro-root-1.2.4</a>的samples/web环境，clone下来后执行<code>git checkout shiro-root-1.2.4</code></p>
