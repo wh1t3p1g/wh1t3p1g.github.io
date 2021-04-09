@@ -41,14 +41,11 @@
     <link href="http://blog.0kami.cn/2021/01/03/java-xstream-blacklist-bypass/"/>
     <id>http://blog.0kami.cn/2021/01/03/java-xstream-blacklist-bypass/</id>
     <published>2021-01-03T14:43:16.000Z</published>
-    <updated>2021-03-21T09:39:22.106Z</updated>
+    <updated>2021-04-09T07:01:25.213Z</updated>
     
     <summary type="html">
     
-      
-      
-        &lt;h1 id=&quot;1-Gadget-Overview&quot;&gt;&lt;a href=&quot;#1-Gadget-Overview&quot; class=&quot;headerlink&quot; title=&quot;#1 Gadget Overview&quot;&gt;&lt;/a&gt;#1 Gadget Overview&lt;/h1&gt;&lt;p&gt;Recently
-      
+      &lt;h1 id=&quot;1-Gadget-Overview&quot;&gt;&lt;a href=&quot;#1-Gadget-Overview&quot; class=&quot;headerlink&quot; title=&quot;#1 Gadget Overview&quot;&gt;&lt;/a&gt;#1 Gadget Overview&lt;/h1&gt;&lt;p&gt;Recently, I found a new deserialzation gadget which can bypass the latest version of XStream. This gadget use the JDK to construct the gadget chain. I had tested the gadget chain to RCE (remote code execute) with the version of JDK8 (8u162). I think other version of JDK also could trigger this vulnerablity to the RCE.&lt;/p&gt;
     
     </summary>
     
