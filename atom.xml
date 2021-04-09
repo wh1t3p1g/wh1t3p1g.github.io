@@ -57,11 +57,11 @@
   </entry>
   
   <entry>
-    <title>【CTF】xnuca2020 easyjava</title>
+    <title>xnuca2020 easyjava设计思路</title>
     <link href="http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/"/>
     <id>http://blog.0kami.cn/2020/11/02/ctf-xnuca-2020-easyjava/</id>
     <published>2020-11-02T04:04:34.000Z</published>
-    <updated>2020-11-18T14:35:36.612Z</updated>
+    <updated>2021-04-09T07:05:18.779Z</updated>
     
     <summary type="html">
     
@@ -77,11 +77,11 @@
   </entry>
   
   <entry>
-    <title>【notes】struts2历史漏洞分析</title>
+    <title>struts2历史漏洞分析</title>
     <link href="http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/"/>
     <id>http://blog.0kami.cn/2020/05/22/java-talk-about-struts2/</id>
     <published>2020-05-22T09:14:38.000Z</published>
-    <updated>2020-12-08T15:15:08.560Z</updated>
+    <updated>2021-04-09T07:03:25.102Z</updated>
     
     <summary type="html">
     
@@ -98,11 +98,11 @@
   </entry>
   
   <entry>
-    <title>【notes】回顾XStream反序列化漏洞</title>
+    <title>回顾XStream反序列化漏洞</title>
     <link href="http://blog.0kami.cn/2020/04/18/java/talk-about-xstream-deserialization/"/>
     <id>http://blog.0kami.cn/2020/04/18/java/talk-about-xstream-deserialization/</id>
     <published>2020-04-18T11:44:58.000Z</published>
-    <updated>2021-03-17T11:42:40.120Z</updated>
+    <updated>2021-04-09T07:03:29.820Z</updated>
     
     <summary type="html">
     
@@ -119,11 +119,11 @@
   </entry>
   
   <entry>
-    <title>【notes】浅谈fastjson反序列化漏洞</title>
+    <title>浅谈fastjson反序列化漏洞</title>
     <link href="http://blog.0kami.cn/2020/04/13/java/talk-about-fastjson-deserialization/"/>
     <id>http://blog.0kami.cn/2020/04/13/java/talk-about-fastjson-deserialization/</id>
     <published>2020-04-13T08:31:09.000Z</published>
-    <updated>2020-11-18T14:33:06.736Z</updated>
+    <updated>2021-04-09T07:03:34.643Z</updated>
     
     <summary type="html">
     
@@ -139,11 +139,11 @@
   </entry>
   
   <entry>
-    <title>【notes】攻击Java JMX-RMI</title>
+    <title>攻击Java JMX-RMI</title>
     <link href="http://blog.0kami.cn/2020/03/10/java/java-jmx-rmi/"/>
     <id>http://blog.0kami.cn/2020/03/10/java/java-jmx-rmi/</id>
     <published>2020-03-10T12:51:30.000Z</published>
-    <updated>2020-11-18T14:30:01.415Z</updated>
+    <updated>2021-04-09T07:04:27.875Z</updated>
     
     <summary type="html">
     
@@ -159,11 +159,11 @@
   </entry>
   
   <entry>
-    <title>【notes】JNDI with LDAP</title>
+    <title>JNDI with LDAP</title>
     <link href="http://blog.0kami.cn/2020/03/01/java/jndi-with-ldap/"/>
     <id>http://blog.0kami.cn/2020/03/01/java/jndi-with-ldap/</id>
     <published>2020-03-01T11:22:01.000Z</published>
-    <updated>2020-11-18T14:29:38.735Z</updated>
+    <updated>2021-04-09T07:04:23.395Z</updated>
     
     <summary type="html">
     
@@ -179,11 +179,11 @@
   </entry>
   
   <entry>
-    <title>【notes】JNDI with RMI</title>
+    <title>JNDI with RMI</title>
     <link href="http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/"/>
     <id>http://blog.0kami.cn/2020/02/09/java/jndi-with-rmi/</id>
     <published>2020-02-09T13:42:18.000Z</published>
-    <updated>2020-11-18T14:29:18.865Z</updated>
+    <updated>2021-04-09T07:04:19.015Z</updated>
     
     <summary type="html">
     
@@ -199,11 +199,11 @@
   </entry>
   
   <entry>
-    <title>【notes】浅谈Java RMI Registry安全问题</title>
+    <title>浅谈Java RMI Registry安全问题</title>
     <link href="http://blog.0kami.cn/2020/02/06/java/rmi-registry-security-problem/"/>
     <id>http://blog.0kami.cn/2020/02/06/java/rmi-registry-security-problem/</id>
     <published>2020-02-06T07:23:36.000Z</published>
-    <updated>2020-11-18T14:27:51.150Z</updated>
+    <updated>2021-04-09T07:04:13.011Z</updated>
     
     <summary type="html">
     
@@ -219,11 +219,11 @@
   </entry>
   
   <entry>
-    <title>【notes】Java反序列化利用链挖掘之Shiro反序列化</title>
+    <title>Java反序列化利用链挖掘之Shiro反序列化</title>
     <link href="http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/"/>
     <id>http://blog.0kami.cn/2019/11/10/java/study-java-deserialized-shiro-1-2-4/</id>
     <published>2019-11-10T07:32:03.000Z</published>
-    <updated>2021-03-16T01:51:54.159Z</updated>
+    <updated>2021-04-09T07:03:40.681Z</updated>
     
     <summary type="html">
     
@@ -239,11 +239,11 @@
   </entry>
   
   <entry>
-    <title>【notes】Java反序列化利用链挖掘之CommonsCollections2,4,8</title>
+    <title>Java反序列化利用链挖掘之CommonsCollections2,4,8</title>
     <link href="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/"/>
     <id>http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/</id>
     <published>2019-11-05T08:55:51.000Z</published>
-    <updated>2020-11-18T14:32:00.442Z</updated>
+    <updated>2021-04-09T07:03:47.688Z</updated>
     
     <summary type="html">
     
@@ -259,11 +259,11 @@
   </entry>
   
   <entry>
-    <title>【notes】Java反序列化利用链挖掘之CommonsCollections5,6,7,9,10</title>
+    <title>Java反序列化利用链挖掘之CommonsCollections5,6,7,9,10</title>
     <link href="http://blog.0kami.cn/2019/10/31/java/study-java-deserialized-commonscollections3-others/"/>
     <id>http://blog.0kami.cn/2019/10/31/java/study-java-deserialized-commonscollections3-others/</id>
     <published>2019-10-31T11:40:44.000Z</published>
-    <updated>2020-11-18T14:30:35.931Z</updated>
+    <updated>2021-04-09T07:04:08.614Z</updated>
     
     <summary type="html">
     
@@ -279,11 +279,11 @@
   </entry>
   
   <entry>
-    <title>【notes】Java反序列化利用链挖掘之CommonsCollections3</title>
+    <title>Java反序列化利用链挖掘之CommonsCollections3</title>
     <link href="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/"/>
     <id>http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/</id>
     <published>2019-10-28T08:20:06.000Z</published>
-    <updated>2020-11-18T14:31:23.156Z</updated>
+    <updated>2021-04-09T07:03:53.969Z</updated>
     
     <summary type="html">
     
@@ -299,11 +299,11 @@
   </entry>
   
   <entry>
-    <title>【notes】Java反序列化利用链挖掘之CommonsCollections1</title>
+    <title>Java反序列化利用链挖掘之CommonsCollections1</title>
     <link href="http://blog.0kami.cn/2019/10/24/java/study-java-deserialized-commonscollections3-1/"/>
     <id>http://blog.0kami.cn/2019/10/24/java/study-java-deserialized-commonscollections3-1/</id>
     <published>2019-10-24T14:15:25.000Z</published>
-    <updated>2020-11-18T14:30:54.639Z</updated>
+    <updated>2021-04-09T07:03:59.364Z</updated>
     
     <summary type="html">
     
@@ -319,11 +319,11 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v5.2.x 反序列化利用链挖掘</title>
+    <title>thinkphp v5.2.x 反序列化利用链挖掘</title>
     <link href="http://blog.0kami.cn/2019/09/10/php-thinkphp-5-2-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
     <id>http://blog.0kami.cn/2019/09/10/php-thinkphp-5-2-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:28:38.670Z</updated>
+    <updated>2021-04-09T07:09:04.156Z</updated>
     
     <summary type="html">
     
@@ -339,11 +339,11 @@
   </entry>
   
   <entry>
-    <title>【Code Review】thinkphp v6.0.x 反序列化利用链挖掘</title>
+    <title>thinkphp v6.0.x 反序列化利用链挖掘</title>
     <link href="http://blog.0kami.cn/2019/09/10/php-thinkphp-6-0-x-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/"/>
     <id>http://blog.0kami.cn/2019/09/10/php-thinkphp-6-0-x-反序列化利用链/</id>
     <published>2019-09-10T04:59:00.000Z</published>
-    <updated>2019-10-25T01:27:35.336Z</updated>
+    <updated>2021-04-09T07:09:12.036Z</updated>
     
     <summary type="html">
     
@@ -359,11 +359,11 @@
   </entry>
   
   <entry>
-    <title>【Code Review】mycncart sqli</title>
+    <title>mycncart sqli</title>
     <link href="http://blog.0kami.cn/2019/02/25/php/mycncart-v2-0-0-3-sqli/"/>
     <id>http://blog.0kami.cn/2019/02/25/php/mycncart-v2-0-0-3-sqli/</id>
     <published>2019-02-25T10:33:48.000Z</published>
-    <updated>2019-02-25T10:48:59.472Z</updated>
+    <updated>2021-04-09T07:08:43.173Z</updated>
     
     <summary type="html">
     
@@ -379,11 +379,11 @@
   </entry>
   
   <entry>
-    <title>【Code Review】temmoku home版 t1.15 前台sqli</title>
+    <title>temmoku home版 t1.15 前台sqli</title>
     <link href="http://blog.0kami.cn/2019/02/21/php/temmoku-t1-15-sqli/"/>
     <id>http://blog.0kami.cn/2019/02/21/php/temmoku-t1-15-sqli/</id>
     <published>2019-02-21T13:09:44.000Z</published>
-    <updated>2019-02-22T01:34:39.328Z</updated>
+    <updated>2021-04-09T07:08:49.876Z</updated>
     
     <summary type="html">
     
@@ -399,11 +399,11 @@
   </entry>
   
   <entry>
-    <title>【Code Analysis】thinkphp v5.x App.php s参数RCE</title>
+    <title>thinkphp v5.x App.php s参数RCE</title>
     <link href="http://blog.0kami.cn/2019/02/05/php-thinkphp-v5-x-App-php-rce/"/>
     <id>http://blog.0kami.cn/2019/02/05/php-thinkphp-v5-x-App-php-rce/</id>
     <published>2019-02-05T08:02:06.000Z</published>
-    <updated>2019-03-13T09:11:15.312Z</updated>
+    <updated>2021-04-09T07:08:56.044Z</updated>
     
     <summary type="html">
     

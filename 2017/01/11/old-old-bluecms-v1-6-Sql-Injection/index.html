@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
-  <title>【Code Review】bluecms v1.6 Sql Injection 分析 | 0kami&#39;s Blog</title>
+  <title>bluecms v1.6 Sql Injection 分析 | 0kami&#39;s Blog</title>
   <meta name="description" content="A Web 🐶 &amp;&amp; Code Reviewer">
   <meta name="keywords" content>
   <meta name="HandheldFriendly" content="True">
@@ -15,7 +15,7 @@
   <meta name="description" content="概述很久没有代码审计了，拿一套简单的找找感觉。bluecms是一套比较老的门户网站cms，网上也有很多关于它的漏洞还未修补，所以下文的漏洞也不算是最新的，仅当是练练手。">
 <meta name="keywords" content="cms">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【Code Review】bluecms v1.6 Sql Injection 分析">
+<meta property="og:title" content="bluecms v1.6 Sql Injection 分析">
 <meta property="og:url" content="http://blog.0kami.cn/2017/01/11/old-old-bluecms-v1-6-Sql-Injection/index.html">
 <meta property="og:site_name" content="0kami&#39;s Blog">
 <meta property="og:description" content="概述很久没有代码审计了，拿一套简单的找找感觉。bluecms是一套比较老的门户网站cms，网上也有很多关于它的漏洞还未修补，所以下文的漏洞也不算是最新的，仅当是练练手。">
@@ -25,9 +25,9 @@
 <meta property="og:image" content="http://blog.0kami.cn/img/bluecms_code_review/bluecms_online_ip.png">
 <meta property="og:image" content="http://blog.0kami.cn/img/bluecms_code_review/bluecms_ip_injection.png">
 <meta property="og:image" content="http://blog.0kami.cn/img/bluecms_code_review/bluecms_ip_results.png">
-<meta property="og:updated_time" content="2019-02-05T13:55:22.299Z">
+<meta property="og:updated_time" content="2021-04-09T07:05:27.565Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【Code Review】bluecms v1.6 Sql Injection 分析">
+<meta name="twitter:title" content="bluecms v1.6 Sql Injection 分析">
 <meta name="twitter:description" content="概述很久没有代码审计了，拿一套简单的找找感觉。bluecms是一套比较老的门户网站cms，网上也有很多关于它的漏洞还未修补，所以下文的漏洞也不算是最新的，仅当是练练手。">
 <meta name="twitter:image" content="http://blog.0kami.cn/img/bluecms_code_review/bluecms_login_success.png">
 
@@ -136,7 +136,7 @@
 	<section class='meta'>
 	<h2 class="title">
   	<a href="/2017/01/11/old-old-bluecms-v1-6-Sql-Injection/">
-    	【Code Review】bluecms v1.6 Sql Injection 分析
+    	bluecms v1.6 Sql Injection 分析
     </a>
   </h2>
 	<time>
@@ -207,13 +207,13 @@
 	
 		<div class="art-item-footer">
 				
-					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2017/01/13/old-old-Struts2-history-payload/" rel="prev"  title="【VULNERABLITY】Struts2命令执行各版本记录">
-						【VULNERABLITY】Struts2命令执行各版本记录
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2017/01/13/old-old-Struts2-history-payload/" rel="prev"  title="Struts2命令执行各版本记录">
+						Struts2命令执行各版本记录
 					</a></span>
 				
 				
-					<span class="art-item-right">next：<a href="/2016/12/19/old-old-file-include/" rel="next"  title="【VULNERABLITY】文件包含漏洞详解">
-						【VULNERABLITY】文件包含漏洞详解
+					<span class="art-item-right">next：<a href="/2016/10/26/old-old-dirtycow-cve-2016-5195/" rel="next"  title="CVE-2016-5195 Dirtycow">
+						CVE-2016-5195 Dirtycow
 					</a><i class="icon icon-chevron-thin-right"></i></span>
 				
 		</div>
@@ -227,7 +227,7 @@
 </article>
 <script>
 	window.subData = {
-		title: '【Code Review】bluecms v1.6 Sql Injection 分析',
+		title: 'bluecms v1.6 Sql Injection 分析',
 		tools: true
 	}
 </script>
@@ -270,7 +270,7 @@
     
         <li><a class="flat-box" href="/categories/ctf/"><div class='name'>ctf</div><div class='badget'>6</div></a></li>
     
-        <li><a class="flat-box" href="/categories/notes/"><div class='name'>notes</div><div class='badget'>25</div></a></li>
+        <li><a class="flat-box" href="/categories/notes/"><div class='name'>notes</div><div class='badget'>24</div></a></li>
     
     </ul>
     
