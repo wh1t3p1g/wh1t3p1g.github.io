@@ -27,9 +27,9 @@
 <meta property="og:image" content="http://blog.0kami.cn/images/java-deserialized-commonscollections3-20191028/image-20191025215202858.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/java-deserialized-commonscollections3-20191028/image-20191025215052940.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/java-deserialized-commonscollections3-20191028/image-20191028155646352.png">
-<meta property="og:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/study-java-deserialized-commonscollections3-3-20191028/image-20191104193635375.png">
-<meta property="og:image" content="http://blog.0kami.cn/2019/10/28/java/study-java-deserialized-commonscollections3-3/study-java-deserialized-commonscollections3-3-20191028/image-20191104194440916.png">
-<meta property="og:updated_time" content="2021-04-09T07:03:53.969Z">
+<meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-commonscollections3-3-20191028/image-20191104193635375.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-commonscollections3-3-20191028/image-20191104194440916.png">
+<meta property="og:updated_time" content="2021-04-19T12:46:25.748Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java反序列化利用链挖掘之CommonsCollections3">
 <meta name="twitter:description" content="0x00 前言前面分析了ysoserial的CommonsCollections1，熟悉了一点Java反序列化。本文将继续分析ysoserial的利用，今天的主角是CommonsCollections3.">
@@ -215,9 +215,9 @@
 <li>利用可控的defineClass函数的byte数组。构造恶意的Class字节码数组，常于静态块注入恶意代码</li>
 </ol>
 <h3 id="20191104-补充"><a href="#20191104-补充" class="headerlink" title="20191104 补充"></a>20191104 补充</h3><p>前面的分析并没有提到3.2.2版本发生了啥事，导致了利用链的失效，这里简单提一下</p>
-<p><img src="study-java-deserialized-commonscollections3-3-20191028/image-20191104193635375.png" alt="image-20191104193635375"></p>
+<p><img src="/images/study-java-deserialized-commonscollections3-3-20191028/image-20191104193635375.png" alt="image-20191104193635375"></p>
 <p>3.2.2版本对InvokerTransformer增加了readObject函数，并且做了是否允许反序列化的检查，在<code>FunctorUtils.checkUnsafeSerialization</code>函数内。</p>
-<p><img src="study-java-deserialized-commonscollections3-3-20191028/image-20191104194440916.png" alt="image-20191104194440916"></p>
+<p><img src="/images/study-java-deserialized-commonscollections3-3-20191028/image-20191104194440916.png" alt="image-20191104194440916"></p>
 <p>这里UNSAFE_SERIALIZABLE_PROPERTY的值默认为false，如果需要为true，需要在运行时指定。</p>
 <p>所以在使用InvokerTransformer作为反序列化利用链的一部分时，会throw一个exception。除了InvokerTransformer类外，还有CloneTransformer, ForClosure, InstantiateFactory, InstantiateTransformer, InvokerTransformer,<br>PrototypeCloneFactory, PrototypeSerializationFactory, WhileClosure。所以在3.2.2版本以上，基本上利用链都已经废了。</p>
 <p>当然，这种方法治标不治本，如果可以在这些类以外，构造一个利用链同样可以达到前面的效果。</p>
