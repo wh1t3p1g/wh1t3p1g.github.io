@@ -34,7 +34,7 @@
 <meta property="og:image" content="http://blog.0kami.cn/images/java-deserialized-commonscollections-others-20191031/image-20191031172937969.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/java-deserialized-commonscollections-others-20191031/image-20191031181203017.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/java-deserialized-commonscollections-others-20191031/image-20191031183753047.png">
-<meta property="og:updated_time" content="2021-04-09T07:04:08.614Z">
+<meta property="og:updated_time" content="2021-04-20T06:58:03.252Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java反序列化利用链挖掘之CommonsCollections5,6,7,9,10">
 <meta name="twitter:description" content="0x00 前言本文继续分析CommonsCollections的相关反序列化利用链，这次主要分析CommonsCollections5,6,7，以及我找的一个新利用链，这里暂且将其称为10.">
@@ -208,7 +208,7 @@
 <p>其中对key调用的<code>hash()</code>函数会调用<code>key.hashCode</code>函数，那么现在就很清楚了，我们只要将key的值替换成构造好的<code>TiedMapEntry</code>对象就可以了。注意，这里的key值其实就是<code>HashSet.add</code>的实例，在HashSet里的HashMap类属性只用到了Key。</p>
 <p>整理一下利用链</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">HashSet.readObject()</span><br><span class="line">	-&gt; HashMap.put(key) =&gt; key.hashCode =&gt; TiedMapEntry.hashCode</span><br><span class="line">	-&gt; TiedMapEntry.getValue</span><br><span class="line">	-&gt; TiedMapEntry.map.get() =&gt; LazyMap.get()</span><br><span class="line">	-&gt; factory.transform() =&gt; ChainedTransformer.transform()</span><br><span class="line">	-&gt; 前文构造的Runtime.getRuntime().exec()</span><br></pre></td></tr></table></figure>
-<h2 id="4-重新构造前半部分利用链–CommonsCollections7"><a href="#4-重新构造前半部分利用链–CommonsCollections7" class="headerlink" title="4. 重新构造前半部分利用链–CommonsCollections7"></a>4. 重新构造前半部分利用链–CommonsCollections7</h2><p>CommonsCollections7用了Hashtable来代替<code>AnnotationInvocationHandler</code>，不同于前面两种CommonsCollections7并未使用<code>TiredMapEntry</code>，而是用了相同key冲突的方式调用<code>equals</code>来触发<code>Lazy.get</code>函数。</p>
+<h2 id="4-重新构造前半部分利用链–CommonsCollections7"><a href="#4-重新构造前半部分利用链–CommonsCollections7" class="headerlink" title="4. 重新构造前半部分利用链–CommonsCollections7"></a>4. 重新构造前半部分利用链–CommonsCollections7</h2><p>CommonsCollections7用了Hashtable来代替<code>AnnotationInvocationHandler</code>，不同于前面两种CommonsCollections7并未使用<code>TiedMapEntry</code>，而是用了相同key冲突的方式调用<code>equals</code>来触发<code>Lazy.get</code>函数。</p>
 <p>先来看一下<code>Hashtable</code>的<code>readObject</code>函数</p>
 <p><img src="/images/java-deserialized-commonscollections-others-20191031/image-20191029170332420.png" alt="image-20191029170332420"></p>
 <p>继续跟进<code>reconstitutionPut</code></p>

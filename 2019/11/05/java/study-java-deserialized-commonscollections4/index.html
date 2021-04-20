@@ -26,12 +26,12 @@
 <meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-commonscollections4-20191105/image-20191105145042981.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-commonscollections4-20191105/image-20191105145452819.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-commonscollections4-20191105/image-20191105154637160.png">
-<meta property="og:image" content="http://blog.0kami.cn/2019/11/05/java/study-java-deserialized-commonscollections4/study_java_deseriablized_4/image-20191105155805597.png">
+<meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-commonscollections4-20191105/image-20191105155805597.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-commonscollections4-20191105/image-20191105155659102.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-commonscollections4-20191105/image-20191105155936014.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-commonscollections4-20191105/image-20191105161531047.png">
 <meta property="og:image" content="http://blog.0kami.cn/images/study-java-deserialized-commonscollections4-20191105/image-20191105161550587.png">
-<meta property="og:updated_time" content="2021-04-09T07:03:47.688Z">
+<meta property="og:updated_time" content="2021-04-20T06:55:18.021Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java反序列化利用链挖掘之CommonsCollections2,4,8">
 <meta name="twitter:description" content="0x00 前言前面几篇文章，分析了CommonsCollections:3.2.1版本以下存在的反序列化链。今天将继续分析CommonsCollections:4.0版本，主要讲述CommonsCollections2，4，8的利用链构造。">
@@ -192,7 +192,7 @@
 <p><img src="/images/study-java-deserialized-commonscollections4-20191105/image-20191105154637160.png" alt="image-20191105154637160"></p>
 <p>这里的两个关键点<code>TreeBag</code>的父类的<code>doReadObject</code>函数和<code>TreeMap</code>.</p>
 <p>看一下<code>doReadObject</code></p>
-<p><img src="study_java_deseriablized_4/image-20191105155805597.png" alt="image-20191105155805597.png"></p>
+<p><img src="/images/study-java-deserialized-commonscollections4-20191105/image-20191105155805597.png" alt="image-20191105155805597.png"></p>
 <p>这里对传入的TreeMap调用了<code>put</code>函数</p>
 <p><img src="/images/study-java-deserialized-commonscollections4-20191105/image-20191105155659102.png" alt="image-20191105155659102"></p>
 <p>继续跟进<code>compare</code>函数</p>
