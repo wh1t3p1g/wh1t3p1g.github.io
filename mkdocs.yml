@@ -1,0 +1,24 @@
+site_name: My Docs
+site_url: https://blog.0kami.cn/
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.tabs
+plugins:
+  - search:
+      lang:
+        - en
+        - ja
+      separator: '[\s\u200b\-]'
+  - tags:
+      tags_file: index.md
+  - blogging:
+      dirs: # The directories to be included
+        - blog
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
