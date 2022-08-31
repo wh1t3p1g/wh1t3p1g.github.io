@@ -5,16 +5,15 @@ tags:
 categories:
   - notes
 date: 2021-3-14 22:43:16
-typora-root-url: ../../../source
 ---
 
-# #1 前言
+## #1 前言
 
 Java反序列化利用链一直都是国内外研究热点之一，但当前自动化方案gadgetinspector的效果并不好。所以目前多数师傅仍然是以人工+自研小工具的方式进行利用链的挖掘。目前我个人也在找一个合适的方法来高效挖掘利用链，本文将主要介绍我自己的一些挖掘心得，辅以XStream反序列化利用链CVE-2021-21346为例。
 
 <!-- more -->
 
-# #1 前置知识
+## #1 前置知识
 
 这里前置知识主要有两类：XStream反序列化利用链的原理和图数据库查询语法
 
@@ -26,7 +25,7 @@ Java反序列化利用链一直都是国内外研究热点之一，但当前自�
 
    这里用到了我即将开源的工具[tabby](https://github.com/wh1t3p1g/tabby)，该工具将jar文件转化为代码属性图，然后后续我们可以用neo4j的图数据库查询语法进行利用链的查找，所以我们需要有一定的图数据库查询语法的[基础](https://neo4j.com/docs/cypher-manual/current/)
 
-# #2 利用链挖掘
+## #2 利用链挖掘
 
 首先本次针对的是JDK相关Jar文件的利用链检测分析，所以先使用tabby生成JDK相关的代码属性图至图数据库。执行完以下两句命令，可以生成一个28w数据节点，76w关系边的代码属性图：
 
@@ -250,7 +249,7 @@ javax.naming.ldap.Rdn$RdnEntry.compareTo
 
 至此，CVE-2021-21346就挖出来了，相对于人工挖，当前的方法大幅度减少了利用链的可能性种类，同样，另一条CVE-2021-21351也是同样的方法可以发现，以后有空再补充些其他的案例:)
 
-# #3 利用链构造
+## #3 利用链构造
 
 当前这条利用链的构造相对来说比较简单，只需要构造好MultiUIDefaults即可，下面为部分构造代码，详细见[LazyValue](https://github.com/wh1t3p1g/ysomap/blob/master/core/src/main/java/ysomap/core/payload/xstream/LazyValue.java#L60)
 
@@ -271,7 +270,7 @@ ReflectionHelper.setFieldValue(rdnEntry2, "value", multiUIDefaults);
 return PayloadHelper.makeTreeSet(rdnEntry2, rdnEntry1);
 ```
 
-# #4 总结
+## #4 总结
 
 13号的时候XStream发布了1.4.16，共修复了11个CVE，其中还比较有意思的是threedr3am的classloader的利用方式，以及钟潦贵师傅的CVE-2021-21345（这条利用链很长，我当前只用tabby做了12个节点的查找，这条链大概有20个节点，嗯，很长）。相信这波完了之后，估计还能找到一些漏网之鱼XD
 

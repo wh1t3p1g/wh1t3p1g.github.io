@@ -5,14 +5,14 @@ tags:
 categories: codereview
 date: 2019-09-10 12:59:00
 ---
-# 0x00 前言
+## 0x00 前言
 
 上周参与了N1CTF，里面有一道关于thinkphp5的反序列化漏洞的利用。记录一下关于该反序列化的利用链分析。
 <!-- more -->
 
 后文主要包括两条链的利用分析（一条是我找的，也是题目的预期解，另一条是wonderkun师傅找的非预期解）
 
-# 0x01 环境准备
+## 0x01 环境准备
 
 这里就不直接用题目的环境了，采用composer直接安装5.2.*-dev版本
 
@@ -20,9 +20,9 @@ date: 2019-09-10 12:59:00
 composer create-project topthink/think=5.2.x-dev v5.2
 ```
 
-# 0x02 利用链分析
+## 0x02 利用链分析
 
-## 背景回顾
+### 背景回顾
 
 tp5在我印象里反序列化的利用链存在一个Windows类的任意文件删除，但是在[这篇文章]([https://blog.riskivy.com/%E6%8C%96%E6%8E%98%E6%9A%97%E8%97%8Fthinkphp%E4%B8%AD%E7%9A%84%E5%8F%8D%E5%BA%8F%E5%88%97%E5%88%A9%E7%94%A8%E9%93%BE/](https://blog.riskivy.com/挖掘暗藏thinkphp中的反序列利用链/))的启示下，也算是找到了一条新的路（关于`__toString`的触发方式，除了字符串拼接的方式，还可以利用PHP自带函数参数的强制转换）。
 
@@ -30,7 +30,7 @@ tp5在我印象里反序列化的利用链存在一个Windows类的任意文件�
 
 那么接下来，我们来看看5.2.x新的利用链吧：）
 
-## think/model/concern/Attribute.php getValue可函数动态调用函数（题目的预期解）
+### think/model/concern/Attribute.php getValue可函数动态调用函数（题目的预期解）
 
 由于5.1.37`__call`函数前的利用链仍然存在于5.2.x版本，这里就不再详述了。
 
@@ -109,7 +109,7 @@ $closure($value, $this->data);// 这里的参数可以不用管
 
 这里由于用到了SerializableClosure，需要使用编码器编码，不可直接输出拷贝利用。
 
-## think/Db.php __call函数可实例化任意类（题目的非预期解）
+### think/Db.php __call函数可实例化任意类（题目的非预期解）
 
 前面说到5.1.37版本的利用链的`__call`函数，在5.2.x版本没办法用了。但是从`__destruct`到`__call`的链路是通的，我们只需要重新找一个可用的`__call`函数即可。
 

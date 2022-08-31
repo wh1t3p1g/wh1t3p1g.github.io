@@ -6,14 +6,14 @@ categories: codereview
 date: 2018-02-03 13:37:35
 ---
 
-# 0x00
+## 0x00
 Detail: [Movie Guide v2.0 SQL Injection](https://www.exploit-db.com/exploits/43346/)
 
 <!-- more -->
 
-# 0x01
+## 0x01
 这是一个比较粗糙的开源cms，总体来说并没有对输入输出做安全处理，从PoC入手，选一个还原一下漏洞形成过程。
-### PoC：index.php?md=[SQL]
+#### PoC：index.php?md=[SQL]
 定位一下md参数
 layout.php为该cms的主要入口处理,下述的变量均没有通过安全处理，直接SQL语句，从而都可以用于数据库注入。
 ```php
@@ -32,7 +32,7 @@ $sql = "SELECT * FROM `Movie_List` WHERE `Main_Dir` LIKE '" . $md . "' ORDER BY 
 ```
 这里比较有意思的是它的PoC，以前没有见过类似的:b，PoC中使用了export_set函数
 
-### `EXPORT_SET(bits,on,off[,separator[,number_of_bits]])`
+#### `EXPORT_SET(bits,on,off[,separator[,number_of_bits]])`
 `Returns a string such that for every bit set in the value bits, you get an on string and for every bit not set in the value, you get an off string. Bits in bits are examined from right to left (from low-order to high-order bits). Strings are added to the result from left to right, separated by the separator string (the default being the comma character ,). The number of bits examined is given by number_of_bits, which has a default of 64 if not specified. number_of_bits is silently clipped to 64 if larger than 64. It is treated as an unsigned integer, so a value of −1 is effectively the same as 64.`
 
 分解一下PoC

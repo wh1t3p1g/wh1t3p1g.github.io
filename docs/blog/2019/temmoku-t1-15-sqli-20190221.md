@@ -6,12 +6,12 @@ categories: codereview
 date: 2019-02-21 21:09:44
 ---
 
-# 0x00
+## 0x00
 很久没有审计了，找了个简单的cms审计
 这次找的是temmoku，他修改了thinkphp作为他的底层框架。
 代码写的很难受，写出来的界面也很难受，所以找了个注入就不想看了，记录一下。
 
-# 0x01 前台注入
+## 0x01 前台注入
 
 这套cms，每个控制器都继承了`temmoku/controller.php`，其中controller构造函数做了相关权限控制
 找到`temmoku/controller.php`，定位到__construct函数
@@ -139,7 +139,7 @@ function getRealIp(){
 ```
 可以看出用Client-Ip就能伪造，那么现在问题都解决了，可以构造加密串了
 
-# 0x02 构造加密串
+## 0x02 构造加密串
 
 ```php
 <?php
@@ -162,7 +162,7 @@ echo encode('1550750916.778 \' 127.0.0.1');
 ```
 得到加密串`iBuikbGflt4lk4LiZ747G7NBIm9uPlLKikooVtsqagnfQIk1NZI0-rW`，直接加在cookie里就能造成系统出现数据库错误
 
-# 0x03 总结
+## 0x03 总结
 这个漏洞是比较经典的问题，用了加密后，开发者默认认为解密后的字符串是安全的，直接拼接到数据库操作上导致的注入。
 
 

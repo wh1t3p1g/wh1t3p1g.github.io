@@ -5,16 +5,16 @@ tags:
 categories: notes
 date: 2019-10-24 22:15:25
 ---
-# 0x00 前言
+## 0x00 前言
 
 <!-- more -->
 前段时间在复现shiro反序列化漏洞的过程中，发现无法很好的理解CommonCollections4为什么无法执行命令，还是缺少Java的一些基础知识。所以这里就先停下了复现漏洞的进程，先将基础打扎实：）。这篇文章将记录，Java反序列化漏洞的原理以及测试环境。
 
 参考文献都嵌入在文中。
 
-# 0x01 基础知识
+## 0x01 基础知识
 
-## 1. Java中的序列化和反序列化
+### 1. Java中的序列化和反序列化
 
 序列化：使用`ObjectOutputStream`类的`writeObject`函数
 
@@ -140,7 +140,7 @@ private void readObject(ObjectInputStream in) throws Exception {
 
 ![image-20191008145635285](/images/study_java_deseriablized/image-20191008145635285.png)
 
-## 2. 反序列化触发点扩展
+### 2. 反序列化触发点扩展
 
 上面展示了序列化和反序列化的原理，并且反序列化的触发点为`ObjectInputStream.readObject`。那么问题来了，是否Java反序列化只能由该点触发？答案当然是否定的。
 
@@ -162,11 +162,11 @@ Note: 对于readUnshared函数，其与readObject函数的区别暂时还没弄�
 
 但其反序列化过程中仍然可以触发readObject的调用，有待弄清楚。
 
-## 3. 扩展触发点试验
+### 3. 扩展触发点试验
 
 `readUnshared`函数的使用方式同`readObject`类似，这里不再叙述。这一小节主要讲各种触发点的利用方式，不讲具体的原理。原理部分留到后面分析。
 
-### a. XMLDecoder.readObject
+#### a. XMLDecoder.readObject
 
 ```java
 public static void main(String[] args){
@@ -206,7 +206,7 @@ poc.xml
 
 最终可触发命令执行
 
-### b. Yaml.load
+#### b. Yaml.load
 
 [参考链接](https://blog.semmle.com/swagger-yaml-parser-vulnerability/)，这里暂未试验
 
@@ -232,7 +232,7 @@ public static void main(String[] args) {
 
 这里的yamlStr可以用https://github.com/mbechler/marshalsec生成危害更大的payload
 
-### c. XStream.fromXML
+#### c. XStream.fromXML
 
 [参考链接](http://www.polaris-lab.com/index.php/archives/658/)
 
@@ -270,9 +270,9 @@ public static void main(String[] args) {
     }
 ```
 
-### d. 上面的6和7，留到后面分析
+#### d. 上面的6和7，留到后面分析
 
-## 4. 小结
+### 4. 小结
 
 上面两节介绍了Java反序列化的原理，并扩展了反序列化的触发点。在实际的审计过程中，可以直接关注这些函数的调用
 
@@ -282,7 +282,7 @@ public static void main(String[] args) {
 
 当然有些还需要看是否是有漏洞的版本
 
-# 0x02 反序列化过程
+## 0x02 反序列化过程
 
 上面大致讲诉了序列化和反序列化的使用方法，本节将调试上面的`Employee`案例，来看看在代码层面反序列化过程是怎么样的！
 
@@ -338,7 +338,7 @@ public static void main(String[] args) {
 
 到此为止，最后返回的对象就是最终我们得到的序列化前的对象。
 
-## 小结
+### 小结
 
 这里引用[浅谈Java反序列化漏洞修复方案](https://github.com/Cryin/Paper/blob/master/浅谈Java反序列化漏洞修复方案.md)
 
@@ -350,11 +350,11 @@ public static void main(String[] args) {
 
 前面分析中提到最后会调用`resolveClass`获取类的Class对象，这是反序列化过程中一个重要的地方，也是必经之路，所以有研究人员提出通过重载`ObjectInputStream`的`resolveClass`来限制可以被反序列化的类
 
-# 0x03 利用链发掘
+## 0x03 利用链发掘
 
 同PHP的反序列化一样，单单发现反序列化的触发点并不能造成严重的影响。往往反序列化漏洞的危害程度取决于后续的反序列化利用链所能达到的危险程度。在java中[ysoserial](https://github.com/frohoff/ysoserial)工具给我们提供了许多常见的库存在的利用链，这一节将逐一分析这些利用链。
 
-## 1. CommonsCollections1(jdk<=7)
+### 1. CommonsCollections1(jdk<=7)
 
 [参考链接](https://security.tencent.com/index.php/blog/msg/97)
 
@@ -575,7 +575,7 @@ sun.reflect.annotation.AnnotationInvocationHandler.readObject()
 
 后续的利用链分析放在下一篇文章里。
 
-# 0x04 总结
+## 0x04 总结
 
 经过对ysoserial工具生成的反序列化利用链的调试，熟悉了Java的反序列化的一个流程。但对于exp的书写仍然有待提高。
 

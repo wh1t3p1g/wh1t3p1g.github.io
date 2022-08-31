@@ -7,13 +7,13 @@ date: 2019-10-31 19:40:44
 typora-root-url: ../../../source
 ---
 
-# 0x00 前言
+## 0x00 前言
 
 本文继续分析CommonsCollections的相关反序列化利用链，这次主要分析CommonsCollections5,6,7，以及我找的一个新利用链，这里暂且将其称为10.
 
 <!-- more -->
 
-# 0x01 环境准备
+## 0x01 环境准备
 
 ---
 
@@ -25,11 +25,11 @@ java -jar ysoserial-master-30099844c6-1.jar CommonsCollections6 "open /System/Ap
 java -jar ysoserial-master-30099844c6-1.jar CommonsCollections7 "open /System/Applications/Calculator.app" > commonscollections7.ser
 ```
 
-# 0x02 利用链分析
+## 0x02 利用链分析
 
 ---
 
-## 1. 背景回顾
+### 1. 背景回顾
 
 前面提到过CommonsCollections1和3在构造AnnotationInvocationHandler时用到了Override.class。但是如果你在jdk8的环境下去载入生成的payload，会发生`java.lang.Override missing element entrySet`的错误。
 
@@ -47,7 +47,7 @@ jdk8不直接调用`s.defaultReadObject`来填充当前的`AnnotaionInvocationHa
 
 jdk8下CommonsCollections1和3无法成功利用了，但是如果我们可以找到一个替代AnnotationInvocationHandler的利用方式呢？这就是本文要讲的CommonsCollections5，6，7所做出的改变。
 
-## 2. 重新构造前半部分利用链--CommonsCollections5
+### 2. 重新构造前半部分利用链--CommonsCollections5
 
 CommonsCollections5与1的区别在于AnnotationInvocationHandler，后部分是相同的，所以这里不分析后部分。
 
@@ -85,7 +85,7 @@ BadAttributeValueExpException.readObject()
 	-> 前文构造的Runtime.getRuntime().exec()
 ```
 
-## 3. 重新构造前半部分利用链--CommonsCollections6
+### 3. 重新构造前半部分利用链--CommonsCollections6
 
 CommonsCollections6是另一种替换方式，后半部分的利用链还是没有变，不作分析。
 
@@ -116,7 +116,7 @@ HashSet.readObject()
 	-> 前文构造的Runtime.getRuntime().exec()
 ```
 
-## 4. 重新构造前半部分利用链--CommonsCollections7
+### 4. 重新构造前半部分利用链--CommonsCollections7
 
 CommonsCollections7用了Hashtable来代替`AnnotationInvocationHandler`，不同于前面两种CommonsCollections7并未使用`TiedMapEntry`，而是用了相同key冲突的方式调用`equals`来触发`Lazy.get`函数。
 
@@ -151,13 +151,13 @@ Hashtable.readObject()
 	-> 前文构造的Runtime.getRuntime().exec()
 ```
 
-## 5. 利用链构造
+### 5. 利用链构造
 
 CommonsCollections6和7的exp构造比较复杂，这里单独拿出来讲一下。
 
 ---
 
-### CommonsCollections6
+#### CommonsCollections6
 
 经过前面的分析，我们可以知道CommonsCollections6需要将构造好的TiedMapEntry实例添加到HashSet的值上。
 
@@ -223,7 +223,7 @@ keyField.set(node, entry);// 对node实例填充key的值为TiedMapEntry实例
 
 ---
 
-### CommonsCollections7
+#### CommonsCollections7
 
 CommonsCollections利用的是key的hash冲突的方法来触发`equals`函数，该函数会调用`LazyMap.get`函数
 
@@ -268,7 +268,7 @@ lazyMap2.remove("yy");
 
 其中第两次的put会使得会使得LazyMap2中增加了yy这个键值，为了保证反序列化后仍然可以触发后续的利用链，这里需要将lazyMap2的yy键值remove掉。
 
-## 6. 构造新CommonsCollections10
+### 6. 构造新CommonsCollections10
 
 经过对前面1,3,5,6,7的分析，我们其实可以发现很多payload都是“杂交”的成果。那么我们是否能根据前面的分析，构造出一个新的CommonsCollections的payload呢？答案当然是肯定的，接下来讲一下我找到的一个新payload利用。
 
@@ -324,7 +324,7 @@ Reflections.setFieldValue(transformerChain, "iTransformers", transformers);
 return hashtable;
 ```
 
-## 7. 梅子酒师傅的CommonsCollections9
+### 7. 梅子酒师傅的CommonsCollections9
 
 找到上面CommonsCollections10时，在网上找了一下有没有师傅已经挖到过了，一共找到下面三位师傅
 
@@ -339,7 +339,7 @@ return hashtable;
 2. 第二个是**[梅子酒](https://github.com/meizjm3i)**师傅提交的CommonsCollections9，主要利用的是CommonsCollections:3.2版本新增的`DefaultedMap`来代替`LazyMap`，因为这两个Map有同样的get函数可以被利用，这里不再具体分析。
 3. 第三个是**[navalorenzo](https://github.com/navalorenzo)**师傅提交的CommonsCollections8，其利用链基于CommonsCollections:4.0版本，暂时不在本篇文章的分析范围内，后面会好好分析一下。
 
-# 0x03 总结
+## 0x03 总结
 
 联合前面两篇文章[CommonsCollections1](http://blog.0kami.cn/2019/10/24/study-java-deserialized-vulnerability/)、[CommonsCollections3](http://blog.0kami.cn/2019/10/28/study-java-deserialized-commonscollections3/)，在加上本文的CommonsCollections5，6，7，9，10。
 

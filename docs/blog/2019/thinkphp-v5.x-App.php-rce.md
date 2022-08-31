@@ -13,15 +13,15 @@ date: 2019-02-05 16:02:06
 
 ## thinkphp v5.0.x
 
-#### 漏洞相关信息
+### 漏洞相关信息
 
 漏洞版本：<= 5.0.22
 补丁：[版本更新 · top-think/framework@4cbc0b5 · GitHub](https://github.com/top-think/framework/commit/4cbc0b5e93314446243ebc7d5f005f9c32864737)
 问题点：library/think/App.php
 
-#### 漏洞分析
+### 漏洞分析
 
-##### 关于thinkphp的url解析方式
+#### 关于thinkphp的url解析方式
 THINKPHP支持使用PATHINFO的方式来访问具体的模块、类、方法，如`index.php/module/controller/action`
 对于不支持PATHINFO的服务器，THINKPHP提供了兼容模式`?s=/module/controller/action`的方式来访问
 而这次的漏洞成因就是在于兼容模式处理时存在的问题。
@@ -68,7 +68,7 @@ public static function parseUrl($url, $depr = '/', $autoSearch = false)
 那么现在来看rce的Poc`?s=/index/\think\app/invokefunction`=>`[module:index,controller:\think\app,action:invokefunction]`
 其中controller=>\think\app，是php命名空间的表示方式，\think\app实际调用library/think/App.php，后面的action实际调用的App.php中的invokefunction函数
 
-##### 漏洞成因点
+#### 漏洞成因点
 
 上面分析了thinkphp的兼容模式是如何处理s参数的，并且处理存在一个问题就是可以伪造controller，导致实际调用为其他的类和函数
 看一下拿到module、controller、action后系统的处理
@@ -167,12 +167,12 @@ public static function invokeMethod($method, $vars = [])
 
 ## thinkphp v5.1.x
 
-#### 版本信息
+### 版本信息
 版本：<= v5.1.30
 补丁信息：[修正控制器调用 · top-think/framework@802f284 · GitHub](https://github.com/top-think/framework/commit/802f284bec821a608e7543d91126abc5901b2815)
 漏洞点：thinkphp/library/think/route/dispatch/Module.php
 
-#### 漏洞分析
+### 漏洞分析
 原理同v5.0.x版本类似，也是由于s参数带入的路径解析存在安全问题导致的任意代码执行
 先看App::run()
 ```php

@@ -8,7 +8,7 @@ date: 2021-1-3 22:43:16
 typora-root-url: ../../../source
 ---
 
-# #1 Gadget Overview
+## #1 Gadget Overview
 
 Recently, I found a new deserialzation gadget which can bypass the latest version of XStream. This gadget use the JDK to construct the gadget chain. I had tested the gadget chain to RCE (remote code execute) with the version of JDK8 (8u162). I think other version of JDK also could trigger this vulnerablity to the RCE.
 
@@ -28,7 +28,7 @@ javax.naming.ldap.Rdn$RdnEntry.compareTo
                         javax.naming.InitialContext.doLookup()
 ```
 
-# #2 Poc
+## #2 Poc
 
 ```xml
 <sorted-set>
@@ -94,7 +94,7 @@ javax.naming.ldap.Rdn$RdnEntry.compareTo
 
 when you try to reproduce this vulnerablity, you should change the line 37's content. For example, changing the `ldap://localhost:1099/EvilObj` to `ldap://your-evil-ldap-server:port/Namespace`
 
-# #3 Analysis
+## #3 Analysis
 
 First of all, XStream can deserialize a tag with `<sorted-set>` using the TreeSet/TreeMapConverter. And the recover process will call some object's `compareTo` function and not in the default blacklist.
 

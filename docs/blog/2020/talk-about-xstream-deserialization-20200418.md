@@ -7,7 +7,7 @@ date: 2020-04-18 19:44:58
 typora-root-url: ../../../source
 ---
 
-# 0x00 前言
+## 0x00 前言
 
 ---
 
@@ -15,7 +15,7 @@ typora-root-url: ../../../source
 
 <!-- more -->
 
-# 0x01 基础知识
+## 0x01 基础知识
 
 ---
 
@@ -43,7 +43,7 @@ XStream反序列化同fastjson这种不一样的地方是fastjson会在反序列
 
 以这种想法来看XStream反序列化，当我们对Map这种类型的对象进行还原的时候，是否也同样会去调用上面提到的几种函数？接下来，看几个Converter的处理：
 
-## 1. MapConverter
+### 1. MapConverter
 
 来看看针对Map类型还原的Converter
 
@@ -61,7 +61,7 @@ XStream反序列化同fastjson这种不一样的地方是fastjson会在反序列
 
 ![image-20200414232218889](/images/talk-about-xstream-deserialization-20200418/image-20200414232218889.png)
 
-## 2. TreeSet/TreeMapConverter
+### 2. TreeSet/TreeMapConverter
 
 这里TreeSet和TreeMap一起讲，因为TreeSet本身就是一个只用上了Key的TreeMap；TreeSetConverter的反序列化处理也是先转化为TreeMapConverter的方式来优先还原TreeSet里的TreeMap，再填充到TreeSet里。
 
@@ -85,7 +85,7 @@ XStream反序列化同fastjson这种不一样的地方是fastjson会在反序列
 
 这里的put函数为`TreeMap.put`,不看具体的代码了，他的主要功能就是填充数据，并且在填充时将会比较当前存在key，如果是相同的key，则替换原有老的值。这个过程会去调用key的`compareTo`函数
 
-## 3. DynamicProxyConverter
+### 3. DynamicProxyConverter
 
 还需要提及的是XStream还支持对动态代理的方式进行还原
 
@@ -94,11 +94,11 @@ XStream反序列化同fastjson这种不一样的地方是fastjson会在反序列
 这里的还原过程不说了，我们主要的关注点是使用Proxy动态代理，我们可以扩展前面两种的自动调用函数的攻击面，下一章会举`EventHandler`的例子
 
 
-# 0x02 现有几种利用分析
+## 0x02 现有几种利用分析
 
 结合上面基础知识中提到的几个Converter，我们想要利用XStream反序列化漏洞的话，得去充分利用前面提到的几个会自动调用的函数
 
-## 1. EventHandler
+### 1. EventHandler
 
 XStream反序列化用的最多的`EventHandler`，来看看他的`invoke`函数
 
@@ -148,13 +148,13 @@ XStream反序列化用的最多的`EventHandler`，来看看他的`invoke`函数
 </sorted-set>
 ```
 
-## 2. Groovy ConvertedClosure
+### 2. Groovy ConvertedClosure
 
 **利用条件**：groovy <= 2.4.3，在后续的版本里，`MethodClosure`不允许反序列化调用。
 
 除了上面这种`EventHandler`的动态代理方式，Groovy的`ConvertedClosure`也同样可以达到这种效果
 
-### MethodClosure
+#### MethodClosure
 
 当前MethodClosure的主要作用就是封装我们需要执行的对象，比如
 
@@ -164,7 +164,7 @@ new MethodClosure(Runtime.getRuntime(), "exec");
 
 封装`Runtime`对象，并设定后续需要调用的函数`exec`
 
-### ConvertedClosure
+#### ConvertedClosure
 
 这个`ConvertedClosure`也是继承了`InvocationHandler`，可以在动态代理中作为handler的存在，来看一下他的invoke
 
@@ -184,7 +184,7 @@ new MethodClosure(Runtime.getRuntime(), "exec");
 
 PS：这里需要提一下的是由于`compareTo`会带上一个参数，所以我们`MethodClosure`封装的后续需要调用的函数必须要存在一个String类型的参数，不然会找不到函数报错。（可能还有其他的解决方法，这里我没继续深入下去了，直接构造`Runtime.exec`可以解决这个问题）
 
-## 3. Groovy Expando
+### 3. Groovy Expando
 
 前面用到了`TreeSet`的方式，这里我们去使用`Map`的类型来触发。以`Map`的类型来触发，那就是找可以利用的`hashCode`函数
 
@@ -194,7 +194,7 @@ PS：这里需要提一下的是由于`compareTo`会带上一个参数，所以�
 
 如果在类属性`expandoProperties`中存在`hashCode:methodclosure`的内容，我们可以在这里直接调用`MethodClosure`的`call`函数，跟上面`ConvertedClosure`后续的调用一样，但是这里调用时没有函数参数过来，所以这里的思路是`ProcessBuilder.start`或者fastjson那种getters的利用，见[POC](https://github.com/wh1t3p1g/ysomap/blob/master/core/src/main/java/ysomap/core/payload/xstream/GroovyExpando.java)
 
-## 4. ImageIO$ContainsFilter
+### 4. ImageIO$ContainsFilter
 
 上面使用动态代理的方式利用了`TreeSet`调用put时触发的`compareTo`，而这里利用的是`HashMap`类型put时调用的`hashCode`函数；这个链相对来说复杂一点，我们一点一点来说（参考marshalsec的[ImageIO](https://github.com/mbechler/marshalsec/blob/master/src/main/java/marshalsec/gadgets/ImageIO.java)，这里先膜一波大佬的思路，后文为顺势讲下去的，主要目的是到达`Iterator.next`，实际挖掘这种链还是得从后往前找）：
 
@@ -270,7 +270,7 @@ XStream 处理Map类型 去调用jdk.nashorn.internal.objects.NativeString#hashC
 
 从后面往前看的话，我们前面做的所有操作都是为了能去触发`Iterator.next`，而这种`Iterator`的遍历处理，我们很容易再找到一处，下一节就是不用`javax.imageio.ImageIO.ContainsFilter#filter`来实现利用，请继续往下看XD
 
-## 5. ServiceFinder$LazyIterator
+### 5. ServiceFinder$LazyIterator
 
 思路来自[文章1](https://www.anquanke.com/post/id/172198#h2-4)、[文章2]([https://meizjm3i.github.io/2020/01/09/Jenkins-2-101-XStream-Rce-%E7%A9%BA%E6%8C%87%E9%92%88CTF%E4%B8%80%E6%9C%88%E5%86%85%E9%83%A8%E8%B5%9BWriteup/](https://meizjm3i.github.io/2020/01/09/Jenkins-2-101-XStream-Rce-空指针CTF一月内部赛Writeup/))
 
@@ -286,7 +286,7 @@ XStream 处理Map类型 去调用jdk.nashorn.internal.objects.NativeString#hashC
 
 所以我们可以在ImageIO那条链的基础上，在触发`Iterator.next`时使用这个`LazyIterator`来代替
 
-### 修改BCEL ClassLoader构造POC
+#### 修改BCEL ClassLoader构造POC
 
 这里来提一下关于POC的构造，如果你使用了当前这个利用链，并且不对`ClassLoader`做处理的话，你会发现怎么都打不通，因为这里在实际还原`ClassLoader`的时候出现了错误
 
@@ -334,7 +334,7 @@ XStream 处理Map类型 去调用jdk.nashorn.internal.objects.NativeString#hashC
 
 这里的Object必须加上，毕竟所有的对象都继承自Object
 
-# 0x03 XStream的防御措施 
+## 0x03 XStream的防御措施 
 
 ---
 
@@ -346,7 +346,7 @@ XStream在1.4.7版本之后支持使用白名单和黑名单的方式来方式�
 
 这里主要看一下黑名单的处理
 
-## 1.4.7-1.4.9
+### 1.4.7-1.4.9
 
 `EventHandler`的处理由`ReflectionConverter`来处理的，在1.4.7-1.4.9版本，在`canConvert`处添加了对`EventHandler`的限制
 
@@ -354,7 +354,7 @@ XStream在1.4.7版本之后支持使用白名单和黑名单的方式来方式�
 
 所以`EventHandler`的POC就失效了，但是其他的几种并没有失效
 
-## >=1.4.10
+### >=1.4.10
 
 在1.4.10版本增加了`setupDefaultSecurity`方式来设置默认的白名单，但是这个版本把上面`EventHandler`的限制去掉了，导致又可以使用最早的POC，需要注意的是这是没修补前的`1.4.10`，修复后已经不可以了
 
@@ -364,7 +364,7 @@ XStream在1.4.7版本之后支持使用白名单和黑名单的方式来方式�
 
 所以这里1,4,5都跪了，只剩下groovy这种了，当然肯定还有其他没有发现的利用链，所以最安全的方法还是使用白名单的方式，不能依赖XStream的黑名单来做安全防御。
 
-# 0x04 总结
+## 0x04 总结
 
 ---
 

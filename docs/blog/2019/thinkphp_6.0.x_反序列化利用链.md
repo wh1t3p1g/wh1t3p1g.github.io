@@ -5,12 +5,12 @@ tags:
 categories: codereview
 date: 2019-09-10 12:59:00
 ---
-# 0x00 前言
+## 0x00 前言
 
 上一篇分析了tp 5.2.x的反序列化利用链挖掘，顺着思路，把tp6.0.x也挖了。有类似的地方，也有需要重新挖掘的地方。
 <!-- more -->
 
-# 0x01 环境准备
+## 0x01 环境准备
 
 采用composer安装6.0.*-dev版本
 
@@ -18,9 +18,9 @@ date: 2019-09-10 12:59:00
 composer create-project topthink/think=6.0.x-dev v6.0
 ```
 
-# 0x02 利用链分析
+## 0x02 利用链分析
 
-## 背景回顾
+### 背景回顾
 
 拿到v6.0.x版本，简单的看了一下，有一个好消息和一个坏消息。
 
@@ -28,7 +28,7 @@ composer create-project topthink/think=6.0.x-dev v6.0
 
 坏消息是前面5.1.x，5.2.x版本都基于触发点`Windows`类的`__destruct`,好巧不巧的是6.0.x版本取消了`Windows`类。这意味着我们得重新找一个合适的起始触发点，才能继续使用上面的好消息。
 
-## vendor/topthink/think-orm/src/Model.php 新起始触发点
+### vendor/topthink/think-orm/src/Model.php 新起始触发点
 
 为了节省篇幅，后文不再重复介绍触发`__toString`函数后的利用链，这部分同5.2.x版本相同(不过wonderkun师傅的利用链已失效，动态函数调用的利用链还能用)。
 

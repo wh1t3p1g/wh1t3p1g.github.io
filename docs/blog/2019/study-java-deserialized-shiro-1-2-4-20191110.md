@@ -7,7 +7,7 @@ date: 2019-11-10 15:32:03
 typora-root-url: ../../../source
 ---
 
-# 0x00 前言
+## 0x00 前言
 
 在跟了一遍commons-collections系列的payload后，终于可以开始解决一下当时对shiro反序列化模凌两可的认识了。
 
@@ -19,7 +19,7 @@ typora-root-url: ../../../source
 
 本文讨论了shiro-1.2.4版本无法直接利用现有的ysoserial利用链，并提出了相应的解决方案。
 
-# 0x01 环境准备
+## 0x01 环境准备
 
 这里用的是[shiro-root-1.2.4](!https://github.com/apache/shiro)的samples/web环境，clone下来后执行`git checkout shiro-root-1.2.4`
 
@@ -50,7 +50,7 @@ ysoserial用的0.0.6版本`https://github.com/frohoff/ysoserial`
    </dependency>
    ```
 
-# 0x02 前景回顾
+## 0x02 前景回顾
 
 16年的时候，shiro爆出了一个默认key的反序列化漏洞。至今已有大量的分析文章分析了该漏洞的原理，所以本文不再重复分析该漏洞的相关原理，可以参考以下几篇文章的分析：
 
@@ -86,7 +86,7 @@ ysoserial用的0.0.6版本`https://github.com/frohoff/ysoserial`
 
 那么，问题来了，我们是否能构造出一个在`commons-collections:3.2.1`下可以利用，并且在利用链上不存在数组类型的对象？答案当然是肯定的：）
 
-# 0x03 新利用链构造
+## 0x03 新利用链构造
 
 根据0x02的介绍，我们可以清楚的是利用链中的`ChainedTransformer`这个类的利用是无法成功的，因为他的类属性`iTransformers`是数组类型的`Transformers`，也就是在执行过程中发生的`ClassNotFoundException`。
 
@@ -156,7 +156,7 @@ TiedMapEntry entry = new TiedMapEntry(lazyMap, templates);
 
 而在`TiedMapEntry`前的利用链，在原生shiro环境下，并不冲突（没有数组类型的对象），可以正常反序列化。这一部分就省略了。
 
-#### 20200108补充
+### 20200108补充
 
 其实createTemplatesImpl的利用方式中还是存在数组形式的，byte[]数组用于存储evil class。但是在tomcat 7及以上的环境下，java的原生数据类型的数组还原不影响反序列化，只针对对象级别的数组还原。而tomcat6的实现方式直接不允许数组类型的还原，也就是说该利用链在tomcat6的环境下是成功不了的。
 
@@ -166,7 +166,7 @@ TiedMapEntry entry = new TiedMapEntry(lazyMap, templates);
 
 ![image-20200109193558744](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20200109193558744.png)
 
-# 0x04 EXP编写
+## 0x04 EXP编写
 
 这里其实可以构造出好几个链，我这里就拿`HashSet`为例，完整的exp见[MyYsoserial](https://github.com/wh1t3p1g/ysoserial)中的`CommonsCollections10`
 
@@ -239,7 +239,7 @@ java.util.HashSet.readObject()
       -> java.lang.Runtime.exec()
 ```
 
-# 0x05 总结
+## 0x05 总结
 
 在经过对`CommonsCollections`系列的利用链进行分析后，在shiro这个问题上，进行了实战，解决了tomcat下无法利用shiro原生的`commons-collections:3.2.1`这个问题。
 

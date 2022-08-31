@@ -7,17 +7,17 @@ date: 2020-04-13 16:31:09
 typora-root-url: ../../../source
 ---
 
-# 0x00 前言
+## 0x00 前言
 
 最近又碰上了fastjson的题目，想着是时候分析一波这个漏洞了，跟上师傅们的脚步。
 
 <!-- more -->
 
-# 0x01 基础知识
+## 0x01 基础知识
 
 ---
 
-## (1). fastjson的基础使用
+### (1). fastjson的基础使用
 
 > fastjson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean。
 
@@ -124,7 +124,7 @@ System.out.println(p);
 
 到了这里，我们可以思考一下，如果`@type`被指定为某恶意的类，是否会导致任意代码执行的漏洞？
 
-## (2).fastjson的流程简介
+### (2).fastjson的流程简介
 
 > 这里直接参考https://paper.seebug.org/994/
 
@@ -144,7 +144,7 @@ System.out.println(p);
 
 ![image-20200104200849550](/images/talk-about-fastjson-deserialization-20200413/image-20200104200849550.png)
 
-## (3).  fastjson 自动调用getter和setter
+### (3).  fastjson 自动调用getter和setter
 
 类似Java的反序列化过程会自动调用readObject函数，fastjson还原对象时也会自动调用以下几个函数：
 
@@ -154,7 +154,7 @@ System.out.println(p);
 
 这里需要区别的是fastjson所使用的parse函数和parseObject函数所调用的函数条件是不一样的。（ps：序列化时会调用所有getters）
 
-### 1. parse 和 parseObject的区别
+#### 1. parse 和 parseObject的区别
 
 来看一下parseObject函数
 
@@ -168,7 +168,7 @@ System.out.println(p);
 
 那么也就意味着，`parseObject`比`parse`函数多了一个调用所有getters的利用点。
 
-### 2. parse自动调用函数的主要逻辑
+#### 2. parse自动调用函数的主要逻辑
 
 接着我们来看一下`JSON.parse`函数自动调用getters和setters的逻辑。
 
@@ -225,14 +225,14 @@ getter提取条件：
 
 我们在利用`@type`构造有危害的利用链时，主要就是查找有危害的无参数的构造函数、符合条件的getter和setter。
 
-### 3. 突破parse不能调用所有getters的限制
+#### 3. 突破parse不能调用所有getters的限制
 
 这里的突破思路主要有两个：
 
 1. tomcat bcel的poc
 2.  threedream师傅发现的[引用](https://github.com/threedr3am/learnjavabug/commit/ea61297cf7b2125ecae0064d2b8061a9e32db1e6)的方式
 
-#### 第一种：Tomcat BCEL POC思路
+##### 第一种：Tomcat BCEL POC思路
 
 这个poc巧妙的利用了`JSONObject.toString`函数，先来看看这个`toString`
 
@@ -276,7 +276,7 @@ getter提取条件：
 };
 ```
 
-#### 第二种：`$ref`点
+##### 第二种：`$ref`点
 
 当fastjson版本>=1.2.36时，我们可以使用`$ref`的方式来调用任意的getter
 
@@ -313,17 +313,17 @@ json = "{" +
 
 会去调用`getConnection`函数，这里也突破了parse到parseObject的效果
 
-## (4). private属性
+### (4). private属性
 
 还有一点需要注意的是默认fastjon在转化时，如果没有setter函数，而是以反射机制来赋值的情况，会忽略private属性的转化。意味着如果我们在构造过程中，填充进去的属性是private的且没有setter，那么在转化过程中是不会被填入还原后的对象的。如果需要对private属性进行转化，那么需要设置`Feature.SupportNonPublicField`
 
-# 0x02 EXP分析
+## 0x02 EXP分析
 
 ---
 
 相比于Java反序列化利用链构造的复杂性，fastjson利用链主要是寻找可利用的getter、setter等，常见的几种POC如下文所示：
 
-## (1). templatesimpl
+### (1). templatesimpl
 
 参考：[http://xxlegend.com/2017/05/03/title-%20fastjson%20%E8%BF%9C%E7%A8%8B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96poc%E7%9A%84%E6%9E%84%E9%80%A0%E5%92%8C%E5%88%86%E6%9E%90/](http://xxlegend.com/2017/05/03/title- fastjson 远程反序列化poc的构造和分析/)
 
@@ -352,11 +352,11 @@ String jsonString = "{\"@type\":\"com.sun.org.apache.xalan.internal.xsltc.trax.T
 
 可以看到这个poc其实限制还是挺大的，需要fastjson parseObject时填上`Feature.SupportNonPublicField`才可以。
 
-## (2). 基于JNDI的利用
+### (2). 基于JNDI的利用
 
 我们都知道如果JNDI的lookup函数参数值可控，那么我们可以利用JNDI Reference的方法加载远程代码达成RCE利用。所以根据前面的分析，如果我们可以在`无参构造函数`、`符合条件的setter`、`符合条件的getter`里发现一个可控的lookup函数，我们就可以利用JNDI的注入方法来达成利用。
 
-### JdbcRowSetImpl
+#### JdbcRowSetImpl
 
 JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代码
 
@@ -374,7 +374,7 @@ JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代
 
 还有很多其他的可以用来JNDI注入的对象，比如`org.hibernate.jmx.StatisticsService`的`setSessionFactoryJNDIName`函数，原理一样不再叙述。
 
-## (3). Tomcat dbcp BasicDataSource
+### (3). Tomcat dbcp BasicDataSource
 
 同1中的TemplateImpl，BasicDataSource也可以载入任意的对象来执行任意代码。先来讲一下他的原理
 
@@ -392,7 +392,7 @@ JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代
 
 这里我们可以写一个用了静态块的类来执行代码。
 
-# 0x03 Fastjson历史版本修复措施
+## 0x03 Fastjson历史版本修复措施
 
 ---
 
@@ -546,7 +546,7 @@ json = "{" + // 用Class载入com.sun.rowset.JdbcRowSetImpl，并缓存到mappin
   {{"@type":"java.net.URL","val":"http://s81twxdise25yxjinqaar74iq9wzko.burpcollaborator.net"}:"aaa"}
   ```
 
-# 0x04 总结
+## 0x04 总结
 
 ---
 

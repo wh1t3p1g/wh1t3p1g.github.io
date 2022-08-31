@@ -6,13 +6,13 @@ categories: notes
 date: 2019-10-28 16:20:06
 ---
 
-# 0x00 前言
+## 0x00 前言
 
 前面分析了ysoserial的CommonsCollections1，熟悉了一点Java反序列化。本文将继续分析ysoserial的利用，今天的主角是CommonsCollections3.
 
 <!-- more -->
 
-# 0x01 环境准备
+## 0x01 环境准备
 
 首先由于override的原因，环境使用的是jdk7u80。利用ysoserial生成payload，并载入调试。
 
@@ -20,7 +20,7 @@ date: 2019-10-28 16:20:06
 java -jar ysoserial-master-30099844c6-1.jar CommonsCollections3 "open /System/Applications/Calculator.app" > commonscollections3.ser
 ```
 
-# 0x02 基础知识
+## 0x02 基础知识
 
 在分析开始前，先补充一下基础知识
 
@@ -70,9 +70,9 @@ Java提供了ClassLoader从bytes数组中还原Class的方法，defineClass函�
 
 这里就用到了Java类的另一个特性，static block在类载入时自动执行块内的代码。我们可以通过javassist对静态块注入任意代码，该类被恢复并载入时会调用注入的代码，后文的利用链主要就是用到了这两个知识点。
 
-# 0x03 利用链分析
+## 0x03 利用链分析
 
-## 1. 前景回顾
+### 1. 前景回顾
 
 这里选择CommonsCollections3是因为他的前半段触发的利用链跟CommonsCollections1是一样的，所以这里只需要分析后半段命令执行的构造即可。回顾一下前半段利用链
 
@@ -87,7 +87,7 @@ sun.reflect.annotation.AnnotationInvocationHandler.readObject()
 
 CommonsCollections1中ChainedTransformer.transform()会循环调用iTransformers数组里的对象的transform函数。CommonsCollections1用的是InvokerTransformer的transform，因为该函数实现了反射调用任意类的功能。那么除了使用InvokerTransformer还有没有其他的方法？答案当然是肯定的！
 
-## 2. 新的命令执行利用链
+### 2. 新的命令执行利用链
 
 来看一下CommonsCollections3的payloads构造
 
@@ -154,7 +154,7 @@ final Transformer[] transformers = new Transformer[] {
 
 经过上面的分析，其实我们可以知道`getTransletInstance`的第408行，对`_class`做实例化时我们想要执行的代码就已经执行了。所以这里额外填充的类其实是可有可无的。
 
-# 0x04 总结
+## 0x04 总结
 
 到这里，整一个CommonsCollections3就分析结束了。
 
