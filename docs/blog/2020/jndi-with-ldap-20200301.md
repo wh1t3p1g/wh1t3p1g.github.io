@@ -1,7 +1,7 @@
 ---
 title: JNDI with LDAP
 tags: 
-  - vul
+  - java
 categories: notes
 date: 2020-03-01 19:22:01
 typora-root-url: ../../../source

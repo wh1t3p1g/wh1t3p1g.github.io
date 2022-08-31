@@ -2,8 +2,6 @@
 title: xnuca2020 easyjava设计思路
 tags:
   - ctf
-categories:
-  - ctf
 date: 2020-11-02 12:04:34
 ---
 

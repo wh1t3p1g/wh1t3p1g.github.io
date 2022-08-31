@@ -2,7 +2,7 @@
 title: bluecms v1.6 Sql Injection 分析
 date: 2017-01-11 22:02:11
 tags: 
- - cms
+ - 漏洞分析
 categories: codereview
 ---
 

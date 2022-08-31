@@ -1,7 +1,7 @@
 ---
 title: 浅谈Java RMI Registry安全问题
 tags: 
-  - vul
+  - java
 categories: notes
 date: 2020-02-06 15:23:36
 typora-root-url: ../../../source

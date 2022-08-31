@@ -1,10 +1,23 @@
-site_name: My Docs
+site_name: wh1t3p1g's blog
+site_author: wh1t3p1g
 site_url: https://blog.0kami.cn/
+site_description: happy hunting bugs
+repo_url: https://github.com/wh1t3p1g
+# nav: # 导航结构
+#   - Home: index.md
+#   - blog
+#   - about.md
 theme:
   name: material
   language: zh
   features:
     - navigation.tabs
+    - navigation.top
+    - navigation.expand
+  static_templates:
+    - sitemap.html
+  icon:
+    repo: fontawesome/brands/github-alt
 plugins:
   - search:
       lang:
@@ -13,12 +26,18 @@ plugins:
       separator: '[\s\u200b\-]'
   - tags:
       tags_file: index.md
-  # - blogging:
-  #     dirs: # The directories to be included
-  #       - blog
+  - awesome-pages
+  - minify:
+      minify_html: true
+      minify_js: true
+      minify_css: true
+      htmlmin_opts:
+          remove_comments: true
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+extra_css:
+  - stylesheets/extra.css

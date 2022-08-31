@@ -1,7 +1,7 @@
 ---
 title: JNDI with RMI
 tags: 
-  - vul
+  - java
 categories: notes
 date: 2020-02-09 21:42:18
 typora-root-url: ../../../source

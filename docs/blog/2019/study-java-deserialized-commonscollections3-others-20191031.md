@@ -1,7 +1,7 @@
 ---
 title: Java反序列化利用链挖掘之CommonsCollections5,6,7,9,10
 tags: 
-  - vul
+  - java
 categories: notes
 date: 2019-10-31 19:40:44
 typora-root-url: ../../../source

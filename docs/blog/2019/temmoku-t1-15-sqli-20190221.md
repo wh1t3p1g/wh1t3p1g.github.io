@@ -1,7 +1,7 @@
 ---
 title: temmoku home版 t1.15 前台sqli
 tags: 
-  - cms
+  - 漏洞分析
 categories: codereview
 date: 2019-02-21 21:09:44
 ---

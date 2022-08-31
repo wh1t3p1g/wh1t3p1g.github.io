@@ -1,7 +1,7 @@
 ---
 title: mycncart sqli
 tags: 
- - cms
+ - 漏洞分析
 categories: codereview
 date: 2019-02-25 18:33:48
 ---

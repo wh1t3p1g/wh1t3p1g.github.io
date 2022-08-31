@@ -1,7 +1,7 @@
 ---
 title: 回顾XStream反序列化漏洞
 tags: 
-  - vul
+  - java
 categories: notes
 date: 2020-04-18 19:44:58
 typora-root-url: ../../../source

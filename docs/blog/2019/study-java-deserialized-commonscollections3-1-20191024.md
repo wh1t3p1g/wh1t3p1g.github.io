@@ -1,8 +1,7 @@
 ---
 title: Java反序列化利用链挖掘之CommonsCollections1
 tags: 
-  - vul
-categories: notes
+  - java
 date: 2019-10-24 22:15:25
 ---
 ## 0x00 前言

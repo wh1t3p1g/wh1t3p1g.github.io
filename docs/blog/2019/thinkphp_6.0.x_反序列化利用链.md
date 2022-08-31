@@ -1,7 +1,7 @@
 ---
 title: thinkphp v6.0.x 反序列化利用链挖掘
 tags: 
-  - cms
+  - 漏洞分析
 categories: codereview
 date: 2019-09-10 12:59:00
 ---

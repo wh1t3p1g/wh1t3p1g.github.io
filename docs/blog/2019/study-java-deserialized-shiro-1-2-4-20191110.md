@@ -1,7 +1,7 @@
 ---
 title: Java反序列化利用链挖掘之Shiro反序列化
 tags: 
-  - vul
+  - java
 categories: notes
 date: 2019-11-10 15:32:03
 typora-root-url: ../../../source

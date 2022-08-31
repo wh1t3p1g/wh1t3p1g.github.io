@@ -1,7 +1,7 @@
 ---
 title: 浅谈fastjson反序列化漏洞
 tags: 
-  - vul
+  - java
 categories: notes
 date: 2020-04-13 16:31:09
 typora-root-url: ../../../source

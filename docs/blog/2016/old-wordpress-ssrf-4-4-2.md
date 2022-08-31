@@ -2,7 +2,7 @@
 title: wordpress SSRF <4.5
 date: 2016-08-19 15:05:19
 tags: 
- - cms
+ - 漏洞分析
 categories: codereview
 ---
 

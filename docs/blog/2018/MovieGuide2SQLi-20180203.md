@@ -1,8 +1,7 @@
 ---
 title: MovieGuide v2.0 SQLi
 tags: 
- - cms
-categories: codereview
+ - 漏洞分析
 date: 2018-02-03 13:37:35
 ---
 

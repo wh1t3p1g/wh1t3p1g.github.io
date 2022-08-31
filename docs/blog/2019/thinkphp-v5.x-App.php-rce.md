@@ -1,7 +1,7 @@
 ---
 title: thinkphp v5.x App.php s参数RCE
 tags: 
-  - cms
+  - 漏洞分析
 categories: codereview
 date: 2019-02-05 16:02:06
 ---

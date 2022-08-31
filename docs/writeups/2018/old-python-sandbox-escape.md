@@ -3,7 +3,6 @@ title: python sandbox escape
 date: 2016-09-16 11:33:11
 tags: 
   - ctf
-categories: notes
 ---
 
 # 概述

@@ -2,7 +2,7 @@
 title: seacms v6.5 前台getshell
 date: 2017-03-16 15:47:15
 tags: 
- - cms
+ - 漏洞分析
 categories: codereview
 ---
 

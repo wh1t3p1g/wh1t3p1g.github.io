@@ -1,7 +1,7 @@
 ---
 title: 攻击Java JMX-RMI
 tags: 
-  - vul
+  - java
 categories: notes
 typora-root-url: ../../../source
 date: 2020-03-10 20:51:30

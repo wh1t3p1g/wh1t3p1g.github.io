@@ -1,0 +1,5 @@
+nav:
+ - Home: index.md
+ - blog
+ - writeups
+ - about.md
