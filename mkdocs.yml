@@ -13,9 +13,9 @@ plugins:
       separator: '[\s\u200b\-]'
   - tags:
       tags_file: index.md
-  - blogging:
-      dirs: # The directories to be included
-        - blog
+  # - blogging:
+  #     dirs: # The directories to be included
+  #       - blog
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true

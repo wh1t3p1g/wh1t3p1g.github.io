@@ -1,0 +1,1397 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://blog.0kami.cn/blog/2020/talk-about-xstream-deserialization-20200418/">
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.2">
+    
+    
+      
+        <title>回顾XStream反序列化漏洞 - My Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.69437709.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#0x00" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="My Docs" class="md-header__button md-logo" aria-label="My Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            My Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              回顾XStream反序列化漏洞
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../2016/old-cve-2016-6663-mysql-exp/" class="md-tabs__link md-tabs__link--active">
+        Blog
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../writeups/2018/ddctf-web-writeup-20180421/" class="md-tabs__link">
+        Writeups
+      </a>
+    </li>
+  
+
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="My Docs" class="md-nav__button md-logo" aria-label="My Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    My Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Blog
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Blog" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Blog
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1" type="checkbox" id="__nav_2_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_1">
+          2016
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2016" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_1">
+          <span class="md-nav__icon md-icon"></span>
+          2016
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2016/old-cve-2016-6663-mysql-exp/" class="md-nav__link">
+        MYSQL提权分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2016/old-dirtycow-cve-2016-5195/" class="md-nav__link">
+        CVE-2016-5195 Dirtycow
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2016/old-wordpress-ssrf-4-4-2/" class="md-nav__link">
+        wordpress SSRF <4.5
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_2" type="checkbox" id="__nav_2_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_2">
+          2017
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2017" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_2">
+          <span class="md-nav__icon md-icon"></span>
+          2017
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2017/bluecms-v1-6-Sql-Injection/" class="md-nav__link">
+        bluecms v1.6 Sql Injection 分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2017/old-DM-sql-injection/" class="md-nav__link">
+        DM企业建站系统前台盲注
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2017/old-seacms-v6-5-getshell/" class="md-nav__link">
+        seacms v6.5 前台getshell
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2017/struts2-history-payload/" class="md-nav__link">
+        Struts2命令执行各版本记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" type="checkbox" id="__nav_2_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_3">
+          2018
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2018" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          2018
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2018/MovieGuide2SQLi-20180203/" class="md-nav__link">
+        MovieGuide v2.0 SQLi
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_4" type="checkbox" id="__nav_2_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_4">
+          2019
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2019" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_4">
+          <span class="md-nav__icon md-icon"></span>
+          2019
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/mycncart-v2-0-0-3-sqli-20190225/" class="md-nav__link">
+        mycncart sqli
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/study-java-deserialized-commonscollections3-1-20191024/" class="md-nav__link">
+        Java反序列化利用链挖掘之CommonsCollections1
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/study-java-deserialized-commonscollections3-3-20191028/" class="md-nav__link">
+        Java反序列化利用链挖掘之CommonsCollections3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/study-java-deserialized-commonscollections3-others-20191031/" class="md-nav__link">
+        Java反序列化利用链挖掘之CommonsCollections5,6,7,9,10
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/study-java-deserialized-commonscollections4-20191105/" class="md-nav__link">
+        Java反序列化利用链挖掘之CommonsCollections2,4,8
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/study-java-deserialized-shiro-1-2-4-20191110/" class="md-nav__link">
+        Java反序列化利用链挖掘之Shiro反序列化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/temmoku-t1-15-sqli-20190221/" class="md-nav__link">
+        temmoku home版 t1.15 前台sqli
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/thinkphp-v5.x-App.php-rce/" class="md-nav__link">
+        thinkphp v5.x App.php s参数RCE
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/thinkphp_5.2.x_%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/" class="md-nav__link">
+        thinkphp v5.2.x 反序列化利用链挖掘
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/thinkphp_6.0.x_%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/" class="md-nav__link">
+        thinkphp v6.0.x 反序列化利用链挖掘
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_5" type="checkbox" id="__nav_2_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_5">
+          2020
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2020" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_5">
+          <span class="md-nav__icon md-icon"></span>
+          2020
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../java-jmx-rmi-20200310/" class="md-nav__link">
+        攻击Java JMX-RMI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jndi-with-ldap-20200301/" class="md-nav__link">
+        JNDI with LDAP
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jndi-with-rmi-20200209/" class="md-nav__link">
+        JNDI with RMI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rmi-registry-security-problem-20200206/" class="md-nav__link">
+        浅谈Java RMI Registry安全问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../talk-about-fastjson-deserialization-20200413/" class="md-nav__link">
+        浅谈fastjson反序列化漏洞
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        回顾XStream反序列化漏洞
+      </a>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../talk_about_struts2/" class="md-nav__link">
+        struts2历史漏洞分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_6" type="checkbox" id="__nav_2_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_6">
+          2021
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2021" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_6">
+          <span class="md-nav__icon md-icon"></span>
+          2021
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2021/how_to_find_gadget_chains/" class="md-nav__link">
+        如何高效的挖掘Java反序列化利用链？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2021/xstream_blacklist_bypass/" class="md-nav__link">
+        XStream 1.4.15 Blacklist Bypass
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Writeups
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Writeups" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Writeups
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          2018
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2018" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          2018
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../writeups/2018/ddctf-web-writeup-20180421/" class="md-nav__link">
+        DDCTF 2018 web writeup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../writeups/2018/hitb-xctf-2018-portion-web-writeup-20180415/" class="md-nav__link">
+        HITB-XCTF 2018 web writeup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../writeups/2018/old-python-sandbox-escape/" class="md-nav__link">
+        python sandbox escape
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../writeups/2018/suctf-part-web-writeup-20180528/" class="md-nav__link">
+        SUCTF 2018 部分web writeup
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2">
+          2020
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2020" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          2020
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../writeups/2020/xnuca-2020-easyjava/" class="md-nav__link">
+        xnuca2020 easyjava设计思路
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+  
+
+  <nav class="md-tags" >
+    
+      
+        <a href="../../../.#vul" class="md-tag">
+          vul
+        </a>
+      
+    
+  </nav>
+
+
+
+<h1 id="0x00">0x00 前言</h1>
+<hr />
+<p><a href="https://x-stream.github.io/">XStream</a>也是一款用的比较多的序列化组件，可以将object转化为XML并能完整的还原回来。他也曾经出现过反序列化漏洞，本文主要整理XStream相关的安全问题XD</p>
+<!-- more -->
+
+<h1 id="0x01">0x01 基础知识</h1>
+<hr />
+<p>XStream的序列化和反序列化主要依靠<code>toXML</code>函数和<code>fromXML</code>函数，如下代码所示</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Person</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Person</span><span class="p">(</span><span class="s">&quot;tom&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">18</span><span class="p">);</span><span class="w"></span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">XStream</span><span class="w"> </span><span class="n">xStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">XStream</span><span class="p">();</span><span class="w"></span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">String</span><span class="w"> </span><span class="n">xml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xStream</span><span class="p">.</span><span class="na">toXML</span><span class="p">(</span><span class="n">person</span><span class="p">);</span><span class="c1">// object to xml</span><span class="w"></span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">xml</span><span class="p">);</span><span class="w"></span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">xStream</span><span class="p">.</span><span class="na">fromXML</span><span class="p">(</span><span class="n">xml</span><span class="p">));</span><span class="w"> </span><span class="c1">// xml to object</span><span class="w"></span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">// 输出</span><span class="w"></span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1">// &lt;objects.Person&gt;</span><span class="w"></span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1">//   &lt;name&gt;tom&lt;/name&gt;</span><span class="w"></span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1">//   &lt;age&gt;18&lt;/age&gt;</span><span class="w"></span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1">// &lt;/objects.Person&gt;</span><span class="w"></span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1">// objects.Person@369f73a2</span><span class="w"></span>
+</code></pre></div>
+<p>关于XStream的fromXML分析看<a href="https://www.jianshu.com/p/387c568faf62">这篇文章</a>，XStream会去调用不同的Converters来处理还原的过程。</p>
+<p>XStream反序列化同fastjson这种不一样的地方是fastjson会在反序列化的时候主动去调用getters和setters，而XStream的反序列化过程中赋值都有Java的反射机制来完成，所以并没有这样主动调用的特性。</p>
+<p>但是还有一种利用方式，回想一下，在几条常规的java反序列化利用链上，都利用了<code>HashMap</code>、<code>PriorityQueue</code>等对象（key不可重复等特性）会自动去调用<code>hashCode</code>、<code>equal</code>、<code>compareTo</code>等这种函数。</p>
+<p>以这种想法来看XStream反序列化，当我们对Map这种类型的对象进行还原的时候，是否也同样会去调用上面提到的几种函数？接下来，看几个Converter的处理：</p>
+<h2 id="1-mapconverter">1. MapConverter</h2>
+<p>来看看针对Map类型还原的Converter</p>
+<p><code>com.thoughtworks.xstream.converters.collections.MapConverter#unmarshal</code></p>
+<p><img alt="image-20200414231833562" src="/images/talk-about-xstream-deserialization-20200418/image-20200414231833562.png" /></p>
+<p><code>populateMap</code>函数会去处理后续的值，这里我们直接来看具体put的地方</p>
+<p><code>com.thoughtworks.xstream.converters.collections.MapConverter#putCurrentEntryIntoMap</code></p>
+<p><img alt="image-20200414231951807" src="/images/talk-about-xstream-deserialization-20200418/image-20200414231951807.png" /></p>
+<p>这里target作为接收者，会调用Map的put函数，后续就是我们熟悉的对key调用hashCode函数</p>
+<p><img alt="image-20200414232218889" src="/images/talk-about-xstream-deserialization-20200418/image-20200414232218889.png" /></p>
+<h2 id="2-treesettreemapconverter">2. TreeSet/TreeMapConverter</h2>
+<p>这里TreeSet和TreeMap一起讲，因为TreeSet本身就是一个只用上了Key的TreeMap；TreeSetConverter的反序列化处理也是先转化为TreeMapConverter的方式来优先还原TreeSet里的TreeMap，再填充到TreeSet里。</p>
+<p>从TreeSetConverter来讲</p>
+<p><img alt="image-20200415142144637" src="/images/talk-about-xstream-deserialization-20200418/image-20200415142144637.png" /></p>
+<p>从treeset中取出field treemap后，去进一步调用TreeMapConverter来还原TreeMap</p>
+<p><code>com.thoughtworks.xstream.converters.collections.TreeMapConverter#populateTreeMap</code></p>
+<p><img alt="image-20200415142431953" src="/images/talk-about-xstream-deserialization-20200418/image-20200415142431953.png" /></p>
+<p>这里先用soredMap来填充需要还原的Entry，后续将调用<code>TreeMap.putAll</code></p>
+<p><img alt="image-20200415142913714" src="/images/talk-about-xstream-deserialization-20200418/image-20200415142913714.png" /></p>
+<p>最终会调用到<code>java.util.AbstractMap#putAll</code></p>
+<p><img alt="image-20200415143058176" src="/images/talk-about-xstream-deserialization-20200418/image-20200415143058176.png" /></p>
+<p>这里的put函数为<code>TreeMap.put</code>,不看具体的代码了，他的主要功能就是填充数据，并且在填充时将会比较当前存在key，如果是相同的key，则替换原有老的值。这个过程会去调用key的<code>compareTo</code>函数</p>
+<h2 id="3-dynamicproxyconverter">3. DynamicProxyConverter</h2>
+<p>还需要提及的是XStream还支持对动态代理的方式进行还原</p>
+<p><img alt="image-20200415162242443" src="/images/talk-about-xstream-deserialization-20200418/image-20200415162242443.png" /></p>
+<p>这里的还原过程不说了，我们主要的关注点是使用Proxy动态代理，我们可以扩展前面两种的自动调用函数的攻击面，下一章会举<code>EventHandler</code>的例子</p>
+<h1 id="0x02">0x02 现有几种利用分析</h1>
+<p>结合上面基础知识中提到的几个Converter，我们想要利用XStream反序列化漏洞的话，得去充分利用前面提到的几个会自动调用的函数</p>
+<h2 id="1-eventhandler">1. EventHandler</h2>
+<p>XStream反序列化用的最多的<code>EventHandler</code>，来看看他的<code>invoke</code>函数</p>
+<p><img alt="image-20200415162715854" src="/images/talk-about-xstream-deserialization-20200418/image-20200415162715854.png" /></p>
+<p>主要实现在<code>invokeInternal</code>函数内</p>
+<p>首先需要判断此时调用的函数是否为<code>hashCode</code>、<code>equals</code>、<code>toString</code>，如果是的话，采用以下的方式来处理。</p>
+<p><img alt="image-20200415163231155" src="/images/talk-about-xstream-deserialization-20200418/image-20200415163231155.png" /></p>
+<p>但是我们需要利用的是<code>invokeInternal</code>函数后续的部分，所以我们利用的时候不能用它来调用上面的3个函数，<strong>意味着我前面提到的<code>Map</code>的方式，不适合用在这个地方</strong>；而<code>TreeSet</code>这种调用<code>compareTo</code>函数，可以用来继续往下走。</p>
+<p>继续往下看</p>
+<p><img alt="image-20200415170159510" src="/images/talk-about-xstream-deserialization-20200418/image-20200415170159510.png" /></p>
+<p>后续的就是经典的java反射机制来实现函数调用，并且这里的target和action都是可控的。</p>
+<p>这里需要注意一个问题是，这里action函数参数是有要求的（看452行到461行）</p>
+<ol>
+<li>无参数</li>
+<li>单个参数，且参数的类型为<code>Comparable</code>，并且这个action函数是可利用的</li>
+</ol>
+<p>第2种还没有找到这样可利用的函数，这里的第一种可以提两种：</p>
+<ul>
+<li>配置好cmd的<code>ProcessBuilder</code>，action填<code>start</code></li>
+<li>配置好rmi url的<code>JdbcRowSetImpl</code>，action填<code>getDatabaseMetaData</code>，这里可以举一反三，主要思路就是可利用的getters</li>
+</ul>
+<p>现在再来看看具体的<a href="https://github.com/wh1t3p1g/ysomap/blob/master/core/src/main/java/ysomap/core/payload/xstream/EventHandler.java">POC</a></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&lt;sorted-set&gt;</span>  
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  <span class="nt">&lt;string&gt;</span>foo<span class="nt">&lt;/string&gt;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="nt">&lt;dynamic-proxy&gt;</span> <span class="cm">&lt;!-- Proxy 动态代理，handler使用EventHandler --&gt;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nt">&lt;interface&gt;</span>java.lang.Comparable<span class="nt">&lt;/interface&gt;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="nt">&lt;handler</span> <span class="na">class=</span><span class="s">&quot;java.beans.EventHandler&quot;</span><span class="nt">&gt;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      <span class="nt">&lt;target</span> <span class="na">class=</span><span class="s">&quot;java.lang.ProcessBuilder&quot;</span><span class="nt">&gt;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="nt">&lt;command&gt;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>          <span class="nt">&lt;string&gt;</span>open<span class="nt">&lt;/string&gt;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>          <span class="nt">&lt;string&gt;</span>/System/Applications/Calculator.app<span class="nt">&lt;/string&gt;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="nt">&lt;/command&gt;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>      <span class="nt">&lt;/target&gt;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>      <span class="nt">&lt;action&gt;</span>start<span class="nt">&lt;/action&gt;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="nt">&lt;/handler&gt;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  <span class="nt">&lt;/dynamic-proxy&gt;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nt">&lt;/sorted-set&gt;</span>
+</code></pre></div>
+<h2 id="2-groovy-convertedclosure">2. Groovy ConvertedClosure</h2>
+<p><strong>利用条件</strong>：groovy &lt;= 2.4.3，在后续的版本里，<code>MethodClosure</code>不允许反序列化调用。</p>
+<p>除了上面这种<code>EventHandler</code>的动态代理方式，Groovy的<code>ConvertedClosure</code>也同样可以达到这种效果</p>
+<h3 id="methodclosure">MethodClosure</h3>
+<p>当前MethodClosure的主要作用就是封装我们需要执行的对象，比如</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">new</span><span class="w"> </span><span class="n">MethodClosure</span><span class="p">(</span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;exec&quot;</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>封装<code>Runtime</code>对象，并设定后续需要调用的函数<code>exec</code></p>
+<h3 id="convertedclosure">ConvertedClosure</h3>
+<p>这个<code>ConvertedClosure</code>也是继承了<code>InvocationHandler</code>，可以在动态代理中作为handler的存在，来看一下他的invoke</p>
+<p><code>ConvertedClosure</code>调用的是父类<code>org.codehaus.groovy.runtime.ConversionHandler#invoke</code></p>
+<p><img alt="image-20200418142036889" src="/images/talk-about-xstream-deserialization-20200418/image-20200418142036889.png" /></p>
+<p>主要看这个部分，对于当前调用的函数，如果非Object的函数(如toString、hashCode等)，并且不是<code>GroovyObject</code>的函数，会去调用子类的<code>invokeCustom</code>，这里看<code>org.codehaus.groovy.runtime.ConvertedClosure#invokeCustom</code></p>
+<p><img alt="image-20200418171210630" src="/images/talk-about-xstream-deserialization-20200418/image-20200418171210630.png" /></p>
+<p>这里的属性都是可控的，也就意味着我们可以去调用去调用前面构造好的<code>MethodClosure</code>，这里后续调用<code>call</code>的过程可以看最近的这篇<a href="https://paper.seebug.org/1171/">文章</a></p>
+<p>所以为了满足能调用<code>invokeCustom</code>函数，前面的两种<code>MapConverter</code>和<code>TreeSetConverter</code>，选哪种呢？</p>
+<p>很明显答案是选择<code>TreeSetConverter</code>，因为<code>Map</code>会去调用<code>hashCode</code>，而<code>TreeSet</code>会去调用<code>compareTo</code>，这里的<code>hashCode</code>是Object的函数，过不了上面<code>checkMethod</code>，具体怎么写POC，不详细说了，见<a href="https://github.com/wh1t3p1g/ysomap/blob/master/core/src/main/java/ysomap/core/payload/xstream/GroovyConvertedClosure.java">ysomap</a></p>
+<p>PS：这里需要提一下的是由于<code>compareTo</code>会带上一个参数，所以我们<code>MethodClosure</code>封装的后续需要调用的函数必须要存在一个String类型的参数，不然会找不到函数报错。（可能还有其他的解决方法，这里我没继续深入下去了，直接构造<code>Runtime.exec</code>可以解决这个问题）</p>
+<h2 id="3-groovy-expando">3. Groovy Expando</h2>
+<p>前面用到了<code>TreeSet</code>的方式，这里我们去使用<code>Map</code>的类型来触发。以<code>Map</code>的类型来触发，那就是找可以利用的<code>hashCode</code>函数</p>
+<p><code>groovy.util.Expando#hashCode</code></p>
+<p><img alt="image-20200418174424715" src="/images/talk-about-xstream-deserialization-20200418/image-20200418174424715.png" /></p>
+<p>如果在类属性<code>expandoProperties</code>中存在<code>hashCode:methodclosure</code>的内容，我们可以在这里直接调用<code>MethodClosure</code>的<code>call</code>函数，跟上面<code>ConvertedClosure</code>后续的调用一样，但是这里调用时没有函数参数过来，所以这里的思路是<code>ProcessBuilder.start</code>或者fastjson那种getters的利用，见<a href="https://github.com/wh1t3p1g/ysomap/blob/master/core/src/main/java/ysomap/core/payload/xstream/GroovyExpando.java">POC</a></p>
+<h2 id="4-imageiocontainsfilter">4. ImageIO$ContainsFilter</h2>
+<p>上面使用动态代理的方式利用了<code>TreeSet</code>调用put时触发的<code>compareTo</code>，而这里利用的是<code>HashMap</code>类型put时调用的<code>hashCode</code>函数；这个链相对来说复杂一点，我们一点一点来说（参考marshalsec的<a href="https://github.com/mbechler/marshalsec/blob/master/src/main/java/marshalsec/gadgets/ImageIO.java">ImageIO</a>，这里先膜一波大佬的思路，后文为顺势讲下去的，主要目的是到达<code>Iterator.next</code>，实际挖掘这种链还是得从后往前找）：</p>
+<p>从XStream处理<code>Map</code>类型时触发<code>hashCode</code>开始</p>
+<p>关注<code>jdk.nashorn.internal.objects.NativeString#hashCode</code></p>
+<p><img alt="image-20200416162110270" src="/images/talk-about-xstream-deserialization-20200418/image-20200416162110270.png" /></p>
+<p>后续调用<code>getStringValue</code>函数，在这个函数里去调用了<code>this.value.toString()</code>，这里的value的类型为<code>CharSequence</code>，所以我们接下来要找可以利用的<code>CharSequence</code>的实现类，这里用到的是<code>com.sun.xml.internal.bind.v2.runtime.unmarshaller.Base64Data#toString</code>函数</p>
+<p><img alt="image-20200416164810572" src="/images/talk-about-xstream-deserialization-20200418/image-20200416164810572.png" /></p>
+<p>这里紧接着会去调用<code>ByteArrayOutputStreamEx</code>的<code>readFrom</code>，这个函数用到的主要是这边传入的InputStream的read函数</p>
+<p><img alt="image-20200416165222727" src="/images/talk-about-xstream-deserialization-20200418/image-20200416165222727.png" /></p>
+<p>实际上<code>is</code>我们是可以控制的，因为这里调用的<code>this.dataHandler.getDataSource().getInputStream()</code>，他的值传递都可以用类属性的方式把他构建出来，分别是</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. this.dataHandler == 构造好的DataHandler
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2. DataHandler的dataSource属性 == 构造好的XmlDataSource
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>3. XmlDataSource调用getInputStream()函数返回构造好的inputStream
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>// com.sun.xml.internal.ws.encoding.xml.XMLMessage$XmlDataSource
+</code></pre></div>
+<p>用这种方法就可以获取一个可控的<code>inputStream</code>，并且后续会去调用<code>read</code>函数</p>
+<p>继续看下去，<code>javax.crypto.CipherInputStream#read</code></p>
+<p><img alt="image-20200416170450515" src="/images/talk-about-xstream-deserialization-20200418/image-20200416170450515.png" /></p>
+<p><img alt="image-20200416170531566" src="/images/talk-about-xstream-deserialization-20200418/image-20200416170531566.png" /></p>
+<p>此时需要构造一个<code>Cipher</code>类型，并且后续调用<code>Cipher.update</code>函数，这里可以用<code>javax.crypto.NullCipher</code>来填充，因为最终用到的是父类<code>Cipher.update</code>，只要不重载<code>update</code>，其他的子类也可以。</p>
+<p>继续看<code>Cipher.update</code></p>
+<p><img alt="image-20200416170954216" src="/images/talk-about-xstream-deserialization-20200418/image-20200416170954216.png" /></p>
+<p><img alt="image-20200416171051157" src="/images/talk-about-xstream-deserialization-20200418/image-20200416171051157.png" /></p>
+<p>说了那么久，我们终于到了至关重要的一个地方，<code>serviceIterator.next</code>函数</p>
+<p>后续我们将调用ImageIO下的<code>javax.imageio.spi.FilterIterator#next</code></p>
+<p><img alt="image-20200416171636844" src="/images/talk-about-xstream-deserialization-20200418/image-20200416171636844.png" /></p>
+<p><img alt="image-20200416171715068" src="/images/talk-about-xstream-deserialization-20200418/image-20200416171715068.png" /></p>
+<p><code>advance</code>函数会去调用<code>filter.filter</code>函数，而ImageIO存在一个有趣的filter</p>
+<p><code>javax.imageio.ImageIO.ContainsFilter#filter</code></p>
+<p><img alt="image-20200416171927622" src="/images/talk-about-xstream-deserialization-20200418/image-20200416171927622.png" /></p>
+<p>我们可以指定一个Method对象去invoke，到了这里就是激动人心的Java反射机制了，我们提前构造好method对象，就可以调用任意的函数。</p>
+<p>利用链比较长，整理一下过程</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>XStream 处理Map类型 去调用jdk.nashorn.internal.objects.NativeString#hashCode
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    com.sun.xml.internal.bind.v2.runtime.unmarshaller.Base64Data#toString
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    javax.activation.DataHandler#getDataSource
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        com.sun.xml.internal.ws.encoding.xml.XMLMessage$XmlDataSource#getInputStream
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>            javax.crypto.CipherInputStream#read -&gt; getMoreData
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>            javax.crypto.NullCipher#update -&gt; chooseFirstProvider
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>                javax.imageio.spi.FilterIterator#next
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>                    javax.imageio.ImageIO.ContainsFilter#filter
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>                        ProcessBuilder#start
+</code></pre></div>
+<p>从后面往前看的话，我们前面做的所有操作都是为了能去触发<code>Iterator.next</code>，而这种<code>Iterator</code>的遍历处理，我们很容易再找到一处，下一节就是不用<code>javax.imageio.ImageIO.ContainsFilter#filter</code>来实现利用，请继续往下看XD</p>
+<h2 id="5-servicefinderlazyiterator">5. ServiceFinder$LazyIterator</h2>
+<p>思路来自<a href="https://www.anquanke.com/post/id/172198#h2-4">文章1</a>、<a href="[https://meizjm3i.github.io/2020/01/09/Jenkins-2-101-XStream-Rce-%E7%A9%BA%E6%8C%87%E9%92%88CTF%E4%B8%80%E6%9C%88%E5%86%85%E9%83%A8%E8%B5%9BWriteup/](https://meizjm3i.github.io/2020/01/09/Jenkins-2-101-XStream-Rce-空指针CTF一月内部赛Writeup/)">文章2</a></p>
+<p>先来看一下<code>java.util.ServiceLoader.LazyIterator#next</code></p>
+<p><img alt="image-20200417164755804" src="/images/talk-about-xstream-deserialization-20200418/image-20200417164755804.png" /></p>
+<p><img alt="image-20200417164854625" src="/images/talk-about-xstream-deserialization-20200418/image-20200417164854625.png" /></p>
+<p>当类属性<code>acc</code>为空时，会去调用<code>nextService</code>函数，而在该函数里面，我们看到了令人熟悉的<code>Class.forName</code>的调用。并且我们去实例化的<code>classname</code>、<code>loader</code>，都是类属性，属于我们可以控制的东西。</p>
+<p>到了这里自然而然的就想到了使用BCEL的ClassLoader来载入classname里的字节码了(这里我在fastjson那篇里提到过)。</p>
+<p>所以我们可以在ImageIO那条链的基础上，在触发<code>Iterator.next</code>时使用这个<code>LazyIterator</code>来代替</p>
+<h3 id="bcel-classloaderpoc">修改BCEL ClassLoader构造POC</h3>
+<p>这里来提一下关于POC的构造，如果你使用了当前这个利用链，并且不对<code>ClassLoader</code>做处理的话，你会发现怎么都打不通，因为这里在实际还原<code>ClassLoader</code>的时候出现了错误</p>
+<p><img alt="image-20200417225056222" src="/images/talk-about-xstream-deserialization-20200418/image-20200417225056222.png" /></p>
+<p>这里有两种解决方案，一是去除这种还原有问题的类（会很麻烦），二是直接把<code>ClassLoader</code>里的一些无关紧要的东西剔除掉。</p>
+<p>这里我选择了第二种，经过调试去除了以下几个属性的值</p>
+<p><img alt="image-20200417225303428" src="/images/talk-about-xstream-deserialization-20200418/image-20200417225303428.png" /></p>
+<p>这里由于我们剔除了<code>ignored_packages</code>和<code>deferTo</code>，导致BCEL的ClassLoader在载入普通的类的时候会出现加载错误的问题</p>
+<p><img alt="image-20200417225600161" src="/images/talk-about-xstream-deserialization-20200418/image-20200417225600161.png" /></p>
+<p>来看看怎么解决这个问题</p>
+<p>首先BCEL的<code>ClassLoader.loadClass</code>，一共尝试4次不同的载入方法</p>
+<ol>
+<li>从当前ClassLoader的classes去找</li>
+</ol>
+<p><img alt="image-20200417225808446" src="/images/talk-about-xstream-deserialization-20200418/image-20200417225808446.png" /></p>
+<ol>
+<li>对于默认忽略的包<code>java./sun./javax.</code>，使用<code>deferTo</code>去重新加载，这里的<code>deferTo</code>是系统的ClassLoader（<code>ClassLoader.getSystemClassLoader()</code>)</li>
+</ol>
+<p><img alt="image-20200417230040882" src="/images/talk-about-xstream-deserialization-20200418/image-20200417230040882.png" /></p>
+<ol>
+<li>对于classname以<code>$$BCEL$$</code>开头的，根据classname的值去defineClass，这边就是我们最喜欢的任意载入字节码的地方</li>
+</ol>
+<p><img alt="image-20200417230343866" src="/images/talk-about-xstream-deserialization-20200418/image-20200417230343866.png" /></p>
+<ol>
+<li>最后一次是用<code>repository</code>去载入当前的classname，如果这里还没找到，就会爆没有找到Class的错误</li>
+</ol>
+<p><img alt="image-20200417230451954" src="/images/talk-about-xstream-deserialization-20200418/image-20200417230451954.png" /></p>
+<p>PS：这部分<code>repository</code>取的<code>SyntheticRepository.getInstance()</code>，还不是很清楚这个左右，后续整理一下ClassLoader相关的知识再做补充</p>
+<p>再来看我们报错的原因，因为删除<code>ignored_packages</code>和<code>deferTo</code>之后，相当于第二种情况无法载入了，而显然<code>java.lang.Object</code>不符合第三种情况。最后第4种里面也没有找到这个<code>java.lang.Object</code>，所以最终爆了<code>ClassNotFoundException</code></p>
+<p>这里其实已经很明显了，解决这个问题，我们得在<code>classes</code>里添加我们传入的class字节码里所用到的所有类，那么在第一次尝试载入的时候，就找到了相应的类，无需尝试后续的几种载入方式。</p>
+<p>比如这里我产生的字节码里面用上了<code>Runtime</code>，就得加上这个类</p>
+<p><img alt="image-20200417231357924" src="/images/talk-about-xstream-deserialization-20200418/image-20200417231357924.png" /></p>
+<p>这里的Object必须加上，毕竟所有的对象都继承自Object</p>
+<h1 id="0x03-xstream">0x03 XStream的防御措施</h1>
+<hr />
+<p>XStream在1.4.7版本之后支持使用白名单和黑名单的方式来方式恶意类的反序列化<a href="http://x-stream.github.io/security.html">security</a></p>
+<blockquote>
+<p>Starting with XStream 1.4.7, it is possible to define <a href="http://x-stream.github.io/security.html#framework">permissions</a> for types, to check the type of an object that should be unmarshalled. Those permissions can be used to allow or deny types explicitly With these permissions it is at least not possible to inject unexpected types into an object graph. The security framework supports the setup of a black or white listing scenario. Any application should use this feature to limit the danger of arbitrary command execution if it deserializes data from an external source.</p>
+<p>XStream itself sets up a black list by default, i.e. it blocks all currently known critical classes of the Java runtime. Main reason for the black list is compatibility, because otherwise newer versions of XStream 1.4.x can no longer be used as drop-in replacement. Unfortunately this provides a false sense of security. Every XStream client should therefore switch to a white listing on its own as soon as possible. XStream itself will use white listing as default starting with 1.5.x and only clients that have also changed their setup will be able to use this newer version again as drop-in replacement.</p>
+</blockquote>
+<p>这里主要看一下黑名单的处理</p>
+<h2 id="147-149">1.4.7-1.4.9</h2>
+<p><code>EventHandler</code>的处理由<code>ReflectionConverter</code>来处理的，在1.4.7-1.4.9版本，在<code>canConvert</code>处添加了对<code>EventHandler</code>的限制</p>
+<p><img alt="image-20200418185546291" src="/images/talk-about-xstream-deserialization-20200418/image-20200418185546291.png" /></p>
+<p>所以<code>EventHandler</code>的POC就失效了，但是其他的几种并没有失效</p>
+<h2 id="1410">&gt;=1.4.10</h2>
+<p>在1.4.10版本增加了<code>setupDefaultSecurity</code>方式来设置默认的白名单，但是这个版本把上面<code>EventHandler</code>的限制去掉了，导致又可以使用最早的POC，需要注意的是这是没修补前的<code>1.4.10</code>，修复后已经不可以了</p>
+<p>除了新增设置白名单的方式，也新增加了<code>InternalBlackList</code>这个converter，他设置的权限为<code>LOW</code>，而<code>ReflectionConverter</code>权限为<code>Very_low</code>，所以会先过一次黑名单检查（XStream在注册converters时，以权限的方式来决定次序）。</p>
+<p><img alt="image-20200418192827552" src="/images/talk-about-xstream-deserialization-20200418/image-20200418192827552.png" /></p>
+<p>所以这里1,4,5都跪了，只剩下groovy这种了，当然肯定还有其他没有发现的利用链，所以最安全的方法还是使用白名单的方式，不能依赖XStream的黑名单来做安全防御。</p>
+<h1 id="0x04">0x04 总结</h1>
+<hr />
+<p>本文主要回顾了现有的一些利用链，值得注意的是：</p>
+<p>如果XStream用的不是白名单模式，还是存在利用的可能性的。现有内置的黑名单只禁止了几个现有的利用链，我们还是可以找到其他可以利用的利用链的，比如前面提到的Groovy的利用链。</p>
+<p>需要记住的是XStream他的触发方式依赖的是HashMap、TreeSet这种类型自动调用的<code>hashCode</code>、<code>compareTo</code>串起来的，后续可以注意一下这种可能的调用链。</p>
+<p>PS：本文提到的所有POC，已经更新到<a href="https://github.com/wh1t3p1g/ysomap">GitHub</a>上</p>
+
+
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      
+        
+        <a href="../talk-about-fastjson-deserialization-20200413/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 浅谈fastjson反序列化漏洞" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              浅谈fastjson反序列化漏洞
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../talk_about_struts2/" class="md-footer__link md-footer__link--next" aria-label="下一页: struts2历史漏洞分析" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              struts2历史漏洞分析
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\uff0c\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      
+    
+  </body>
+</html>

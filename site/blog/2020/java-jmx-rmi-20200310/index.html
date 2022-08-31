@@ -1,0 +1,1436 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://blog.0kami.cn/blog/2020/java-jmx-rmi-20200310/">
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.2">
+    
+    
+      
+        <title>攻击Java JMX-RMI - My Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.69437709.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#0x00" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="My Docs" class="md-header__button md-logo" aria-label="My Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            My Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              攻击Java JMX-RMI
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../2016/old-cve-2016-6663-mysql-exp/" class="md-tabs__link md-tabs__link--active">
+        Blog
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../writeups/2018/ddctf-web-writeup-20180421/" class="md-tabs__link">
+        Writeups
+      </a>
+    </li>
+  
+
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="My Docs" class="md-nav__button md-logo" aria-label="My Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    My Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Blog
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Blog" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Blog
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1" type="checkbox" id="__nav_2_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_1">
+          2016
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2016" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_1">
+          <span class="md-nav__icon md-icon"></span>
+          2016
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2016/old-cve-2016-6663-mysql-exp/" class="md-nav__link">
+        MYSQL提权分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2016/old-dirtycow-cve-2016-5195/" class="md-nav__link">
+        CVE-2016-5195 Dirtycow
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2016/old-wordpress-ssrf-4-4-2/" class="md-nav__link">
+        wordpress SSRF <4.5
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_2" type="checkbox" id="__nav_2_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_2">
+          2017
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2017" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_2">
+          <span class="md-nav__icon md-icon"></span>
+          2017
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2017/bluecms-v1-6-Sql-Injection/" class="md-nav__link">
+        bluecms v1.6 Sql Injection 分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2017/old-DM-sql-injection/" class="md-nav__link">
+        DM企业建站系统前台盲注
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2017/old-seacms-v6-5-getshell/" class="md-nav__link">
+        seacms v6.5 前台getshell
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2017/struts2-history-payload/" class="md-nav__link">
+        Struts2命令执行各版本记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" type="checkbox" id="__nav_2_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_3">
+          2018
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2018" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          2018
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2018/MovieGuide2SQLi-20180203/" class="md-nav__link">
+        MovieGuide v2.0 SQLi
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_4" type="checkbox" id="__nav_2_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_4">
+          2019
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2019" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_4">
+          <span class="md-nav__icon md-icon"></span>
+          2019
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/mycncart-v2-0-0-3-sqli-20190225/" class="md-nav__link">
+        mycncart sqli
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/study-java-deserialized-commonscollections3-1-20191024/" class="md-nav__link">
+        Java反序列化利用链挖掘之CommonsCollections1
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/study-java-deserialized-commonscollections3-3-20191028/" class="md-nav__link">
+        Java反序列化利用链挖掘之CommonsCollections3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/study-java-deserialized-commonscollections3-others-20191031/" class="md-nav__link">
+        Java反序列化利用链挖掘之CommonsCollections5,6,7,9,10
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/study-java-deserialized-commonscollections4-20191105/" class="md-nav__link">
+        Java反序列化利用链挖掘之CommonsCollections2,4,8
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/study-java-deserialized-shiro-1-2-4-20191110/" class="md-nav__link">
+        Java反序列化利用链挖掘之Shiro反序列化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/temmoku-t1-15-sqli-20190221/" class="md-nav__link">
+        temmoku home版 t1.15 前台sqli
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/thinkphp-v5.x-App.php-rce/" class="md-nav__link">
+        thinkphp v5.x App.php s参数RCE
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/thinkphp_5.2.x_%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/" class="md-nav__link">
+        thinkphp v5.2.x 反序列化利用链挖掘
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2019/thinkphp_6.0.x_%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/" class="md-nav__link">
+        thinkphp v6.0.x 反序列化利用链挖掘
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_5" type="checkbox" id="__nav_2_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_5">
+          2020
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2020" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_5">
+          <span class="md-nav__icon md-icon"></span>
+          2020
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          攻击Java JMX-RMI
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        攻击Java JMX-RMI
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0x00" class="md-nav__link">
+    0x00 前言
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0x01" class="md-nav__link">
+    0x01 基础
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0x02-jmx" class="md-nav__link">
+    0x02 攻击JMX
+  </a>
+  
+    <nav class="md-nav" aria-label="0x02 攻击JMX">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-jmx-rmi" class="md-nav__link">
+    1. 攻击JMX-RMI
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2. 攻击存在函数参数的对象
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-mletmbean" class="md-nav__link">
+    3. 利用MLET方式动态加载MBean
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0x03" class="md-nav__link">
+    0x03 总结
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jndi-with-ldap-20200301/" class="md-nav__link">
+        JNDI with LDAP
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jndi-with-rmi-20200209/" class="md-nav__link">
+        JNDI with RMI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rmi-registry-security-problem-20200206/" class="md-nav__link">
+        浅谈Java RMI Registry安全问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../talk-about-fastjson-deserialization-20200413/" class="md-nav__link">
+        浅谈fastjson反序列化漏洞
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../talk-about-xstream-deserialization-20200418/" class="md-nav__link">
+        回顾XStream反序列化漏洞
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../talk_about_struts2/" class="md-nav__link">
+        struts2历史漏洞分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_6" type="checkbox" id="__nav_2_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_6">
+          2021
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2021" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_6">
+          <span class="md-nav__icon md-icon"></span>
+          2021
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2021/how_to_find_gadget_chains/" class="md-nav__link">
+        如何高效的挖掘Java反序列化利用链？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2021/xstream_blacklist_bypass/" class="md-nav__link">
+        XStream 1.4.15 Blacklist Bypass
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Writeups
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Writeups" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Writeups
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          2018
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2018" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          2018
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../writeups/2018/ddctf-web-writeup-20180421/" class="md-nav__link">
+        DDCTF 2018 web writeup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../writeups/2018/hitb-xctf-2018-portion-web-writeup-20180415/" class="md-nav__link">
+        HITB-XCTF 2018 web writeup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../writeups/2018/old-python-sandbox-escape/" class="md-nav__link">
+        python sandbox escape
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../writeups/2018/suctf-part-web-writeup-20180528/" class="md-nav__link">
+        SUCTF 2018 部分web writeup
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2">
+          2020
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2020" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          2020
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../writeups/2020/xnuca-2020-easyjava/" class="md-nav__link">
+        xnuca2020 easyjava设计思路
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0x00" class="md-nav__link">
+    0x00 前言
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0x01" class="md-nav__link">
+    0x01 基础
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0x02-jmx" class="md-nav__link">
+    0x02 攻击JMX
+  </a>
+  
+    <nav class="md-nav" aria-label="0x02 攻击JMX">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-jmx-rmi" class="md-nav__link">
+    1. 攻击JMX-RMI
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2. 攻击存在函数参数的对象
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-mletmbean" class="md-nav__link">
+    3. 利用MLET方式动态加载MBean
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0x03" class="md-nav__link">
+    0x03 总结
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+  
+
+  <nav class="md-tags" >
+    
+      
+        <a href="../../../.#vul" class="md-tag">
+          vul
+        </a>
+      
+    
+  </nav>
+
+
+
+  <h1>攻击Java JMX-RMI</h1>
+
+<h2 id="0x00">0x00 前言</h2>
+<p>RMI的一个重要应用是JMX(Java Management Extentions)，本文介绍JMX的两个攻击面：）</p>
+<!-- more -->
+
+<h2 id="0x01">0x01 基础</h2>
+<p>在写一半的时候，发现了这篇文章，感觉写的很好，可以看看：https://mogwailabs.de/blog/2019/04/attacking-rmi-based-jmx-services/</p>
+<p>JMX</p>
+<blockquote>
+<p>Java Management Extensions (JMX) is a Java technology that supplies tools for managing and monitoring applications, system objects, devices (such as printers) and service-oriented networks.</p>
+</blockquote>
+<p>MBean</p>
+<blockquote>
+<p>JMX allows you to manage resources as managed beans. A managed bean (MBean) is a Java Bean class that follows certain design rules of the JMX standard. An MBean can represent a device, an application, or any resource that needs to be managed over JMX. You can access these MBeans via JMX, query attributes and invoke Bean methods.</p>
+<p>The JMX standard differs between various MBean types however, we will only deal with the standard MBeans here. To be a valid MBean, a Java class must:</p>
+<ul>
+<li>Implement an interface</li>
+<li>Provide a default constructor (without any arguments)</li>
+<li>Follow certain naming conventions, for example implement getter/setter methods to read/write attributes</li>
+</ul>
+</blockquote>
+<p>这里提一下，当MBean的名字为<code>Hello</code>时，其相应的interface名必须为<code>HelloMBean</code>，不然算不合法的MBean</p>
+<p>MBean Server</p>
+<blockquote>
+<p>A MBean server is a service that manages the MBeans of a system. Developers can register their MBeans in the server following a specific naming pattern. The MBean server will forward incoming messages to the registered MBeans. The service is also responsible to forward messages from MBeans to external components.</p>
+</blockquote>
+<p>DEMO用参考里的，用<code>jconsole</code>看看结果</p>
+<p><img alt="image-20200306152727840" src="/images/java-jmx-rmi-20200310/image-20200306152727840-4519092.png" /></p>
+<p>在JConsole里可以对当前注册的MBean进行操作，如上图调用<code>sayHello</code>函数</p>
+<p>当前我们连的是本地的MBean Server(每个java进程在本地都会有一个MBean Server)，我们也可以将MBean Server挂载到某一端口上，提供远程的MBean管理。</p>
+<p>运行jar时带上<code>-Dcom.sun.management.jmxremote.port=2222 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false</code></p>
+<p>直接通过JConsole来连接，会提示你有两种方法1:<code>host:port</code>;2:<code>service:jmx:&lt;protocol&gt;:&lt;sap&gt;</code></p>
+<p>这里我们重点要讲的就是第二种方法，首先我们先来看一下jmx建立起2222端口后，用nmap来获取其内容是怎么样的</p>
+<p><img alt="image-20200306155425100" src="/images/java-jmx-rmi-20200310/image-20200306155425100-4519092.png" /></p>
+<p>从结果来看，JMX的MBean Server是建立在RMI的基础上的，并且其RMI Registy注册的名字叫<code>jmxrmi</code>。</p>
+<p>第二种方法中，我们可以通过指定具体的协议来跟Server端进行连接，参考<a href="https://docs.oracle.com/javase/8/docs/api/index.html?javax/management/remote/rmi/package-summary.html">JMX RMI connector API</a></p>
+<blockquote>
+<p>There are two forms for RMI connector addresses:</p>
+<ul>
+<li>In the <em>JNDI form</em>, the URL indicates <em>where to find an RMI stub for the connector</em>. This RMI stub is a Java object of type <a href="https://docs.oracle.com/javase/8/docs/api/javax/management/remote/rmi/RMIServer.html"><code>RMIServer</code></a> that gives remote access to the connector server. With this address form, the RMI stub is obtained from an external directory entry included in the URL. An external directory is any directory recognized by <a href="https://docs.oracle.com/javase/8/docs/api/javax/naming/package-summary.html"><code>JNDI</code></a>, typically the RMI registry, LDAP, or COS Naming.</li>
+<li>In the <em>encoded form</em>, the URL directly includes the information needed to connect to the connector server. When using RMI/JRMP, the encoded form is the serialized RMI stub for the server object, encoded using BASE64 without embedded newlines. When using RMI/IIOP, the encoded form is the CORBA IOR for the server object.</li>
+</ul>
+</blockquote>
+<p>这里的encoded form的反序列化过程实在发起端进行的，所以这里不考虑第二种形式。</p>
+<p>对于JNDI的形式，有以下几种方法跟JMX Server去连接：</p>
+<p>Connector支持JRMP和iiop作为连接层的协议，所以对应的有两种方式</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. service:jmx:rmi://host:port/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2. service:jmx:iiop://host:port/
+</code></pre></div>
+<p>此外，还有基于目录条目的connectors</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. service:jmx:rmi://host:port/jndi/jndi-name
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. service:jmx:iiop://host:port/jndi/jndi-name
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>比如
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>serivce:jmx:rmi://&lt;可忽略的host&gt;/jndi/rmi://host:port/jmxrmi
+</code></pre></div>
+<p>这种方式就可以使用jndi下的所有spi来进行连接</p>
+<h2 id="0x02-jmx">0x02 攻击JMX</h2>
+<h3 id="1-jmx-rmi">1. 攻击JMX-RMI</h3>
+<p><strong>CVE-2016-3427</strong> 由于JMX认证时传递的是HashMap数据结构，而以HashMap可以直接构造一个反序列化利用链来攻击本地ClassPath，这里已经修复了不细讲了XD</p>
+<p><strong>主动攻击1</strong>：利用RMI Registy收到远程bind时产生的反序列化漏洞 jdk&lt;8u141_b10(并且check host的顺序变了，详细可以看<a href="http://blog.0kami.cn/2020/02/06/rmi-registry-security-problem/">这里</a>)，<a href="http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/rev/c92d704420d7#l2.32">8u141_b10修改后</a>SingleEntryRegistry增加了filter</p>
+<p><img alt="image-20200306170312638" src="/images/java-jmx-rmi-20200310/image-20200306170312638-4519092.png" /></p>
+<p>限制了接受到的不能是序列化后的对象，也就意味着不能利用registry这种方式来达成利用了。</p>
+<p><strong>主动攻击2</strong>:利用RMI DGC实现存在反序列化漏洞，可在JEP 290之前的版本攻击成功(使用ysoserial的JRMPClient，分析也见<a href="http://blog.0kami.cn/2020/02/06/rmi-registry-security-problem/">这里</a>0x08部分)</p>
+<p>前面两种方式，在最新版的JDK8中均早已失效。除了直接攻击RMI层，我们也还可以利用MBean Server挂载的对象函数，来传递构造好的序列化数据。这里有点像RMI中利用RMI Server挂载的对象函数参数中存在相关可利用的对象，如Object类型就可以装载所有的序列化数据。</p>
+<h3 id="2">2. 攻击存在函数参数的对象</h3>
+<p>利用MBean Server挂载的对象函数参数，来传递构造好的序列化数据。MBean Server接收到数据后，会对获取到的参数数据进行<code>object[]</code>转换，在转换前，需要将RMI交互过程中的序列化数据进行反序列化</p>
+<p><code>javax/management/remote/rmi/RMIConnectionImpl.java#unwrap</code></p>
+<p><img alt="image-20200306212145063" src="/images/java-jmx-rmi-20200310/image-20200306212145063-4519092.png" /></p>
+<p>1583行进行类型转化，但首先需要先进行反序列化<code>mo.get()</code></p>
+<p><code>java/rmi/MarshalledObject.java#get</code></p>
+<p><img alt="image-20200306212242480" src="/images/java-jmx-rmi-20200310/image-20200306212242480-4519092.png" /></p>
+<p>这里就到了常规的反序列化操作</p>
+<p>所以只要MBean Server里存在MBean的函数存在参数，我们通过构造相关的invoke传递过去就可以触发反序列化</p>
+<p><img alt="image-20200306212452672" src="/images/java-jmx-rmi-20200310/image-20200306212452672-4519092.png" /></p>
+<p>如<code>java.util.logging.Logging#getLoggerLevel(String)</code>有一个String类型的函数参数，这里我们直接将payload塞进invoke的第二个参数即可。</p>
+<p>其他的MBean也同样可以这样操作，这里如果需要认证的话，就需要在连接时将认证信息带上，后续的还是可以利用成功的。</p>
+<h3 id="3-mletmbean">3. 利用MLET方式动态加载MBean</h3>
+<p>这里先说利用方式：</p>
+<p><strong>利用条件</strong>：</p>
+<ol>
+<li>无security manager</li>
+<li>无认证</li>
+</ol>
+<p><strong>利用原理</strong>：</p>
+<ol>
+<li>在一HTTP Server挂载mlet文件和包含MBean的jar文件</li>
+<li>用<code>createMBean("javax.management.loading.MLet", null);</code>的方式在远程JMX创建MLet对象</li>
+<li>使用<code>getMBeansFromURL</code>从远程HTTP Server加载mlet文件</li>
+<li>解析mlet文件，由于存在codebase，从远程加载jar文件，并载入该MBean</li>
+<li>调用该MBean的方法，这个方法可以是自定义的执行命令等操作</li>
+</ol>
+<p><strong>简单分析</strong>：</p>
+<p>来简单说一下MLet的原理，JMX除了加载本地的MBean，也可以加载远程的MLet文件(包含了MLet标签)来动态加载codebase里的Jar文件。后者就是通过MLet对象的getMBeansFromURL函数来完成的。</p>
+<p>有兴趣的可以翻一翻<code>javax/management/loading/MLet.java#getMBeansFromURL</code>，这里直接说一下流程</p>
+<ol>
+<li>
+<p>从远程服务器加载MLet文件并解析该文件</p>
+</li>
+<li>
+<p>根据MLet文件中指定的codebase和archive字段，拼接成最后要请求的jar文件URL地址</p>
+</li>
+<li>最后由URLClassLoader来完成请求载入操作</li>
+</ol>
+<p>这里需要注意的是，第2步中，如果当前的URL地址已经存在将不再重新发起载入请求，意味着一次载入成功之后，我们就可以直接调用该MBean（Server不重启的状态下）。</p>
+<p>而对于前面提到的两个利用条件：</p>
+<p>在文档里https://docs.oracle.com/javase/7/docs/technotes/guides/management/agent.html提到</p>
+<blockquote>
+<p><strong>Caution -</strong> This configuration is insecure: any remote user who knows (or guesses) your port number and host name will be able to monitor and control your Java applications and platform. Furthermore, possible harm is not limited to the operations you define in your MBeans. A remote client could create a <code>javax.management.loading.MLet</code> MBean and use it to create new MBeans from arbitrary URLs, at least if there is <strong>no security manager</strong>. In other words, a rogue remote client could make your Java application execute arbitrary code.</p>
+<p>Consequently, while disabling security might be acceptable for development, it is strongly recommended that you <strong>do not disable security for production systems</strong>.</p>
+</blockquote>
+<p>首先对于有认证的情况下，调用MLet将会进行权当前用户的权限验证，默认情况下都是不允许的。</p>
+<p><code>com/sun/jmx/remote/security/MBeanServerFileAccessController.java#checkAccess</code>会检查当前登陆的用户是否有Create的权限(这里的权限是下面的createPatterns，它允许创建指定正则的类型，而我们默认是为空的)，这里默认会返回false，也就意味着它不允许以MLet对象创建新的MBean</p>
+<p><img alt="image-20200318153641087" src="/images/java-jmx-rmi-20200310/image-20200318153641087.png" /></p>
+<p>其次对于security manager的限制，在远程载入前会判断是否存在载入的权限（这里我没看到其他的地方做了判断，可能不止当前这个位置的验证）</p>
+<p><img alt="image-20200318155835634" src="/images/java-jmx-rmi-20200310/image-20200318155835634.png" /></p>
+<p>当前方法比较方便的是可以载入任意的代码来执行，但是利用条件比较苛刻。</p>
+<h2 id="0x03">0x03 总结</h2>
+<p>对于JMX的利用主要利用的是本地存在的Gadget，如果本地不存在Gadget的话就无法利用成功。除非满足JMX MLet的利用条件，通过加载codebase上的Jar文件来执行任意代码。</p>
+<p>除此之外，由于本身JMX用的RMI那一套东西，所以如果在合适的JDK版本下，我们可以直接攻击RMI，不过前提仍然是本地存在相关的利用链。</p>
+<p>最后，前文提到的攻击方法我已经同步到<a href="https://github.com/wh1t3p1g/ysomap">github</a>上了</p>
+
+
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      
+        
+        <a href="../../2019/thinkphp_6.0.x_%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/" class="md-footer__link md-footer__link--prev" aria-label="上一页: thinkphp v6.0.x 反序列化利用链挖掘" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              thinkphp v6.0.x 反序列化利用链挖掘
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../jndi-with-ldap-20200301/" class="md-footer__link md-footer__link--next" aria-label="下一页: JNDI with LDAP" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              JNDI with LDAP
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\uff0c\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      
+    
+  </body>
+</html>
