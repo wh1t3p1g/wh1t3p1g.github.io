@@ -10,10 +10,12 @@ repo_url: https://github.com/wh1t3p1g
 theme:
   name: material
   language: zh
+  font:
+    text: "Noto Sans Hong Kong"
   features:
     - navigation.tabs
     - navigation.top
-    - navigation.expand
+    # - navigation.expand
   static_templates:
     - sitemap.html
   icon:
