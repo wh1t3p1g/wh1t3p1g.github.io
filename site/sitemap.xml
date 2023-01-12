@@ -2,182 +2,192 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://blog.0kami.cn/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/about/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2016/old-cve-2016-6663-mysql-exp/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2016/old-dirtycow-cve-2016-5195/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2016/old-wordpress-ssrf-4-4-2/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2017/bluecms-v1-6-Sql-Injection/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2017/old-DM-sql-injection/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2017/old-seacms-v6-5-getshell/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2017/struts2-history-payload/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2018/MovieGuide2SQLi-20180203/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2019/mycncart-v2-0-0-3-sqli-20190225/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2019/study-java-deserialized-commonscollections3-1-20191024/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2019/study-java-deserialized-commonscollections3-3-20191028/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2019/study-java-deserialized-commonscollections3-others-20191031/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2019/study-java-deserialized-commonscollections4-20191105/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2019/study-java-deserialized-shiro-1-2-4-20191110/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2019/temmoku-t1-15-sqli-20190221/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2019/thinkphp-v5.x-App.php-rce/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2019/thinkphp_5.2.x_%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2019/thinkphp_6.0.x_%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2020/java-jmx-rmi-20200310/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2020/jndi-with-ldap-20200301/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2020/jndi-with-rmi-20200209/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2020/rmi-registry-security-problem-20200206/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2020/talk-about-fastjson-deserialization-20200413/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2020/talk-about-xstream-deserialization-20200418/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2020/talk_about_struts2/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2021/how_to_find_gadget_chains/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2021/how_to_find_gadget_chains_2/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/blog/2021/xstream_blacklist_bypass/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://blog.0kami.cn/blog/2023/introduce_of_tabby/</loc>
+         <lastmod>2023-01-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://blog.0kami.cn/blog/2023/%E5%9F%BA%E4%BA%8E%E4%BB%A3%E7%A0%81%E5%B1%9E%E6%80%A7%E5%9B%BE%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%AE%9E%E8%B7%B5/</loc>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/writeups/2018/ddctf-web-writeup-20180421/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/writeups/2018/hitb-xctf-2018-portion-web-writeup-20180415/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/writeups/2018/old-python-sandbox-escape/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/writeups/2018/suctf-part-web-writeup-20180528/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/writeups/2020/xnuca-2020-easyjava/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://blog.0kami.cn/</loc>
-         <lastmod>2022-08-31</lastmod>
+         <lastmod>2023-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
