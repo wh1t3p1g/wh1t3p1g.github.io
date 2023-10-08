@@ -29,6 +29,13 @@ plugins:
   - tags:
       tags_file: index.md
   - awesome-pages
+  - rss:
+      match_path: blog/.*
+      date_from_meta:
+        as_creation: date
+      categories:
+        - notes
+        - ctf
   - minify:
       minify_html: true
       minify_js: true
