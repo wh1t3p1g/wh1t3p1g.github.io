@@ -38,7 +38,7 @@ Ognl.setValue("(\"@java.lang.Runtime@getRuntime().exec(\'open /System/Applicatio
 
 其中关于`setValue`的利用用的是Expression Evaluation部分，`(1)(2)(3)`中`(1)(2)`被作为一个整体解析，对于`(1)`做表达式的解析，如果你用`getValue((1)(2))`会发现其实也能执行命令，而`setValue((1)(2)(3))`需要double evaluation，实际上变成`((1)(2))(3)`，在后续调用`setValueBody`函数时取出的`children[0]`就是`(1)(2)`，等同于调用`Ognl.getValue((1)(2))`的效果。所以这里调用`setValue`也同样可以达成`getValue`的计算OGNL表达式的效果。
 
-![image-20200506154002054](/images/talk_about_struts2/image-20200506154002054.png)
+![image-20200506154002054](assets/talk_about_struts2/image-20200506154002054.png)
 
 同样，我们也可以利用`children[1]`的位置，如`(1)((2)(3))`把payload放到`(2)(3)`
 
@@ -62,25 +62,25 @@ sink: jsp渲染调用`doEndTag `，后续由于识别出用户输入中OGNL表�
 
 主要出问题的是JSP中`<s:textfield>`标签，Struts2里处理textfield的是`org.apache.struts2.components.UIBean`
 
-![image-20200428211153680](/images/talk_about_struts2/image-20200428211153680.png)
+![image-20200428211153680](assets/talk_about_struts2/image-20200428211153680.png)
 
-![image-20200428212308880](/images/talk_about_struts2/image-20200428212308880.png)
+![image-20200428212308880](assets/talk_about_struts2/image-20200428212308880.png)
 
 看到在处理params时，当parameters里不存在`value`这个key的时候，会进到执行name相对应的value上来。并且`altSyntax`默认配置为`true`
 
-![image-20200428213206168](/images/talk_about_struts2/image-20200428213206168.png)
+![image-20200428213206168](assets/talk_about_struts2/image-20200428213206168.png)
 
 会在当前的`name`左右加上OGNL表达式的标识` %{name}`，这里的name是`<s:textfield name="name"`，name字段的值，比如这里`name="username"`，此时会变成` %{username}`.继续往下跟
 
-![image-20200428220429903](/images/talk_about_struts2/image-20200428220429903.png)
+![image-20200428220429903](assets/talk_about_struts2/image-20200428220429903.png)
 
-![image-20200428220447992](/images/talk_about_struts2/image-20200428220447992.png)
+![image-20200428220447992](assets/talk_about_struts2/image-20200428220447992.png)
 
 这里的String类型的转化主要用了`TextParesUtil.translateVariables()`来处理，这里看看具体他怎么做的
 
 `com.opensymphony.xwork2.util.TextParseUtil#translateVariables#97`
 
-![image-20200428221026617](/images/talk_about_struts2/image-20200428221026617.png)
+![image-20200428221026617](assets/talk_about_struts2/image-20200428221026617.png)
 
 这里会去判断传入的expression是否是OGNL表达式的格式的` %{xxx}`，如果是的话，就会去`OgnlValueStack`里面去找对应的内容(这块就是OGNL表达式的计算结果，`findValue`函数后续会去调用`OgnlUtil.getValue`，详细的可以看我基础里列的文章)
 
@@ -103,7 +103,7 @@ sink: jsp渲染调用`doEndTag `，后续由于识别出用户输入中OGNL表�
 
 先从上下文context中取出`HttpServletResponse`的实例，用到的实际是`HttpServletResponseWrapper`
 
-![image-20200428223750035](/images/talk_about_struts2/image-20200428223750035.png)
+![image-20200428223750035](assets/talk_about_struts2/image-20200428223750035.png)
 
 然后获取当前response的writer对象，在利用该writer来写入任意内容
 
@@ -136,7 +136,7 @@ sink: jsp渲染调用`doEndTag `，后续由于识别出用户输入中OGNL表�
 
 在>=2.0.9版本的struts2上，`com.opensymphony.xwork2.util.TextParseUtil#translateVariables`做了循环判断，不允许递归执行OGNL表达式
 
-![image-20200428231900257](/images/talk_about_struts2/image-20200428231900257.png)
+![image-20200428231900257](assets/talk_about_struts2/image-20200428231900257.png)
 
 默认`maxLoopCount`为1，所以处理完`%{name}`后，不会再继续对他的值进行OGNL表达式的执行了。
 
@@ -154,21 +154,21 @@ sink: 调用`Ognl.setValue`
 
 Struts2在处理参数内容时，将调用`com.opensymphony.xwork2.interceptor.ParametersInterceptor#setParameters`函数，填充到OgnlVauleStack的context上下文里。
 
-![image-20200430155156109](/images/talk_about_struts2/image-20200430155156109.png)
+![image-20200430155156109](assets/talk_about_struts2/image-20200430155156109.png)
 
 这里会先过一次`acceptableName`的检查（2.0.8版本）
 
-![image-20200430155231489](/images/talk_about_struts2/image-20200430155231489.png)
+![image-20200430155231489](assets/talk_about_struts2/image-20200430155231489.png)
 
 不能出现`=`、`,`、`#`、`:`以及被排除在外的参数名
 
-![image-20200430155418664](/images/talk_about_struts2/image-20200430155418664.png)
+![image-20200430155418664](assets/talk_about_struts2/image-20200430155418664.png)
 
 只有通过了acceptableName函数的检查才能继续往下走，所以我们必须绕过上面的几个问题，这里漏洞发现者用了unicode编码来绕过检测。
 
 `ognl.JavaCharStream#readChar`
 
-![image-20200430232206989](/images/talk_about_struts2/image-20200430232206989.png)
+![image-20200430232206989](assets/talk_about_struts2/image-20200430232206989.png)
 
 当遇到`\u`unicode编码，会做一次转换，比如`\u0040`会被转成`@`
 
@@ -176,7 +176,7 @@ Struts2在处理参数内容时，将调用`com.opensymphony.xwork2.interceptor.
 
 回到`setParameters`，后续调用了`OgnlValueStack.setValue`
 
-![image-20200430232635455](/images/talk_about_struts2/image-20200430232635455.png)
+![image-20200430232635455](assets/talk_about_struts2/image-20200430232635455.png)
 
 这里最终到了`OgnlUtil.setValue`计算OGNL表达式
 
@@ -190,7 +190,7 @@ Struts2在处理参数内容时，将调用`com.opensymphony.xwork2.interceptor.
 
 先来看第一句，该条ognl表达式用于开启方法执行，因为在调用`setParameters`之前，开发人员考虑到了参数执行OGNL表达式的风险，所以提前关闭了函数调用执行
 
-![image-20200430234629782](/images/talk_about_struts2/image-20200430234629782.png)
+![image-20200430234629782](assets/talk_about_struts2/image-20200430234629782.png)
 
 设置完了之后，再还原回来
 
@@ -218,7 +218,7 @@ Struts2在处理参数内容时，将调用`com.opensymphony.xwork2.interceptor.
 
 xwork>=2.0.6 `com.opensymphony.xwork2.interceptor.ParametersInterceptor#setParameters`多了以下代码
 
-![image-20200507101610804](/images/talk_about_struts2/image-20200507101610804.png)
+![image-20200507101610804](assets/talk_about_struts2/image-20200507101610804.png)
 
 低版本用的直接是已存在的OgnlValueStack，从2.0.6开始，使用了一个空的stack来处理参数的解析
 
@@ -226,23 +226,23 @@ xwork>=2.0.6 `com.opensymphony.xwork2.interceptor.ParametersInterceptor#setParam
 
 在`ognl.OgnlRuntime#callAppropriateMethod`调用函数前，会去判断函数是否可被访问(method不为null)
 
-![image-20200507102155210](/images/talk_about_struts2/image-20200507102155210.png)
+![image-20200507102155210](assets/talk_about_struts2/image-20200507102155210.png)
 
 其实这边`isMethodAccessible`的返回结果无所谓，但是不能在这个函数调用时出错，出错的话也就走不到`invokeMethod`
 
 看一下具体的实现，`isMethodAccessible`的判断依赖于`SecurityMemberAccess`
 
-![image-20200507102334789](/images/talk_about_struts2/image-20200507102334789.png)
+![image-20200507102334789](assets/talk_about_struts2/image-20200507102334789.png)
 
-![image-20200507103428140](/images/talk_about_struts2/image-20200507103428140.png)
+![image-20200507103428140](assets/talk_about_struts2/image-20200507103428140.png)
 
 这里我们主要看`isAcceptableProperty`
 
-![image-20200507103621957](/images/talk_about_struts2/image-20200507103621957.png)
+![image-20200507103621957](assets/talk_about_struts2/image-20200507103621957.png)
 
-![image-20200507103632321](/images/talk_about_struts2/image-20200507103632321.png)
+![image-20200507103632321](assets/talk_about_struts2/image-20200507103632321.png)
 
-![image-20200507103642250](/images/talk_about_struts2/image-20200507103642250.png)
+![image-20200507103642250](assets/talk_about_struts2/image-20200507103642250.png)
 
 下端点调试你会发现这个版本acceptProperties为空，而excludeProperties非空，所以在调用`isExclude`函数时，正则调用`pattern.matcher(null)`会报错，也就无法达到调用函数的目的了（`propertiesName`为null）。
 
@@ -272,7 +272,7 @@ poc里的第一行做的就是这个事情，将`excludeProperties`置为空集�
 
 `ognl.OgnlContext#get`
 
-![image-20200507110201209](/images/talk_about_struts2/image-20200507110201209.png)
+![image-20200507110201209](assets/talk_about_struts2/image-20200507110201209.png)
 
 从`OgnlContext`上下文获取内容，首先会判断是否在`RESERVED_KEYS`集合里，如果存在，则相应的调用他的getters，如果不存在，则从当前的上下文里去找这个key。
 
@@ -305,22 +305,20 @@ xwork>=2.2.1.1，对参数名做了更为细致的正则检查`[a-zA-Z0-9\\.\\]\
 
 `com.opensymphony.xwork2.interceptor.ConversionErrorInterceptor#intercept`
 
-![image-20200509111903026](/images/talk_about_struts2/image-20200509111903026.png)
+![image-20200509111903026](assets/talk_about_struts2/image-20200509111903026.png)
 
 value为我们传入的数据，过了一次getOverrideExpr
 
-![image-20200509111939166](/images/talk_about_struts2/image-20200509111939166.png)
+![image-20200509111939166](assets/talk_about_struts2/image-20200509111939166.png)
 
 对我们的输入围上了单引号，这里如果我们的payload为`'+xxxx+'`，这里的xxxx就逃逸出来了，而不单单是字符串了
 
-![image-20200509112218065](/images/talk_about_struts2/image-20200509112218065.png)
+![image-20200509112218065](assets/talk_about_struts2/image-20200509112218065.png)
 
 后续将处理好的数据放到了stack的overrides里面
 
 而实际触发的地方跟S2-001一样，是在解析JSP的时候造成的
-
-<img src="/images/talk_about_struts2/image-20200509114347567.png" alt="image-20200509114347567" style="zoom:50%;" />
-
+![image-20200509114347567](assets/talk_about_struts2/image-20200509114347567.png)
 在`tryFIndValue`函数中，从stack的overrides中取出前面加了单引号的数据，并在后续调用`Ognl.getValue`，导致了Ognl表达式的执行。
 
 #### POC
@@ -331,7 +329,7 @@ value为我们传入的数据，过了一次getOverrideExpr
 
 xwork>=2.2.3，ognl表达式计算时，调用函数的函数判断`isAcceptableProperty`如果name为null直接返回true，所以我们不用像s2-005那样把`excludeProperties`置为空集合。
 
-![image-20200509120444634](/images/talk_about_struts2/image-20200509120444634.png)
+![image-20200509120444634](assets/talk_about_struts2/image-20200509120444634.png)
 
 但是从这里开始，`allowStaticMethodAccess`默认为false，我们需要将其置为true，才能正常执行静态函数。
 
@@ -367,15 +365,15 @@ S2-008一共有4个漏洞，详细看https://cwiki.apache.org/confluence/display
 
 `org.apache.struts2.interceptor.CookieInterceptor#intercept`
 
-![image-20200509202547849](/images/talk_about_struts2/image-20200509202547849.png)
+![image-20200509202547849](assets/talk_about_struts2/image-20200509202547849.png)
 
-![image-20200509202741614](/images/talk_about_struts2/image-20200509202741614.png)
+![image-20200509202741614](assets/talk_about_struts2/image-20200509202741614.png)
 
 这里会到`OgnlValueStack.setValue`，也就是后续调用`Ognl.setValue`，用`((1)(2))(3)`的方式来执行任意OGNL表达式
 
 #### DebuggingInterceptor
 
-![image-20200509204915751](/images/talk_about_struts2/image-20200509204915751.png)
+![image-20200509204915751](assets/talk_about_struts2/image-20200509204915751.png)
 
 当开启开发者模式时，传入`debug=command&expression=xxxx`，即可执行OGNL表达式
 
@@ -407,15 +405,15 @@ Ognl.setValue("a[(test)(bla)]",context,"");// 以a[(test)(bla)],执行test所代
 
 因为在计算OGNL表达式`(password)(bla)`的时候(解析出两个ASTProperty)
 
-![image-20200511171450014](/images/talk_about_struts2/image-20200511171450014.png)
+![image-20200511171450014](assets/talk_about_struts2/image-20200511171450014.png)
 
 后续再执行过程中，会去查找当前的action里面是否含有这个属性
 
-![image-20200511171056619](/images/talk_about_struts2/image-20200511171056619.png)
+![image-20200511171056619](assets/talk_about_struts2/image-20200511171056619.png)
 
 `com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor#getProperty`
 
-![image-20200511204523185](/images/talk_about_struts2/image-20200511204523185.png)
+![image-20200511204523185](assets/talk_about_struts2/image-20200511204523185.png)
 
 如果当前存在这个属性的时候，返回其内容
 
@@ -435,13 +433,13 @@ Ognl.setValue("a[(test)(bla)]",context,"");// 以a[(test)(bla)],执行test所代
 
 改进了正则
 
-![image-20200511222139049](/images/talk_about_struts2/image-20200511222139049.png)
+![image-20200511222139049](assets/talk_about_struts2/image-20200511222139049.png)
 
 增加了`setParameter`函数，默认设置表达式不可执行
 
-![image-20200511223638532](/images/talk_about_struts2/image-20200511223638532.png)
+![image-20200511223638532](assets/talk_about_struts2/image-20200511223638532.png)
 
-![image-20200519154216690](/images/talk_about_struts2/image-20200519154216690.png)
+![image-20200519154216690](assets/talk_about_struts2/image-20200519154216690.png)
 
 
 
@@ -454,21 +452,21 @@ Ognl.setValue("a[(test)(bla)]",context,"");// 以a[(test)(bla)],执行test所代
 
 看描述可以知道是struts2在处理redirect的时候出现的问题。
 
-![image-20200513145252050](/images/talk_about_struts2/image-20200513145252050.png)
+![image-20200513145252050](assets/talk_about_struts2/image-20200513145252050.png)
 
-![image-20200513145417046](/images/talk_about_struts2/image-20200513145417046.png)
+![image-20200513145417046](assets/talk_about_struts2/image-20200513145417046.png)
 
 结果返回后回去调用`ServletRedirectResult`来处理
 
 来看看该对象的实际处理函数`org.apache.struts2.dispatcher.ServletRedirectResult#execute`
 
-![image-20200513145546225](/images/talk_about_struts2/image-20200513145546225.png)
+![image-20200513145546225](assets/talk_about_struts2/image-20200513145546225.png)
 
-![image-20200513150115678](/images/talk_about_struts2/image-20200513150115678.png)
+![image-20200513150115678](assets/talk_about_struts2/image-20200513150115678.png)
 
 在父类execute函数调用了`conditionalParse`函数
 
-![image-20200513150240332](/images/talk_about_struts2/image-20200513150240332.png)
+![image-20200513150240332](assets/talk_about_struts2/image-20200513150240332.png)
 
 这里出现了我们比较熟悉的`TextParseUtil.translateVariables`，S2-001就是由这个函数来处理String类型转化的。
 
@@ -478,17 +476,17 @@ Ognl.setValue("a[(test)(bla)]",context,"");// 以a[(test)(bla)],执行test所代
 
 出问题的地方跟S2-001一样
 
-![image-20200513151342610](/images/talk_about_struts2/image-20200513151342610.png)
+![image-20200513151342610](assets/talk_about_struts2/image-20200513151342610.png)
 
 触发总共分为两步：
 
 1. 将xml配置中`${currentSkill.name}`解析成传入的值，此时stack.findValue会去找到前面处理好后的Result里面的currentSkill.name的值
 
-   ![image-20200513151651915](/images/talk_about_struts2/image-20200513151651915.png)
+   ![image-20200513151651915](assets/talk_about_struts2/image-20200513151651915.png)
 
 2. 由于`translateVariables`的解析OGNL表达式有两种`$`、`%`，并且是循环去处理的
 
-   ![image-20200513151842698](/images/talk_about_struts2/image-20200513151842698.png)
+   ![image-20200513151842698](assets/talk_about_struts2/image-20200513151842698.png)
 
    首先是去处理`$`，将`${currentSkill.name}`解析成具体的值，并且将result的值置为他的内容
 
@@ -500,7 +498,7 @@ Ognl.setValue("a[(test)(bla)]",context,"");// 以a[(test)(bla)],执行test所代
 
 由于我前面分析的是`2.2.3`版本，后续的版本的`translateVariables`变化有点大，其修复版本
 
-![image-20200513155116772](/images/talk_about_struts2/image-20200513155116772.png)
+![image-20200513155116772](assets/talk_about_struts2/image-20200513155116772.png)
 
 增加了pos来做起始位置来查找`${}%{}`，在第一次表达式执行完成后会更新pos值，来防止二次OGNL表达式执行
 
@@ -518,17 +516,16 @@ currentSkill.name=%{(#_memberAccess['allowStaticMethodAccess']=true,#context['xw
 
 这次的原理跟S2-001类似，只是问题出在解析`<s:a>`、`<s:url>`，当这两个标签支持`includeParams`
 
-![image-20200514151446611](/images/talk_about_struts2/image-20200514151446611.png)
+![image-20200514151446611](assets/talk_about_struts2/image-20200514151446611.png)
 
 当当前的href为空时，会用当前url来填充href，也就是在`buildUrl`时导致的OGNL表达式的执行
 
 这里不具体分析了，看一下他的执行栈
-
-<img src="/images/talk_about_struts2/image-20200514150911888.png" alt="image-20200514150911888" style="zoom:50%;" />
+![image-20200514150911888](assets/talk_about_struts2/image-20200514150911888.png)
 
 `org.apache.struts2.views.util.DefaultUrlHelper#translateVariable`
 
-![image-20200514151844894](/images/talk_about_struts2/image-20200514151844894.png)
+![image-20200514151844894](assets/talk_about_struts2/image-20200514151844894.png)
 
 也同样是使用String转换时出现的OGNL表达式执行
 
@@ -542,9 +539,9 @@ currentSkill.name=%{(#_memberAccess['allowStaticMethodAccess']=true,#context['xw
 
 #### 修复
 
-![image-20200514152500049](/images/talk_about_struts2/image-20200514152500049.png)
+![image-20200514152500049](assets/talk_about_struts2/image-20200514152500049.png)
 
-![image-20200514152517255](/images/talk_about_struts2/image-20200514152517255.png)
+![image-20200514152517255](assets/talk_about_struts2/image-20200514152517255.png)
 
 这里`org.apache.struts2.views.util.DefaultUrlHelper`不再使用TextParseUtil来处理
 
@@ -556,17 +553,17 @@ S2-015一共有两种：
 
 第一种漏洞原理跟S2-012类似，这次问题不是出在重定向，而是在解析具体的action name时出现的问题
 
-![image-20200514165546294](/images/talk_about_struts2/image-20200514165546294.png)
+![image-20200514165546294](assets/talk_about_struts2/image-20200514165546294.png)
 
 这里的`{1}`会被替换成`xxx.action`的`xxx`，这里的`xxx`如果被我们替换成OGNL表达式，会在后续的`TextParseUtil.translateVariables`得到执行，过程跟S2-012一样，不再叙述。
 
 第二种是结果由httpheader来处理时，会将我们的`${message}`嵌套执行
 
-![image-20200514202040764](/images/talk_about_struts2/image-20200514202040764.png)
+![image-20200514202040764](assets/talk_about_struts2/image-20200514202040764.png)
 
 `org.apache.struts2.dispatcher.HttpHeaderResult#execute`
 
-![image-20200514202919865](/images/talk_about_struts2/image-20200514202919865.png)
+![image-20200514202919865](assets/talk_about_struts2/image-20200514202919865.png)
 
 跟S2-012一样，解析执行`${另一层以%起始的OGNL表达式}`
 
@@ -597,11 +594,11 @@ S2-015一共有两种：
 
 `ognl.OgnlRuntime#setFieldValue`
 
-![image-20200514173311368](/images/talk_about_struts2/image-20200514173311368.png)
+![image-20200514173311368](assets/talk_about_struts2/image-20200514173311368.png)
 
 而此时这里我们要设置的`#_memberAccess['allowStaticMethodAccess']`
 
-![image-20200514173631503](/images/talk_about_struts2/image-20200514173631503.png)
+![image-20200514173631503](assets/talk_about_struts2/image-20200514173631503.png)
 
 是final类型，我们不能使用普通的方式改变他的值，只能通过上面的反射的方式来进行修改。
 
@@ -631,11 +628,11 @@ redirect:%{#context['xwork.MethodAccessor.denyMethodExecution']=false,#m=#_membe
 
 `org.apache.struts2.dispatcher.mapper.DefaultActionMapper`默认的`redirect/redirectaction`直接被删除了
 
-![image-20200515154730941](/images/talk_about_struts2/image-20200515154730941.png)
+![image-20200515154730941](assets/talk_about_struts2/image-20200515154730941.png)
 
 `action:`部分因为S2-015的关系，限制了action名
 
-![image-20200515154855569](/images/talk_about_struts2/image-20200515154855569.png)
+![image-20200515154855569](assets/talk_about_struts2/image-20200515154855569.png)
 
 已经不构成威胁了
 
@@ -675,19 +672,19 @@ S2-036影响范围：Struts 2.0.0 - Struts 2.3.28.1 （跟S2-029一样，主要�
 
 原理跟S2-001差不多，S2-029的触发需要jsp用到标签`<s:textfield name="%{xxxx}"></s:textfield>`，name属性中由一OGNL表达式解析而得，意味着生成的input标签的name属性是动态计算而得的，比如?xxxx=username，此时解析得到的input.name为username。这其中执行了`%{xxxx}`，获得xxxx的内容。而S2-001的修复主要解决的是递归计算OGNL表达式的问题，S2-029就是在进入translateVariables之前就将第一层的OGNL表达式执行完毕
 
-![image-20200519143433067](/images/talk_about_struts2/image-20200519143433067.png)
+![image-20200519143433067](assets/talk_about_struts2/image-20200519143433067.png)
 
 直接看`UIBean.evaluateParams`
 
 首先计算`%{message}`到我们传入的OGNL表达式
 
-![image-20200519144431546](/images/talk_about_struts2/image-20200519144431546.png)
+![image-20200519144431546](assets/talk_about_struts2/image-20200519144431546.png)
 
 后续会在我们传入的OGNL表达式括上`%{xxx}`
 
-![image-20200519144525695](/images/talk_about_struts2/image-20200519144525695.png)
+![image-20200519144525695](assets/talk_about_struts2/image-20200519144525695.png)
 
-![image-20200519144603429](/images/talk_about_struts2/image-20200519144603429.png)
+![image-20200519144603429](assets/talk_about_struts2/image-20200519144603429.png)
 
 此时再传入到`findValue`就是第二层的OGNL表达式，后续跟S2-001一样，只需要执行一次OGNL表达式计算即可
 
@@ -706,13 +703,13 @@ S2-036影响范围：Struts 2.0.0 - Struts 2.3.28.1 （跟S2-029一样，主要�
 
 `com.opensymphony.xwork2.ognl.OgnlUtil#compileAndExecute`
 
-![image-20200519152941105](/images/talk_about_struts2/image-20200519152941105.png)
+![image-20200519152941105](assets/talk_about_struts2/image-20200519152941105.png)
 
 在计算表达式之前，验证是否可以执行
 
-![image-20200519153530702](/images/talk_about_struts2/image-20200519153530702.png)
+![image-20200519153530702](assets/talk_about_struts2/image-20200519153530702.png)
 
-![image-20200519153555655](/images/talk_about_struts2/image-20200519153555655.png)
+![image-20200519153555655](assets/talk_about_struts2/image-20200519153555655.png)
 
 这里先看`node.isEvalChain`，这里是对S2-009做的限制，也就是当出现`((1)(2))`时，会解析出`ASTEval`节点，而`ASTEval`对象的`isEvalChain`函数直接返回true，也就使得`(1)(2)`无法执行
 
@@ -732,15 +729,15 @@ rest-plugin支持解析`xxx!method`的调用
 
 `org.apache.struts2.rest.RestActionMapper#handleDynamicMethodInvocation`解析`name!method`，并对当前的`restactionmapper`设置好后续要调用method
 
-![image-20200520223124404](/images/talk_about_struts2/image-20200520223124404.png)
+![image-20200520223124404](assets/talk_about_struts2/image-20200520223124404.png)
 
 在struts2的所有intercepter调用完毕后，会去调用DefaultActionInvocation的invokeActionOnly函数
 
-![image-20200520223603177](/images/talk_about_struts2/image-20200520223603177.png)
+![image-20200520223603177](assets/talk_about_struts2/image-20200520223603177.png)
 
 而invokeActionOnly会去调用`com.opensymphony.xwork2.DefaultActionInvocation#invokeAction`
 
-![image-20200520223738228](/images/talk_about_struts2/image-20200520223738228.png)
+![image-20200520223738228](assets/talk_about_struts2/image-20200520223738228.png)
 
 在这个函数里，我们可以看到他将前面可控的methodName放进了`ognlUtil.getValue`，导致了OGNL表达式的执行
 
@@ -761,7 +758,7 @@ http://localhost:8080/showcase_war/orders/3!(%23_memberAccess%3D%40ognl.OgnlCont
 
 #### S2-032/S2-033修复
 
-![image-20200520230704180](/images/talk_about_struts2/image-20200520230704180.png)
+![image-20200520230704180](assets/talk_about_struts2/image-20200520230704180.png)
 
 `xwork-core:2.3.28.1`在`OgnlUtil.isEvalExpression`增加了`isSequence`的判断
 
@@ -777,17 +774,17 @@ http://localhost:8080/showcase_war/orders/3!(%23_memberAccess%3D%40ognl.OgnlCont
 
 #### S2-037修复
 
-![image-20200520233839824](/images/talk_about_struts2/image-20200520233839824.png)
+![image-20200520233839824](assets/talk_about_struts2/image-20200520233839824.png)
 
 在解析`name!method`的地方，调用了`cleanupActionName`
 
-![image-20200520233957407](/images/talk_about_struts2/image-20200520233957407.png)
+![image-20200520233957407](assets/talk_about_struts2/image-20200520233957407.png)
 
 使用了正则，防止出现`(#@)`等特殊字符，出现就报错，也就到不了后续的OGNL表达式的执行
 
 并且在禁止的class列表里增加了两个
 
-![image-20200520234647887](/images/talk_about_struts2/image-20200520234647887.png)
+![image-20200520234647887](assets/talk_about_struts2/image-20200520234647887.png)
 
 使得我们不能在用`#_memberAccess=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS`来绕过限制
 
@@ -797,7 +794,7 @@ http://localhost:8080/showcase_war/orders/3!(%23_memberAccess%3D%40ognl.OgnlCont
 
 前面说的几种方法都是在处理`name!method`这个格式，rest其实还支持对`action/id/method`的解析
 
-![image-20200521112254951](/images/talk_about_struts2/image-20200521112254951.png)
+![image-20200521112254951](assets/talk_about_struts2/image-20200521112254951.png)
 
 所以改改POC就能通杀rest-plugin了
 
@@ -817,37 +814,37 @@ S2-046原理一样，这里只分析S2-045
 
 看看调用栈
 
-![image-20200521154143972](/images/talk_about_struts2/image-20200521154143972.png)
+![image-20200521154143972](assets/talk_about_struts2/image-20200521154143972.png)
 
 封装实际由`org.apache.struts2.dispatcher.Dispatcher#wrapRequest`处理
 
-![image-20200521154319856](/images/talk_about_struts2/image-20200521154319856.png)
+![image-20200521154319856](assets/talk_about_struts2/image-20200521154319856.png)
 
 可以看到这里在处理`Content-Type: multipart/form-data`类型时，会生成`org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper`处理，S2-045就是出问题在这里
 
-![image-20200521154524558](/images/talk_about_struts2/image-20200521154524558.png)
+![image-20200521154524558](assets/talk_about_struts2/image-20200521154524558.png)
 
 在用`JakartaMultiPartRequest`解析request包时，调用`org.apache.commons.fileupload.FileUploadBase.FileItemIteratorImpl#FileItemIteratorImpl`来检查Content-Type的内容，需要由multipart/开头才行，不然就是报错并将具体的contentType内容写到异常里
 
-![image-20200521155036903](/images/talk_about_struts2/image-20200521155036903.png)
+![image-20200521155036903](assets/talk_about_struts2/image-20200521155036903.png)
 
 这里我们的可控数据就到了异常上，就看struts2是怎么处理异常了
 
 `org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest#parse`
 
-![image-20200521155309089](/images/talk_about_struts2/image-20200521155309089.png)
+![image-20200521155309089](assets/talk_about_struts2/image-20200521155309089.png)
 
-![image-20200521155346720](/images/talk_about_struts2/image-20200521155346720.png)
+![image-20200521155346720](assets/talk_about_struts2/image-20200521155346720.png)
 
 可控内容传入了`com.opensymphony.xwork2.util.LocalizedTextUtil#findText`
 
-![image-20200521155451100](/images/talk_about_struts2/image-20200521155451100.png)
+![image-20200521155451100](assets/talk_about_struts2/image-20200521155451100.png)
 
-![image-20200521155901705](/images/talk_about_struts2/image-20200521155901705.png)
+![image-20200521155901705](assets/talk_about_struts2/image-20200521155901705.png)
 
 当前都没生成错误信息时，将获取默认的message
 
-![image-20200521155825583](/images/talk_about_struts2/image-20200521155825583.png)
+![image-20200521155825583](assets/talk_about_struts2/image-20200521155825583.png)
 
 这里到了我们熟悉的`TextParseUtil.translateVariables`函数，他后续会处理计算OGNL表达式
 
@@ -894,7 +891,7 @@ S2-046原理一样，这里只分析S2-045
 
 来看看他是怎么设置的`com.opensymphony.xwork2.ognl.OgnlValueStack#setOgnlUtil`
 
-![image-20200521172344561](/images/talk_about_struts2/image-20200521172344561.png)
+![image-20200521172344561](assets/talk_about_struts2/image-20200521172344561.png)
 
 可以看到`securityMemberAccess`的相关禁用设置都是来自于`ognlUtil`，这意味着我们只需要清除掉`ognlUtil`的禁用设置就可以消除掉`securityMemberAccess`的限制。这是因为在jvm里面他们用的都是同一个实例。
 
@@ -906,7 +903,7 @@ S2-046原理一样，这里只分析S2-045
 
 #### 修复
 
-![image-20200521204140738](/images/talk_about_struts2/image-20200521204140738.png)
+![image-20200521204140738](assets/talk_about_struts2/image-20200521204140738.png)
 
 修复主要是不把message传入，放到了args的位置
 
@@ -922,17 +919,17 @@ S2-046原理一样，这里只分析S2-045
 
 struts2的rest插件注册了ContentTypeInterceptor来处理不同的content-type
 
-![image-20200522100814912](/images/talk_about_struts2/image-20200522100814912.png)
+![image-20200522100814912](assets/talk_about_struts2/image-20200522100814912.png)
 
 针对xml类型，将调用`XStreamHandler`来处理
 
 `org.apache.struts2.rest.ContentTypeInterceptor#intercept`
 
-![image-20200522101114659](/images/talk_about_struts2/image-20200522101114659.png)
+![image-20200522101114659](assets/talk_about_struts2/image-20200522101114659.png)
 
 根据request请求选择handler，这里我们传入`application/xml`类型，将使用`org.apache.struts2.rest.handler.XStreamHandler#toObject`来处理xml
 
-![image-20200522101244620](/images/talk_about_struts2/image-20200522101244620.png)
+![image-20200522101244620](assets/talk_about_struts2/image-20200522101244620.png)
 
 这里用了最简单的调用方式（1.4.8版本），没有做xstream的相关安全处理，导致XStream反序列化
 
@@ -948,13 +945,13 @@ S2-052跟以往的漏洞不一样，这里跟OGNL表达式并没有什么关系�
 
 升级XStream到了1.4.10版本，并且添加了安全措施
 
-![image-20200522102217477](/images/talk_about_struts2/image-20200522102217477.png)
+![image-20200522102217477](assets/talk_about_struts2/image-20200522102217477.png)
 
 这里新添加了`AllowedClasses`、`AllowedClassNames`、`XStreamPermissionProvider`来设置每个类可以反序列化的对象列表
 
 也会添加一些默认的类
 
-![image-20200522102927472](/images/talk_about_struts2/image-20200522102927472.png)
+![image-20200522102927472](assets/talk_about_struts2/image-20200522102927472.png)
 
 这里的用法就是XStream官方推荐的，采用白名单的方式来防止不安全的反序列化
 
@@ -964,19 +961,19 @@ S2-052跟以往的漏洞不一样，这里跟OGNL表达式并没有什么关系�
 
 S2-053问题出在freemarker的标签内容可控时出现的问题
 
-![image-20200522103937515](/images/talk_about_struts2/image-20200522103937515.png)
+![image-20200522103937515](assets/talk_about_struts2/image-20200522103937515.png)
 
 在action执行结束后，由于设置的类型为freemarker，所以结果交由freemarker来处理
 
-![image-20200522111039529](/images/talk_about_struts2/image-20200522111039529.png)
+![image-20200522111039529](assets/talk_about_struts2/image-20200522111039529.png)
 
 关注对freemarker标签解析的类`org.apache.struts2.views.freemarker.tags.CallbackWriter#onStart`
 
-![image-20200522111238176](/images/talk_about_struts2/image-20200522111238176.png)
+![image-20200522111238176](assets/talk_about_struts2/image-20200522111238176.png)
 
 因为这里我们时url标签，所以由`org.apache.struts2.components.URL#start`来处理
 
-![image-20200522111315111](/images/talk_about_struts2/image-20200522111315111.png)
+![image-20200522111315111](assets/talk_about_struts2/image-20200522111315111.png)
 
 回到了由`ServletUrlRenderer`来解析我们传入的OGNL表达式，跟S2-013一样，后续也是由`TextParseUtil.translateVariables`触发的
 
@@ -1035,25 +1032,25 @@ S2-055漏洞原理跟S2-052一样，由jackson库处理json内容时产生的漏
 
 这里一种配置方案是
 
-![image-20200522152919691](/images/talk_about_struts2/image-20200522152919691.png)
+![image-20200522152919691](assets/talk_about_struts2/image-20200522152919691.png)
 
 没有配置namespace，访问s2057.action都会导向test.action，这里处理redirectAction的是
 
-![image-20200522153229727](/images/talk_about_struts2/image-20200522153229727.png)
+![image-20200522153229727](assets/talk_about_struts2/image-20200522153229727.png)
 
 `org.apache.struts2.dispatcher.ServletActionRedirectResult#execute`
 
-![image-20200522153556365](/images/talk_about_struts2/image-20200522153556365.png)
+![image-20200522153556365](assets/talk_about_struts2/image-20200522153556365.png)
 
 `ServletActionRedirectResult`会将namespace一起拼接进location，比如`/s2vuls/${1*2}/s2057.action`,其namespace为`/${1*2}`,actionName为跳转的test，最终location为`/${1*2}/test.action`。到这里我们就引入了OGNL表达式，看后续的一个处理
 
 `org.apache.struts2.dispatcher.StrutsResultSupport#execute`
 
-![image-20200522154209594](/images/talk_about_struts2/image-20200522154209594.png)
+![image-20200522154209594](assets/talk_about_struts2/image-20200522154209594.png)
 
 到这里，就开始熟悉起来了，就是S2-012的漏洞触发点
 
-![image-20200522154315511](/images/talk_about_struts2/image-20200522154315511.png)
+![image-20200522154315511](assets/talk_about_struts2/image-20200522154315511.png)
 
 传入了`TextParseUtil.translateVariables`，到这里就结束了，后续将调用OGNL.getValue
 

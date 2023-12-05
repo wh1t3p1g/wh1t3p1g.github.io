@@ -38,7 +38,7 @@ MBean Server
 
 DEMO用参考里的，用`jconsole`看看结果
 
-![image-20200306152727840](/images/java-jmx-rmi-20200310/image-20200306152727840-4519092.png)
+![image-20200306152727840](assets/java-jmx-rmi-20200310/image-20200306152727840-4519092.png)
 
 在JConsole里可以对当前注册的MBean进行操作，如上图调用`sayHello`函数
 
@@ -50,7 +50,7 @@ DEMO用参考里的，用`jconsole`看看结果
 
 这里我们重点要讲的就是第二种方法，首先我们先来看一下jmx建立起2222端口后，用nmap来获取其内容是怎么样的
 
-![image-20200306155425100](/images/java-jmx-rmi-20200310/image-20200306155425100-4519092.png)
+![image-20200306155425100](assets/java-jmx-rmi-20200310/image-20200306155425100-4519092.png)
 
 从结果来看，JMX的MBean Server是建立在RMI的基础上的，并且其RMI Registy注册的名字叫`jmxrmi`。
 
@@ -91,7 +91,7 @@ serivce:jmx:rmi://<可忽略的host>/jndi/rmi://host:port/jmxrmi
 
 **主动攻击1**：利用RMI Registy收到远程bind时产生的反序列化漏洞 jdk<8u141_b10(并且check host的顺序变了，详细可以看[这里](http://blog.0kami.cn/2020/02/06/rmi-registry-security-problem/))，[8u141_b10修改后](http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/rev/c92d704420d7#l2.32)SingleEntryRegistry增加了filter
 
-![image-20200306170312638](/images/java-jmx-rmi-20200310/image-20200306170312638-4519092.png)
+![image-20200306170312638](assets/java-jmx-rmi-20200310/image-20200306170312638-4519092.png)
 
 限制了接受到的不能是序列化后的对象，也就意味着不能利用registry这种方式来达成利用了。
 
@@ -105,19 +105,19 @@ serivce:jmx:rmi://<可忽略的host>/jndi/rmi://host:port/jmxrmi
 
 `javax/management/remote/rmi/RMIConnectionImpl.java#unwrap`
 
-![image-20200306212145063](/images/java-jmx-rmi-20200310/image-20200306212145063-4519092.png)
+![image-20200306212145063](assets/java-jmx-rmi-20200310/image-20200306212145063-4519092.png)
 
 1583行进行类型转化，但首先需要先进行反序列化`mo.get()`
 
 `java/rmi/MarshalledObject.java#get`
 
-![image-20200306212242480](/images/java-jmx-rmi-20200310/image-20200306212242480-4519092.png)
+![image-20200306212242480](assets/java-jmx-rmi-20200310/image-20200306212242480-4519092.png)
 
 这里就到了常规的反序列化操作
 
 所以只要MBean Server里存在MBean的函数存在参数，我们通过构造相关的invoke传递过去就可以触发反序列化
 
-![image-20200306212452672](/images/java-jmx-rmi-20200310/image-20200306212452672-4519092.png)
+![image-20200306212452672](assets/java-jmx-rmi-20200310/image-20200306212452672-4519092.png)
 
 如`java.util.logging.Logging#getLoggerLevel(String)`有一个String类型的函数参数，这里我们直接将payload塞进invoke的第二个参数即可。
 
@@ -165,11 +165,11 @@ serivce:jmx:rmi://<可忽略的host>/jndi/rmi://host:port/jmxrmi
 
 `com/sun/jmx/remote/security/MBeanServerFileAccessController.java#checkAccess`会检查当前登陆的用户是否有Create的权限(这里的权限是下面的createPatterns，它允许创建指定正则的类型，而我们默认是为空的)，这里默认会返回false，也就意味着它不允许以MLet对象创建新的MBean
 
-![image-20200318153641087](/images/java-jmx-rmi-20200310/image-20200318153641087.png)
+![image-20200318153641087](assets/java-jmx-rmi-20200310/image-20200318153641087.png)
 
 其次对于security manager的限制，在远程载入前会判断是否存在载入的权限（这里我没看到其他的地方做了判断，可能不止当前这个位置的验证）
 
-![image-20200318155835634](/images/java-jmx-rmi-20200310/image-20200318155835634.png)
+![image-20200318155835634](assets/java-jmx-rmi-20200310/image-20200318155835634.png)
 
 当前方法比较方便的是可以载入任意的代码来执行，但是利用条件比较苛刻。
 

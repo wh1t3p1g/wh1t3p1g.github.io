@@ -130,7 +130,7 @@ System.out.println(p);
 
 用一下廖大的流程图
 
-![img](/images/talk-about-fastjson-deserialization-20200413/1564368830000-15632616584384.jpg)
+![img](assets/talk-about-fastjson-deserialization-20200413/1564368830000-15632616584384.jpg)
 
 具体的分析过程看上面的那篇文章即可，这里提一下将ASM动态生成的代码dump出来的方法
 
@@ -138,11 +138,11 @@ System.out.println(p);
 
 先将断点下在`com/alibaba/fastjson/parser/deserializer/ASMDeserializerFactory.java#80`
 
-![image-20200104200324167](/images/talk-about-fastjson-deserialization-20200413/image-20200104200324167.png)
+![image-20200104200324167](assets/talk-about-fastjson-deserialization-20200413/image-20200104200324167.png)
 
 生成的bytecodes在code里，用执行表达式的功能，执行`(new FileOutputStream("some.class")).write(code)`即可生成
 
-![image-20200104200849550](/images/talk-about-fastjson-deserialization-20200413/image-20200104200849550.png)
+![image-20200104200849550](assets/talk-about-fastjson-deserialization-20200413/image-20200104200849550.png)
 
 ### (3).  fastjson 自动调用getter和setter
 
@@ -158,7 +158,7 @@ System.out.println(p);
 
 来看一下parseObject函数
 
-![image-20200409201548997](/images/talk-about-fastjson-deserialization-20200413/image-20200409201548997.png)
+![image-20200409201548997](assets/talk-about-fastjson-deserialization-20200413/image-20200409201548997.png)
 
 这里parseObject函数会首先调用`JSON.parse`函数，然后再去调用`toJSON`函数。
 
@@ -176,7 +176,7 @@ System.out.println(p);
 
 `com/alibaba/fastjson/parser/deserializer/JavaBeanDeserializer.java#deserialze`（ps：这里很鸡贼的把deserialize的i给省略了）
 
-![image-20200106094637943](/images/talk-about-fastjson-deserialization-20200413/image-20200106094637943.png)
+![image-20200106094637943](assets/talk-about-fastjson-deserialization-20200413/image-20200106094637943.png)
 
 首先是第570行调用了createInstance函数，该函数将会对当前还原的类进行实例化，这里会自动调用无参数的构造函数
 
@@ -184,15 +184,15 @@ System.out.println(p);
 
 跟进parseField函数
 
-![image-20200106105841139](/images/talk-about-fastjson-deserialization-20200413/image-20200106105841139.png)
+![image-20200106105841139](assets/talk-about-fastjson-deserialization-20200413/image-20200106105841139.png)
 
 这里调用了`com/alibaba/fastjson/parser/deserializer/DefaultFieldDeserializer.java#parseField`函数，直接看关键点第83行，调用了setValue函数
 
-![image-20200106110005828](/images/talk-about-fastjson-deserialization-20200413/image-20200106110005828.png)
+![image-20200106110005828](assets/talk-about-fastjson-deserialization-20200413/image-20200106110005828.png)
 
 setValue函数就是fastjson自动调用getter和setter的关键点
 
-![image-20200106110837420](/images/talk-about-fastjson-deserialization-20200413/image-20200106110837420.png)
+![image-20200106110837420](assets/talk-about-fastjson-deserialization-20200413/image-20200106110837420.png)
 
 如果不存在相应的getter、setter、is函数，则利用反射机制将value赋值到当前的object上（这里就是else部分做的事情）。
 
@@ -238,11 +238,11 @@ getter提取条件：
 
 这个`toString`继承自`JSON`
 
-![image-20200410110654354](/images/talk-about-fastjson-deserialization-20200413/image-20200410110654354.png)
+![image-20200410110654354](assets/talk-about-fastjson-deserialization-20200413/image-20200410110654354.png)
 
 这里他直接调用了`toJSONString`函数
 
-![image-20200410110738399](/images/talk-about-fastjson-deserialization-20200413/image-20200410110738399.png)
+![image-20200410110738399](assets/talk-about-fastjson-deserialization-20200413/image-20200410110738399.png)
 
 看到后续他将当前这个JSONObject实例进行了obj to str的操作，也就是我们使用静态函数`JSON.toJSONString`来序列化数据一样，这里将会调用当前这个类的所有符合条件的getters（这里的条件比调用parse时宽松，他对返回类型无限制）。
 
@@ -250,11 +250,11 @@ getter提取条件：
 
 `com/alibaba/fastjson/parser/DefaultJSONParser.java#parseObject`
 
-![image-20200410121100651](/images/talk-about-fastjson-deserialization-20200413/image-20200410121100651.png)
+![image-20200410121100651](assets/talk-about-fastjson-deserialization-20200413/image-20200410121100651.png)
 
 这里有一处如果当前object为JSONObject类型时，将会对当前的这个key调用`toString`函数。这里在处理过程中，我们可以知道如果遇到`{`，fastjson会加一层JSONObject。
 
-![image-20200410122509759](/images/talk-about-fastjson-deserialization-20200413/image-20200410122509759.png)
+![image-20200410122509759](assets/talk-about-fastjson-deserialization-20200413/image-20200410122509759.png)
 
 那么，我们只需要构造一个类似
 
@@ -284,19 +284,19 @@ getter提取条件：
 
 `com.alibaba.fastjson.parser.DefaultJSONParser#parseObject#388`
 
-![image-20200411145506512](/images/talk-about-fastjson-deserialization-20200413/image-20200411145506512.png)
+![image-20200411145506512](assets/talk-about-fastjson-deserialization-20200413/image-20200411145506512.png)
 
 当遇到引用`$ref`这种方式，会增加一个resolveTask，留在parse结束后进行处理
 
 `com.alibaba.fastjson.parser.DefaultJSONParser#handleResovleTask`
 
-![image-20200411145811138](/images/talk-about-fastjson-deserialization-20200413/image-20200411145811138.png)
+![image-20200411145811138](assets/talk-about-fastjson-deserialization-20200413/image-20200411145811138.png)
 
 调用`JSONPath.eval`，关于JSONPath的[介绍](https://github.com/alibaba/fastjson/wiki/JSONPath)
 
 这里的eval函数最终会去调用`JSONPath.getPropertyValue`函数（这里其实是可以根据我们传入的内容去调用不同的Segement，比如这里用了**$.value**的方式使用的是PropertySegement）
 
-![image-20200411153340074](/images/talk-about-fastjson-deserialization-20200413/image-20200411153340074.png)
+![image-20200411153340074](assets/talk-about-fastjson-deserialization-20200413/image-20200411153340074.png)
 
 后续就不详细分析了，这里如果存在相应的getter，就会去invoke这个函数；如果没有，那么就会用反射机制去获取属性的值。
 
@@ -331,7 +331,7 @@ json = "{" +
 
 其中触发载入的函数为`newTransformer`函数，而很巧的是，templatesimpl存在一个getter调用了该函数
 
-![image-20200106232029570](/images/talk-about-fastjson-deserialization-20200413/image-20200106232029570.png)
+![image-20200106232029570](assets/talk-about-fastjson-deserialization-20200413/image-20200106232029570.png)
 
 那么很明显，我们可以直接填入`outputProperties`的方法来触发`getOutputProperties`（他恰巧无setter，返回值也符合条件）。但是有一个问题是我们需要填充的类属性都是private类型，要想执行该利用链，需要在调用parseObject函数时填入`Feature.SupportNonPublicField`。以下图为例，将调用计算器
 
@@ -346,7 +346,7 @@ String jsonString = "{\"@type\":\"com.sun.org.apache.xalan.internal.xsltc.trax.T
 
 除此之外，byte[]类型在fastjson转化中会被base64编码
 
-![image-20200106233142450](/images/talk-about-fastjson-deserialization-20200413/image-20200106233142450.png)
+![image-20200106233142450](assets/talk-about-fastjson-deserialization-20200413/image-20200106233142450.png)
 
 所以payload中是一长串base64的字串。
 
@@ -360,11 +360,11 @@ String jsonString = "{\"@type\":\"com.sun.org.apache.xalan.internal.xsltc.trax.T
 
 JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代码
 
-![image-20200407105109680](/images/talk-about-fastjson-deserialization-20200413/image-20200407105109680.png)
+![image-20200407105109680](assets/talk-about-fastjson-deserialization-20200413/image-20200407105109680.png)
 
 这次出问题的地方在于setAutoCommit函数，该函数调用了connect函数来重新发起一个jdbc的连接
 
-![image-20200407105258958](/images/talk-about-fastjson-deserialization-20200413/image-20200407105258958.png)
+![image-20200407105258958](assets/talk-about-fastjson-deserialization-20200413/image-20200407105258958.png)
 
 在connect函数里我们可以看到调用了lookup函数，其参数值由`getDataSourceName`来获取，该函数主要返回属性`dataSource`，根据fastjson的利用原理，我们只需要填充`dataSource`和`autoCommit`就可以触发这里的JNDI注入。
 
@@ -380,15 +380,15 @@ JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代
 
 前面的基础知识里提到了我们可以调用符合条件的getters，在`BasicDataSource`存在一个`getConnection`函数，他主要调用`createConnectionFactory`
 
-![image-20200411132559759](/images/talk-about-fastjson-deserialization-20200413/image-20200411132559759.png)
+![image-20200411132559759](assets/talk-about-fastjson-deserialization-20200413/image-20200411132559759.png)
 
 在`createConnectionFactory`函数使用Class.forName加载类
 
-![image-20200411132736300](/images/talk-about-fastjson-deserialization-20200413/image-20200411132736300.png)
+![image-20200411132736300](assets/talk-about-fastjson-deserialization-20200413/image-20200411132736300.png)
 
 这部分driverClassName和driverClassLoader是可控的，这时候我们要用到的是`com.sun.org.apache.bcel.internal.util.ClassLoader`，这个ClassLoader可以从classname中提取出BCEL格式的class字节码，并调用defineClass进行载入
 
-![image-20200411134429055](/images/talk-about-fastjson-deserialization-20200413/image-20200411134429055.png)
+![image-20200411134429055](assets/talk-about-fastjson-deserialization-20200413/image-20200411134429055.png)
 
 这里我们可以写一个用了静态块的类来执行代码。
 
@@ -404,13 +404,13 @@ JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代
 
 `com.alibaba.fastjson.parser.DefaultJSONParser#parseObject(java.util.Map, java.lang.Object)`
 
-![image-20200411232403665](/images/talk-about-fastjson-deserialization-20200413/image-20200411232403665.png)
+![image-20200411232403665](assets/talk-about-fastjson-deserialization-20200413/image-20200411232403665.png)
 
 当遇到`@type`时，会先`com.alibaba.fastjson.parser.ParserConfig#checkAutoType`。该函数的一个主要逻辑（1.2.25版本）
 
 1. 开启了`AutoType`时，会过一次黑名单和白名单检测（先检测白名单，后检测黑名单）。
 
-   ![image-20200412223524510](/images/talk-about-fastjson-deserialization-20200413/image-20200412223524510.png)
+   ![image-20200412223524510](assets/talk-about-fastjson-deserialization-20200413/image-20200412223524510.png)
 
    优先载入人工配置的白名单类，并对黑名单类爆出异常；
 
@@ -418,13 +418,13 @@ JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代
 
 3. 前面的情况都不符合，并且开启了`AutoType`，则尝试去载入任意类，但是不可以载入ClassLoader和DataSource的子类
 
-   ![image-20200412224904669](/images/talk-about-fastjson-deserialization-20200413/image-20200412224904669.png)
+   ![image-20200412224904669](assets/talk-about-fastjson-deserialization-20200413/image-20200412224904669.png)
 
 这里载入的方法用的都是`TypeUtils.loadClass`，来看一下他的一个处理
 
 * 首先他对于`Lxxx.class.xxx;`的类表示方法做`L`,`;`的剔除，递归调用loadClass去调用内部的具体类
 
-  ![image-20200412232825982](/images/talk-about-fastjson-deserialization-20200413/image-20200412232825982.png)
+  ![image-20200412232825982](assets/talk-about-fastjson-deserialization-20200413/image-20200412232825982.png)
 
 * 后续的调用方法为使用`AppClassLoader.loadClass`或`Class.forName`去加载类
 
@@ -434,7 +434,7 @@ JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代
 
 而黑名单的检测方式是去匹配当前的类名`class.startsWith(deny)`
 
-![image-20200412233730761](/images/talk-about-fastjson-deserialization-20200413/image-20200412233730761.png)
+![image-20200412233730761](assets/talk-about-fastjson-deserialization-20200413/image-20200412233730761.png)
 
 而在这个黑名单里显然并没有考虑到`TypeUtils.loadClass`实现中，对于`Lxxxx.class.xxx;`的处理。
 
@@ -446,7 +446,7 @@ JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代
 
 对于前面`Lxxxxx;`的绕过，42版本添加了以下代码来剔除（因为黑名单已经变成了hash比较的方式，这里`L;`都以这种方式来确认）
 
-![image-20200413114125856](/images/talk-about-fastjson-deserialization-20200413/image-20200413114125856.png)
+![image-20200413114125856](assets/talk-about-fastjson-deserialization-20200413/image-20200413114125856.png)
 
 但是这里的处理治标不治本，我们使用`LLxxxxx;;`这种方式就可以绕过。
 
@@ -456,7 +456,7 @@ JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代
 
 这个版本主要修复了上面`LLxxxx;;`的方式
 
-![image-20200413125108171](/images/talk-about-fastjson-deserialization-20200413/image-20200413125108171.png)
+![image-20200413125108171](assets/talk-about-fastjson-deserialization-20200413/image-20200413125108171.png)
 
 做了两次检测，如果碰上`LLxxxxx;;`的方式则直接爆出异常
 
@@ -466,29 +466,29 @@ JdbcRowSetImpl对象可以被我们用做上述的利用，来看一下他的代
 
 在48版本之前，`checkAutoType`还存在这样一个逻辑（以1.2.47为例）
 
-![image-20200413130933666](/images/talk-about-fastjson-deserialization-20200413/image-20200413130933666.png)
+![image-20200413130933666](assets/talk-about-fastjson-deserialization-20200413/image-20200413130933666.png)
 
 当开启`AutoType`时，如果mappings里面存在这个类，那么就算这个类在黑名单里，也允许他进行下一步操作
 
 PS：这里的mappings是fastjson提早载入的一些缓存类
 
-![image-20200413131026571](/images/talk-about-fastjson-deserialization-20200413/image-20200413131026571.png)
+![image-20200413131026571](assets/talk-about-fastjson-deserialization-20200413/image-20200413131026571.png)
 
 后续如果能从mappings里面得到这个类，就直接返回。那么我们有没有什么方法将我们需要的类加入到这个mappings里呢？
 
 先来看一下`deserializers.findClass`，在`deserializers`里面预先填充了一些类与其反序列化器的实例
 
-![image-20200413131650373](/images/talk-about-fastjson-deserialization-20200413/image-20200413131650373.png)
+![image-20200413131650373](assets/talk-about-fastjson-deserialization-20200413/image-20200413131650373.png)
 
 这里我们主要关注一下`Class.class`，他所对应的反序列化器为`MiscCodec`，`checkAutoType`检测过后，后续将调用反序列化器的`deserialze`函数。来看看MiscCodec的这个函数对于`Class.class`的处理
 
-![image-20200413132337804](/images/talk-about-fastjson-deserialization-20200413/image-20200413132337804.png)
+![image-20200413132337804](assets/talk-about-fastjson-deserialization-20200413/image-20200413132337804.png)
 
 他调用了`TypeUtils.loadClass`函数，前面我们讲过，他将使用`ClassLoader.loadClass`或`Class.forName`来载入类，在这一过程中，涉及到了`mappings`的操作
 
-![image-20200413132644597](/images/talk-about-fastjson-deserialization-20200413/image-20200413132644597.png)
+![image-20200413132644597](assets/talk-about-fastjson-deserialization-20200413/image-20200413132644597.png)
 
-![image-20200413132704804](/images/talk-about-fastjson-deserialization-20200413/image-20200413132704804.png)
+![image-20200413132704804](assets/talk-about-fastjson-deserialization-20200413/image-20200413132704804.png)
 
 这里的`cache`默认为`true`，所以这里会直接将载入后的对象填入`mappings`
 
@@ -511,7 +511,7 @@ json = "{" + // 用Class载入com.sun.rowset.JdbcRowSetImpl，并缓存到mappin
 
 在`MiscCodec`对Class的处理中，修改了`cache=false`
 
-![image-20200413134143022](/images/talk-about-fastjson-deserialization-20200413/image-20200413134143022.png)
+![image-20200413134143022](assets/talk-about-fastjson-deserialization-20200413/image-20200413134143022.png)
 
 并且对于`TypeUtils.loadClass`里的`mappings`操作都依赖于`cache`，如果为`false`则不添加到`mappings`里（在前面的版本里`Class.forName`部分并不依赖cache，48版本之后增加了对cache的判断）
 
@@ -526,7 +526,7 @@ json = "{" + // 用Class载入com.sun.rowset.JdbcRowSetImpl，并缓存到mappin
 
 最新版1.2.68引入了[safeMode](https://github.com/alibaba/fastjson/wiki/fastjson_safemode)，在`checkAutoType`里添加了下面判断，如果开启了safemode，那么将不允许进行`@type`
 
-![image-20200413161935377](/images/talk-about-fastjson-deserialization-20200413/image-20200413161935377.png)
+![image-20200413161935377](assets/talk-about-fastjson-deserialization-20200413/image-20200413161935377.png)
 
 不过这个并不是默认开启的，需要人工去配置。
 

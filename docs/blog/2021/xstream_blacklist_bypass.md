@@ -273,9 +273,9 @@ set objectName EvilObj
 run
 ```
 
-![image-20210105110226086](/images/xstream_blacklist_bypass/image-20210105110226086.png)
+![image-20210105110226086](assets/xstream_blacklist_bypass/image-20210105110226086.png)
 
 Then, try to deserialze the payload, you will get a calculator XD
 
-![image-20210105110507762](/images/xstream_blacklist_bypass/image-20210105110507762.png)
+![image-20210105110507762](assets/xstream_blacklist_bypass/image-20210105110507762.png)
 

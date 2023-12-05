@@ -35,13 +35,13 @@ java -jar ysoserial-master-30099844c6-1.jar CommonsCollections7 "open /System/Ap
 
 这个错误的产生原因主要在于jdk8更新了`AnnotationInvocationHandler`[参考](http://hg.openjdk.java.net/jdk8u/jdk8u-dev/jdk/diff/8e3338e7c7ea/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java)
 
-![image-20191029103316582](/images/java-deserialized-commonscollections-others-20191031/image-20191029103316582.png)
+![image-20191029103316582](assets/java-deserialized-commonscollections-others-20191031/image-20191029103316582.png)
 
 jdk8不直接调用`s.defaultReadObject`来填充当前的`AnnotaionInvocationHandler`实例，而选择了单独填充新的变量。
 
 这里我们回顾一下，1和3的payload的触发点是`LazyMap.get`函数，而触发这个函数需要使得`memberValues`为`LazyMap`对象
 
-![image-20191029103756251](/images/java-deserialized-commonscollections-others-20191031/image-20191029103756251.png)
+![image-20191029103756251](assets/java-deserialized-commonscollections-others-20191031/image-20191029103756251.png)
 
 显然，jdk8的操作使得`memberValues`并不是我们构造好的`LazyMap`类型。在调试中，可以看到此时的`memberValues`为`LinkedHashMap`对象，该对象无法获得`entrySet`的内容，所以会报前面的这个错误。
 
@@ -58,11 +58,11 @@ AnnotationInvocationHandler在前面起到的作用是来触发LazyMap.get函数
 
 CommonsCollections5在这里用到了TiedMapEntry，来看一下
 
-![image-20191029110642707](/images/java-deserialized-commonscollections-others-20191031/image-20191029110642707.png)
+![image-20191029110642707](assets/java-deserialized-commonscollections-others-20191031/image-20191029110642707.png)
 
 TiedMapEntry有一个map类属性，且在getValue处调用了map.get函数。同时toString、hashCode、equals均调用了getValue函数，这里关注toString函数。
 
-![image-20191029110812953](/images/java-deserialized-commonscollections-others-20191031/image-20191029110812953.png)
+![image-20191029110812953](assets/java-deserialized-commonscollections-others-20191031/image-20191029110812953.png)
 
 toString函数通常在与字符串拼接时，会被自动调用。那么接下来我们需要找一个对象满足
 
@@ -71,7 +71,7 @@ toString函数通常在与字符串拼接时，会被自动调用。那么接下
 
 这里选择了`BadAttributeValueExpException`对象，他的`readObject`函数会自动调用类属性的`toString`函数。
 
-![image-20191029111315584](/images/java-deserialized-commonscollections-others-20191031/image-20191029111315584.png)
+![image-20191029111315584](assets/java-deserialized-commonscollections-others-20191031/image-20191029111315584.png)
 
 需要注意的是这里`System.getSecurityManager`为空，换句话说，就是当前的jvm环境不能启用安全管理器。
 
@@ -97,11 +97,11 @@ CommonsCollections6利用了`TiedMapEntry`的`hashCode`函数，来触发`LazyMa
 
 先来看一下HashSet的`readObject`函数
 
-![image-20191029145451405](/images/java-deserialized-commonscollections-others-20191031/image-20191029145451405.png)
+![image-20191029145451405](assets/java-deserialized-commonscollections-others-20191031/image-20191029145451405.png)
 
 继续跟put函数，这里其实调用的是HashMap的put函数
 
-![image-20191029150815776](/images/java-deserialized-commonscollections-others-20191031/image-20191029150815776.png)
+![image-20191029150815776](assets/java-deserialized-commonscollections-others-20191031/image-20191029150815776.png)
 
 其中对key调用的`hash()`函数会调用`key.hashCode`函数，那么现在就很清楚了，我们只要将key的值替换成构造好的`TiedMapEntry`对象就可以了。注意，这里的key值其实就是`HashSet.add`的实例，在HashSet里的HashMap类属性只用到了Key。
 
@@ -122,21 +122,21 @@ CommonsCollections7用了Hashtable来代替`AnnotationInvocationHandler`，不�
 
 先来看一下`Hashtable`的`readObject`函数
 
-![image-20191029170332420](/images/java-deserialized-commonscollections-others-20191031/image-20191029170332420.png)
+![image-20191029170332420](assets/java-deserialized-commonscollections-others-20191031/image-20191029170332420.png)
 
 继续跟进`reconstitutionPut`
 
-![image-20191029170517723](/images/java-deserialized-commonscollections-others-20191031/image-20191029170517723.png)
+![image-20191029170517723](assets/java-deserialized-commonscollections-others-20191031/image-20191029170517723.png)
 
 该函数将填充table的内容，其中第1236行仅当有重复数据冲突时，才会进入下面的if语句，这里我们继续跟进`equals`函数
 
 这里的`equals`函数取决于`key`的对象，利用链用的是`LazyMap`对象，实际调用的是父类`AbstractMapDecorator`的`equals`函数
 
-![image-20191029173505843](/images/java-deserialized-commonscollections-others-20191031/image-20191029173505843.png)
+![image-20191029173505843](assets/java-deserialized-commonscollections-others-20191031/image-20191029173505843.png)
 
 这里又调用了map的equals函数，这里实际调用的是HashMap的父类`AbstractMap`的`equals`函数
 
-![image-20191029173654711](/images/java-deserialized-commonscollections-others-20191031/image-20191029173654711.png)
+![image-20191029173654711](assets/java-deserialized-commonscollections-others-20191031/image-20191029173654711.png)
 
 在第495行调用了`m.get`函数，所以后面又是我们熟悉的`LazyMap.get`的套路了。
 
@@ -231,13 +231,13 @@ CommonsCollections利用的是key的hash冲突的方法来触发`equals`函数�
 
 这里大家可以跟一下String.hashCode函数，他的计算方法存在不同字符串相同hash的可能性，例如如下代码
 
-![image-20191031172937969](/images/java-deserialized-commonscollections-others-20191031/image-20191031172937969.png)
+![image-20191031172937969](assets/java-deserialized-commonscollections-others-20191031/image-20191031172937969.png)
 
 CommonsCollections7用的就是这个bug来制造hash冲突。
 
 这里需要提一点的是触发LazyMap.get函数
 
-![image-20191031181203017](/images/java-deserialized-commonscollections-others-20191031/image-20191031181203017.png)
+![image-20191031181203017](assets/java-deserialized-commonscollections-others-20191031/image-20191031181203017.png)
 
 要走到第151行红框框上，首先需要满足的是`map`里不存在当前这个`key`
 
@@ -276,7 +276,7 @@ lazyMap2.remove("yy");
 
 我们在分析`Hashtable`的`reconstitutionPut`函数时，看下图
 
-![image-20191031183753047](/images/java-deserialized-commonscollections-others-20191031/image-20191031183753047.png)
+![image-20191031183753047](assets/java-deserialized-commonscollections-others-20191031/image-20191031183753047.png)
 
 该函数在第1234行对`key`调用了一次`hashCode`函数，那么很明显，如果key值被代替为构造好的`TiedMapEntry`实例，这里我们就能触发`LazyMap.get`函数，后续的调用链就类似了。
 

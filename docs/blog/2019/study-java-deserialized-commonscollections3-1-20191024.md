@@ -80,7 +80,7 @@ public class SerializeDemo
 
 运行后，生成employee.ser
 
-![image-20190923193109921](/images/study_java_deseriablized/image-20190923193109921.png)
+![image-20190923193109921](assets/study_java_deseriablized/image-20190923193109921.png)
 
 根据[序列化规范](https://docs.oracle.com/javase/8/docs/platform/serialization/spec/protocol.html)，`aced`代表java序列化数据的magic word`STREAM_MAGIC`,`0005`表示版本号`STREAM_VERSION`,`73`表示是一个对象`TC_OBJECT`,`72`表示这个对象的描述`TC_CLASSDESC`
 
@@ -137,7 +137,7 @@ private void readObject(ObjectInputStream in) throws Exception {
 
 在反序列化过程中将调用该函数
 
-![image-20191008145635285](/images/study_java_deseriablized/image-20191008145635285.png)
+![image-20191008145635285](assets/study_java_deseriablized/image-20191008145635285.png)
 
 ### 2. 反序列化触发点扩展
 
@@ -293,19 +293,19 @@ public static void main(String[] args) {
 
 `ObjectInputStream:readObject:417`
 
-![image-20191009165050116](/images/study_java_deseriablized/image-20191009165050116.png)
+![image-20191009165050116](assets/study_java_deseriablized/image-20191009165050116.png)
 
 跟进ObjectInputStream的readObject类，该函数体现了整个反序列化的过程，其中其主要功能的是`readObject0`函数
 
 `ObjectInputStream:readObject0:1515`
 
-![image-20191009171309599](/images/study_java_deseriablized/image-20191009171309599.png)
+![image-20191009171309599](assets/study_java_deseriablized/image-20191009171309599.png)
 
 从流中读取出当前的类型，`tc=115`此时代表Object对象，从而进入`readOrdinaryObject`
 
 `ObjectInputStream:readOrdinaryObject:2026`
 
-![image-20191009191352950](/images/study_java_deseriablized/image-20191009191352950.png)
+![image-20191009191352950](assets/study_java_deseriablized/image-20191009191352950.png)
 
 该函数主要做了实例化对象的工作，其中2033行生成的ObjectStreamClass对象，会利用反射机制实例化序列化流中的对象。2044行实际的获取到该对象。
 
@@ -314,12 +314,12 @@ public static void main(String[] args) {
 > Serialization's descriptor for classes. It contains the name and serialVersionUID of the class. The ObjectStreamClass for a specific class loaded in this Java VM can be found/created using the lookup method.
 
 其中函数`readClassDesc`将从序列化流中提取出相关的类信息。这里就直接看利用反射机制获取到类的地方，位于`ObjectInputStream.resolveClass`，下图为调用链
+![](assets/study_java_deseriablized/image-20191009193053871.png)
 
-<img src="/images/study_java_deseriablized/image-20191009193053871.png" alt="image-20191009193053871" style="zoom:50%;" />
 
 `ObjectInputStream:resolveClass:677`
 
-![image-20191009193404315](/images/study_java_deseriablized/image-20191009193404315.png)
+![image-20191009193404315](assets/study_java_deseriablized/image-20191009193404315.png)
 
 这里提取了jvm中当前这个流中的类的Class对象，用于后续的newInstance。
 
@@ -329,7 +329,7 @@ public static void main(String[] args) {
 
 `ObjectInputStream:readSerialData:2149`
 
-![image-20191011113246544](/images/study_java_deseriablized/image-20191011113246544.png)
+![image-20191011113246544](assets/study_java_deseriablized/image-20191011113246544.png)
 
 这里会根据当前的类描述器是否存在readObject函数来自动调用该函数，或者是填充序列流中的field数据。这里的readObject的调用常为利用链的一部分，例如CommonsCollections1中的`AnnotationInvocationHandler`，后文将分析该函数。
 
@@ -374,7 +374,7 @@ CommonsCollections1 payload针对的commons-collections 3.1版本，先引入库
 
 在ysoserial的exp中，我们可以看到一整个调用的链
 
-![image-20191011113756573](/images/study_java_deseriablized/image-20191011113756573.png)
+![image-20191011113756573](assets/study_java_deseriablized/image-20191011113756573.png)
 
 我们可以看到利用链的最后调用了`Runtime.getRuntime().exec()`，这意味着我们需要在前一步的链上可以达到调用任意类和方法的函数。
 

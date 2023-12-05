@@ -37,7 +37,7 @@ RMI有一个重要的特性是动态类加载机制，当本地CLASSPATH中无�
 
 JNDI方便了与naming service和Directory service的交互，通过指定特定的URL即可与不同的服务进行交互。相当于对这些服务的API又进行了一次封装供开发人员使用。其中JNDI中也存在上述RMI codebase的动态加载机制，并且其配置同底层的RMI配置并不相关。
 
-![image-20200204162708130](/images/jndi-with-rmi-20200209/image-20200204162708130-1255889.png)
+![image-20200204162708130](assets/jndi-with-rmi-20200209/image-20200204162708130-1255889.png)
 
 从上述的构架来看，动态加载发生于两个部分，Naming Manager和JNDI SPI。这里SPI部分就是相对应的服务的配置，比如前文提到的RMI的限制就是SPI部分的。而Naming Manager也存在一个动态加载机制并且其在修复前并无限制，这里Naming Manager部分用到的是JNDI的Naming References
 
@@ -58,7 +58,7 @@ ctx.bind("Foo", wrapper);// 绑定reference
 
 请求端以lookup请求上述绑定的RMI服务即可。其处理过程引用https://www.blackhat.com/docs/us-16/materials/us-16-Munoz-A-Journey-From-JNDI-LDAP-Manipulation-To-RCE-wp.pdf
 
-![image-20200204164815153](/images/jndi-with-rmi-20200209/image-20200204164815153-1255889.png)
+![image-20200204164815153](assets/jndi-with-rmi-20200209/image-20200204164815153-1255889.png)
 
 ## 0x02 原理
 
@@ -135,33 +135,33 @@ public class EvilObj {
 
 首先InitialContext的lookup函数，会根据提供的URL自动选择合适的InitialContext（分离出协议后进行选择），比如此时的InitialContext为rmiURLContext
 
-![image-20200204203703902](/images/jndi-with-rmi-20200209/image-20200204203703902-1255889.png)
+![image-20200204203703902](assets/jndi-with-rmi-20200209/image-20200204203703902-1255889.png)
 
 继续跟进`com/sun/jndi/toolkit/url/GenericURLContext.java#lookup`
 
-![image-20200204204303412](/images/jndi-with-rmi-20200209/image-20200204204303412-1255889.png)
+![image-20200204204303412](assets/jndi-with-rmi-20200209/image-20200204204303412-1255889.png)
 
 这里的ctx为RegistryContext，将对指定的RMI Registry获取绑定的obj
 
-![image-20200204204444118](/images/jndi-with-rmi-20200209/image-20200204204444118-1255889.png)
+![image-20200204204444118](assets/jndi-with-rmi-20200209/image-20200204204444118-1255889.png)
 
 获取到远程对象，并调用decodeObject函数
 
-![image-20200204205121493](/images/jndi-with-rmi-20200209/image-20200204205121493-1255889.png)
+![image-20200204205121493](assets/jndi-with-rmi-20200209/image-20200204205121493-1255889.png)
 
 如果当前的remote对象是RemoteReference类型，则进一步请求Registry获取该Reference的内容。到这里为止，我们接下来的请求就同Server端的关系不大了，Client会根据拿到的Reference请求相应的服务器
 
 继续跟进getObjectInstance
 
-![image-20200204205638427](/images/jndi-with-rmi-20200209/image-20200204205638427-1255889.png)
+![image-20200204205638427](assets/jndi-with-rmi-20200209/image-20200204205638427-1255889.png)
 
 这里会继续调用NamingManager的getObjectFactoryFromReference，该函数完成了向FactoryURL请求具体的class文件的功能。
 
-![image-20200204210107747](/images/jndi-with-rmi-20200209/image-20200204210107747-1255889.png)
+![image-20200204210107747](assets/jndi-with-rmi-20200209/image-20200204210107747-1255889.png)
 
 这里可以看到，根据factoryName和codebase将远程载入相应的class文件(这里的loadClass用的URLClassLoader来完成任务)
 
-![image-20200204210025714](/images/jndi-with-rmi-20200209/image-20200204210025714-1255889.png)
+![image-20200204210025714](assets/jndi-with-rmi-20200209/image-20200204210025714-1255889.png)
 
 并在第163行对载入的obj进行初始化，这也就是为什么我们需要把payload写在构造函数里。
 
@@ -173,21 +173,21 @@ public class EvilObj {
 
 `org/springframework/transaction/jta/JtaTransactionManager.java#readObject`
 
-![image-20200205222725185](/images/jndi-with-rmi-20200209/image-20200205222725185-1255889.png)
+![image-20200205222725185](assets/jndi-with-rmi-20200209/image-20200205222725185-1255889.png)
 
 这里1230行初始化了一个jdni的context，这个context将用于后续的JNDI lookup
 
 继续跟进initUserTransactionAndTranscationManager
 
-![image-20200205222908751](/images/jndi-with-rmi-20200209/image-20200205222908751-1255889.png)
+![image-20200205222908751](assets/jndi-with-rmi-20200209/image-20200205222908751-1255889.png)
 
 继续跟进lookupUserTransaction
 
-![image-20200205223002181](/images/jndi-with-rmi-20200209/image-20200205223002181-1255889.png)
+![image-20200205223002181](assets/jndi-with-rmi-20200209/image-20200205223002181-1255889.png)
 
 这里最终调用了context的lookup函数，并且其参数为userTransactionName，这个部分我们可以在序列化前进行构造，例如下面的代码(更新在了ysoserial的spring3上)
 
-![image-20200205223116317](/images/jndi-with-rmi-20200209/image-20200205223116317-1255889.png)
+![image-20200205223116317](assets/jndi-with-rmi-20200209/image-20200205223116317-1255889.png)
 
 到了如今2020年，这个类的利用仍然存在于最新版的Spring-tx组件上XD
 
@@ -201,11 +201,11 @@ fastjson由于`@type`的存在，在受影响的版本中，其可以对任意�
 
 这里的关键在于autoCommit，来看一下JdbcRowSetImpl的setAutoCommit函数
 
-![image-20200205125555341](/images/jndi-with-rmi-20200209/image-20200205125555341-1255889.png)
+![image-20200205125555341](assets/jndi-with-rmi-20200209/image-20200205125555341-1255889.png)
 
 这里如果conn为null的话，会调用connect函数，看一下connect函数
 
-![image-20200205125714780](/images/jndi-with-rmi-20200209/image-20200205125714780-1255889.png)
+![image-20200205125714780](assets/jndi-with-rmi-20200209/image-20200205125714780-1255889.png)
 
 看到这里用JNDI进行数据库连接，并且由于fastjson的特性dataSource是可控的，这就意味着我们可以控制lookup的参数，并向恶意的server发起JNDI连接。根据前文说的原理，我们可以使得主机执行任意代码。
 
@@ -217,15 +217,15 @@ fastjson由于`@type`的存在，在受影响的版本中，其可以对任意�
 
 在RMI部分曾经分析过JRMPListener，其返回了ExceptionalReturn，使得构造好的Exception在Client反序列化执行命令。而对于绑定Reference，我们需要修改ExceptionalReturn为NormalReturn并将payloadObject改为ReferenceWrapper
 
-![image-20200205154116235](/images/jndi-with-rmi-20200209/image-20200205154116235-1255889.png)
+![image-20200205154116235](assets/jndi-with-rmi-20200209/image-20200205154116235-1255889.png)
 
 payloadObject改为ReferenceWrapper
 
-![image-20200205154412920](/images/jndi-with-rmi-20200209/image-20200205154412920-1255889.png)
+![image-20200205154412920](assets/jndi-with-rmi-20200209/image-20200205154412920-1255889.png)
 
 但是在实际测试时，发现Client请求后不能完全退出。其实我们也可以直接用上面的例子
 
-![image-20200205155851653](/images/jndi-with-rmi-20200209/image-20200205155851653-1255889.png)
+![image-20200205155851653](assets/jndi-with-rmi-20200209/image-20200205155851653-1255889.png)
 
 不过这里就获取不到是否有访问进来，根据实际的环境取舍吧XD
 
@@ -254,15 +254,15 @@ java -cp ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.RMIRefListener2 host
 
 用[vulhub](https://github.com/vulhub/vulhub/blob/master/fastjson/1.2.24-rce/README.md)的环境
 
-![image-20200206144653206](/images/jndi-with-rmi-20200209/image-20200206144653206-1255889.png)
+![image-20200206144653206](assets/jndi-with-rmi-20200209/image-20200206144653206-1255889.png)
 
 在服务器端会接收到连接
 
-![image-20200206144749240](/images/jndi-with-rmi-20200209/image-20200206144749240-1255889.png)
+![image-20200206144749240](assets/jndi-with-rmi-20200209/image-20200206144749240-1255889.png)
 
 进到docker里可以看到生成了success文件
 
-![image-20200206144824977](/images/jndi-with-rmi-20200209/image-20200206144824977-1255889.png)
+![image-20200206144824977](assets/jndi-with-rmi-20200209/image-20200206144824977-1255889.png)
 
 ## 0x04 后续
 
@@ -299,7 +299,7 @@ java -cp ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.RMIRefListener2 host
 
 在前面分析NamingManager的getObjectFactoryFromReference时，我略过了本地的factory的载入部分的代码
 
-![image-20200206163723977](/images/jndi-with-rmi-20200209/image-20200206163723977-1255889.png)
+![image-20200206163723977](assets/jndi-with-rmi-20200209/image-20200206163723977-1255889.png)
 
 这里首先会在本地的CLASSPATH里找这个factoryName，如果找到了，后续就不用进行远程加载。所以如果本地可以找到一个可利用的factory，也能突破JNDI的远程加载的限制。
 

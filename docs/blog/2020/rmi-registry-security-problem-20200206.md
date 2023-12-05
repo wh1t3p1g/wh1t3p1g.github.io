@@ -23,7 +23,7 @@ Java RMI流程可参考[1](https://xz.aliyun.com/t/2223)，出问题的位置在
 
 （下图为JDK8u141之前的版本的实现）
 
-![image-20200317175519024](/images/rmi-registry-security-problem-20200206/image-20200317175519024.png)
+![image-20200317175519024](assets/rmi-registry-security-problem-20200206/image-20200317175519024.png)
 
 可以看到获取到的序列化数据直接调用了readObject函数，导致了常规的Java反序列化漏洞的触发。
 
@@ -37,11 +37,11 @@ Registry对于bind/rebind的请求，会去检查这个请求是否为本地请�
 
 JDK 8u141之前，首先会去接收传送过来的对象，并将其进行`readObject`反序列化，实际判断是否为本地请求，是在put新的绑定对象之前进行的。这意味着在checkAccess之前我们就可以完成反序列化操作，该限制并没有起到相应的作用。
 
-![image-20200317175608779](/images/rmi-registry-security-problem-20200206/image-20200317175608779.png)
+![image-20200317175608779](assets/rmi-registry-security-problem-20200206/image-20200317175608779.png)
 
 而在JDK 8u141版本之后，`sun/rmi/registry/RegistryImpl_Skel.java#dispatch`
 
-![image-20200317181813002](/images/rmi-registry-security-problem-20200206/image-20200317181813002.png)
+![image-20200317181813002](assets/rmi-registry-security-problem-20200206/image-20200317181813002.png)
 
 这里会先去判断是否为本地绑定请求，然后再进行反序列化。
 
@@ -55,13 +55,13 @@ JDK 8u141之前，首先会去接收传送过来的对象，并将其进行`read
 
 答案是肯定的，来看`sun.rmi.registry.RegistryImpl_Skel#dispatch`对于lookup请求的处理
 
-![image-20200512141031125](/images/rmi-registry-security-problem-20200206/image-20200512141031125.png)
+![image-20200512141031125](assets/rmi-registry-security-problem-20200206/image-20200512141031125.png)
 
 可以看到在这里，接收到lookup发送过来的内容时，也是直接对其进行反序列化操作。但是这里并没有bind/rebind的请求源限制，所以我们可以直接lookup发起对141版本之后的registry的攻击。
 
 我们在构造lookup函数请求时，只需重新实现一下lookup函数的实现就可以了（这里将Naming.lookup和RegistryImpl_Stub.lookup进行了合并，并将传送过去的内容改成了任意的Object对象）。
 
-![image-20200512141411217](/images/rmi-registry-security-problem-20200206/image-20200512141411217.png)
+![image-20200512141411217](assets/rmi-registry-security-problem-20200206/image-20200512141411217.png)
 
 ## 0x02 攻击Registry jdk<8u121
 
@@ -77,11 +77,11 @@ ysoserial工具中的`ysoserial.exploit.RMIRegisterExploit`采用了代理Remote
 
 根据前面文章中的原理，我们传过去的对象必须要是一个继承了java.rmi.Remote接口的对象。这里ysoserial工具则直接利用动态代理的原理，对Remote类做代理，其处理的handler用了CommonsCollections中常用的AnnotationInvocationHandler。但其触发点变为handler的memberValues属性被反序列化所执行的利用链。
 
-![image-20200110145154688](/images/rmi-registry-security-problem-20200206/image-20200110145154688.png)
+![image-20200110145154688](assets/rmi-registry-security-problem-20200206/image-20200110145154688.png)
 
 接下来，远程bind对象将构造好的remote对象传过去即可，来看一下这个代码
 
-![image-20200110145346319](/images/rmi-registry-security-problem-20200206/image-20200110145346319.png)
+![image-20200110145346319](assets/rmi-registry-security-problem-20200206/image-20200110145346319.png)
 
 ## 0x03 攻击Registry jdk<8u232_b09
 
@@ -123,21 +123,21 @@ Registry registry = LocateRegistry.getRegistry("192.168.98.80");
 
 跟进`java/rmi/registry/LocateRegistry.java#getRegistry`
 
-![image-20200131185848839](/images/rmi-registry-security-problem-20200206/image-20200131185848839.png)
+![image-20200131185848839](assets/rmi-registry-security-problem-20200206/image-20200131185848839.png)
 
 注意到这样一段代码，通过TCPEndpoint注册服务端的host、端口等信息，以UnicastRef封装liveRef.在下面createProxy时使用了RemoteObjectInvocationHandler作为UnicastRef动态代理的处理类
 
-![image-20200131191232156](/images/rmi-registry-security-problem-20200206/image-20200131191232156.png)
+![image-20200131191232156](assets/rmi-registry-security-problem-20200206/image-20200131191232156.png)
 
 最终，我们将以客户端的身份去链接，所以这里的Registry会是`sun/rmi/registry/RegistryImpl_Stub.java#bind`向远程RMI Registry注册。
 
-![image-20200131231355987](/images/rmi-registry-security-problem-20200206/image-20200131231355987.png)
+![image-20200131231355987](assets/rmi-registry-security-problem-20200206/image-20200131231355987.png)
 
 newCall发起连接，并将需要绑定的对象发送过去。
 
 到这里就结束了向远程Registry发起绑定的操作。这个过程中我们用到了UnicastRef对象，那么这里想象一下，如果我们可以控制UnicastRef对象里LiveRef的host和port，那么我们就能发起任意的RMI连接。这里就是ysoserial中JRMPClient的原理，来看一下这个payload
 
-![image-20200131232428711](/images/rmi-registry-security-problem-20200206/image-20200131232428711.png)
+![image-20200131232428711](assets/rmi-registry-security-problem-20200206/image-20200131232428711.png)
 
 是不是很熟悉XD，使用的方法就是前面绑定过程中的代码。而在白名单里UnicastRef对象是允许被反序列化的。
 
@@ -150,7 +150,7 @@ newCall发起连接，并将需要绑定的对象发送过去。
 
 这里JRMPClient使用的RemoteObjectInvocationHandler就是第一种方法，我们将AnnotationInvocationHandler替换成RemoteObjectInvocationHandler。在反序列化时会调用RemoteObjectInvocationHandler的父类RemoteObject的readObject函数
 
-![image-20200110220005786](/images/rmi-registry-security-problem-20200206/image-20200110220005786.png)
+![image-20200110220005786](assets/rmi-registry-security-problem-20200206/image-20200110220005786.png)
 
 这里的ref就是我们传进去的UnicastRef，调用其readExternal函数，这里介绍一下readExternal
 
@@ -161,19 +161,19 @@ newCall发起连接，并将需要绑定的对象发送过去。
 
 这里的readExternal就是重新创建一个tcp连接
 
-![image-20200110220105735](/images/rmi-registry-security-problem-20200206/image-20200110220105735.png)
+![image-20200110220105735](assets/rmi-registry-security-problem-20200206/image-20200110220105735.png)
 
 继续往下跟
 
-![image-20200110220150019](/images/rmi-registry-security-problem-20200206/image-20200110220150019.png)
+![image-20200110220150019](assets/rmi-registry-security-problem-20200206/image-20200110220150019.png)
 
 重新生成一个LiveRef对象后，将存储到当前的ConnectionInputStream上。后续该stream会继续调用registerRefs函数
 
-![image-20200110220710690](/images/rmi-registry-security-problem-20200206/image-20200110220710690.png)
+![image-20200110220710690](assets/rmi-registry-security-problem-20200206/image-20200110220710690.png)
 
 最终由DGCClient发起连接，下图中的loopup函数
 
-![image-20200110220823670](/images/rmi-registry-security-problem-20200206/image-20200110220823670.png)
+![image-20200110220823670](assets/rmi-registry-security-problem-20200206/image-20200110220823670.png)
 
 到这里后面就是JRMPListener反序列化的东西了，这里在最后进行分析。
 
@@ -203,7 +203,7 @@ jdk版本8u232_b09修复了前面使用反向发起JRMP连接的利用。修复�
 
 `sun.rmi.registry.RegistryImpl_Skel#dispatcher`，这里截了lookup函数的处理，bind/rebind函数的处理是一样的
 
-![image-20200512145332476](/images/rmi-registry-security-problem-20200206/image-20200512145332476.png)
+![image-20200512145332476](assets/rmi-registry-security-problem-20200206/image-20200512145332476.png)
 
 当发生反序列化错误或者类型转换错误时，会调用`call.discardPendingRefs`，将现有的JRMP连接清除掉。也就意味着这里我们无法用JRMP反向链接的方式来达成利用了。
 
@@ -211,15 +211,15 @@ jdk版本8u232_b09修复了前面使用反向发起JRMP连接的利用。修复�
 
 当Registry处理JRMP反连的时候，会调用`DGCImpl_Stub#dirty`，而`ref.invoke`会最终调用`sun.rmi.transport.StreamRemoteCall#executeCall`来处理返回的异常，这里会最终导致反序列化(详细见0x05番外)
 
-![image-20200512145824806](/images/rmi-registry-security-problem-20200206/image-20200512145824806.png)
+![image-20200512145824806](assets/rmi-registry-security-problem-20200206/image-20200512145824806.png)
 
 而在232版本，将原本在后面注册的`leaseFilter`提到了前面
 
-![image-20200512150213665](/images/rmi-registry-security-problem-20200206/image-20200512150213665.png)
+![image-20200512150213665](assets/rmi-registry-security-problem-20200206/image-20200512150213665.png)
 
 看看该过滤器的限制`sun/rmi/transport/DGCImpl_Stub.java#leaseFilter`
 
-![image-20200118182504042](/images/rmi-registry-security-problem-20200206/image-20200118182504042.png)
+![image-20200118182504042](assets/rmi-registry-security-problem-20200206/image-20200118182504042.png)
 
 对于返回的序列化对象，只允许上面的几种类型，而现有的反序列化利用链中HashSet、HashTable等类都是通不过的。
 
@@ -235,13 +235,13 @@ ps:这里用的`DGCImpl_Stub`是客户端发起时使用的，相对应的还有
 
 看一下JRMPListener的代码，简单来说，其实现了与RMI Client的交互流程。这里我们直接看重点的代码
 
-![image-20200202161819982](/images/rmi-registry-security-problem-20200206/image-20200202161819982.png)
+![image-20200202161819982](assets/rmi-registry-security-problem-20200206/image-20200202161819982.png)
 
 在完成前面的一些交互步骤后，Listener会向Client发送一个ExceptionalReturn的状态，并将序列化的payload填充到BadAttributeValueExpException的val属性。这里用的BadAttributeValueExpException并不是我们以前分析时做的toString触发点，而是仅作为payload的一个载体，在反序列化BadAttributeValueExpException的val属性时同样反序列化了我们的payload。
 
 而位于Client在接收到ExceptionalReturn时的处理方式见`sun/rmi/transport/StreamRemoteCall.java#executeCall`前面的分析都省略了
 
-![image-20200202163234429](/images/rmi-registry-security-problem-20200206/image-20200202163234429.png)
+![image-20200202163234429](assets/rmi-registry-security-problem-20200206/image-20200202163234429.png)
 
 在这里我们看到了熟悉的readObject函数，其用于将前面的Exception进行反序列化。
 
@@ -266,9 +266,9 @@ ps:这里用的`DGCImpl_Stub`是客户端发起时使用的，相对应的还有
 
 本地在bind或rebind一个Remote对象时，会在sun/rmi/server/MarshalOutputStream.java#replaceObject进行转化
 
-![image-20200303203244913](/images/rmi-registry-security-problem-20200206/image-20200303203244913.png)
+![image-20200303203244913](assets/rmi-registry-security-problem-20200206/image-20200303203244913.png)
 
-![image-20200303203931864](/images/rmi-registry-security-problem-20200206/image-20200303203931864.png)
+![image-20200303203931864](assets/rmi-registry-security-problem-20200206/image-20200303203931864.png)
 
 原来的对象会被转化成上面的一个结构，这里直接丢掉了UnicastRemoteObject，自然在Registry端无法从UnicastRemoteObject的readObject函数开始，这样这个Gadget就无法成功利用了。
 
@@ -311,7 +311,7 @@ if (enableReplace) {
 
 1. 首先对于第一个限制，UnicastRemoteObject的jrmp反连发生在readObject过程中
 
-   ![image-20200617230402963](/images/rmi-registry-security-problem-20200206/image-20200617230402963.png)
+   ![image-20200617230402963](assets/rmi-registry-security-problem-20200206/image-20200617230402963.png)
 
 2. 其次对于第二个限制，前面提到Registry能触发JRMP反连主要是因为调用了`DGCClient.registerRefs`去处理
 
@@ -319,25 +319,25 @@ if (enableReplace) {
 
    前面分析<8u232_b09时，用到的RemoteObjectInvocationHandler的方式来触发，不过这里其实只用到了封装UnicastRef的作用（这里提一下实际触发时需要调用UnicastRef.invoke）。UnicastRemoteObject对这个handler做了更深入的利用，这里用到了`java.rmi.server.RemoteObjectInvocationHandler#invokeRemoteMethod`
 
-   ![image-20200617234429050](/images/rmi-registry-security-problem-20200206/image-20200617234429050.png)
+   ![image-20200617234429050](assets/rmi-registry-security-problem-20200206/image-20200617234429050.png)
 
    调用了`ref.invoke`触发jrmp反连，到这里都没有经过DGCClient的路径，自然也就没有白名单的限制。
 
 不过这条链到了8u242也失效了，主要原因在于lookup接口无法再反序列化非string类型的object了
 
-![image-20200618002342127](/images/rmi-registry-security-problem-20200206/image-20200618002342127.png)
+![image-20200618002342127](assets/rmi-registry-security-problem-20200206/image-20200618002342127.png)
 
 ## 0x08 RMI DGC实现问题(ysoserial.expliots.JRMPClient)
 
 在JEP290之前，RMI的DGCImpl_skel#dipatch接收处，获取到数据后，直接readObject造成的。
 
-![image-20200306202106633](/images/rmi-registry-security-problem-20200206/image-20200306202106633.png)
+![image-20200306202106633](assets/rmi-registry-security-problem-20200206/image-20200306202106633.png)
 
 在JEP290之后，反序列化前做了校验，见DGCImpl
 
-![image-20200306202539911](/images/rmi-registry-security-problem-20200206/image-20200306202539911.png)
+![image-20200306202539911](assets/rmi-registry-security-problem-20200206/image-20200306202539911.png)
 
-![image-20200306202604696](/images/rmi-registry-security-problem-20200206/image-20200306202604696.png)
+![image-20200306202604696](assets/rmi-registry-security-problem-20200206/image-20200306202604696.png)
 
 导致了ysoserial的exploit中的JRMPClient失效
 
@@ -347,15 +347,15 @@ if (enableReplace) {
 
 直接讲触发点`sun/rmi/server/UnicastServerRef.java#dispatch#338`
 
-![image-20200317203347230](/images/rmi-registry-security-problem-20200206/image-20200317203347230.png)
+![image-20200317203347230](assets/rmi-registry-security-problem-20200206/image-20200317203347230.png)
 
 当我们编写Client端对Server端挂载的对象进行远程函数调用（RMI）时，Server端会逐一进行（获取到Methtod，解析parameters，最后进行invoke调用）。而在解析params时（我们讲过RMI过程中，对象均是序列化的状态）我们需要先对参数对象进行反序列化，也就是第338行所做的工作，继续往下跟
 
-![image-20200317203723497](/images/rmi-registry-security-problem-20200206/image-20200317203723497.png)
+![image-20200317203723497](assets/rmi-registry-security-problem-20200206/image-20200317203723497.png)
 
 在函数`unmarshalParametersUnchecked`中分别对每个参数进行反序列化还原
 
-![image-20200317203838431](/images/rmi-registry-security-problem-20200206/image-20200317203838431.png)
+![image-20200317203838431](assets/rmi-registry-security-problem-20200206/image-20200317203838431.png)
 
 如果所接受的类型非基础数据结构，那么将直接调用readObject，这部分并没有前面filter的限制
 

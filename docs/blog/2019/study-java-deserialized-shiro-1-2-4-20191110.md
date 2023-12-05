@@ -33,7 +33,7 @@ ysoserial用的0.0.6版本`https://github.com/frohoff/ysoserial`
 
    这里的解决方案是修改pom.xml
 
-![image-20191108153248897](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191108153248897.png)
+![image-20191108153248897](assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191108153248897.png)
 
 ​			添加jstl的具体版本即可解决。
 
@@ -62,21 +62,21 @@ ysoserial用的0.0.6版本`https://github.com/frohoff/ysoserial`
 
 `org.apache.shiro.io.DefaultSerializer.deserialize:67`
 
-![image-20191109160945448](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191109160945448.png)
+![image-20191109160945448](assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109160945448.png)
 
 这里我们直接看反序列化发生的点，第75行使用了`ClassResolvingObjectInputStream`类而非传统的`ObjectInputStream`.这里可能是开发人员做的一种防护措施？他重写了`ObjectInputStream`类的`resolveClass`函数，我曾在第一篇[基础文章](http://blog.0kami.cn/2019/10/24/study-java-deserialized-commonscollections3-1/)中分析过Java反序列化的过程，`ObjectInputStream`的`resolveClass`函数用的是`Class.forName`类获取当前描述器所指代的类的Class对象。而重写后的`resolveClass`函数
 
-![image-20191109162524242](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191109162524242.png)
+![image-20191109162524242](assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109162524242.png)
 
 采用的是`ClassUtils.forName`，我们继续看这个forName的实现。
 
-![image-20191109163048059](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191109163048059.png)
+![image-20191109163048059](assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109163048059.png)
 
 来看看这个`ExceptionIgnoringAccessor`是怎么实现的
 
-![image-20191109164548583](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191109164548583.png)
+![image-20191109164548583](assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191109164548583.png)
 
-这里实际上调用了`ParallelWebAppClassLoader`父类`WebappClassLoaderBase`的`loadClass`函数（可以直接下断点看看内容）。![image-20191110110209579](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191110110209579.png)
+这里实际上调用了`ParallelWebAppClassLoader`父类`WebappClassLoaderBase`的`loadClass`函数（可以直接下断点看看内容）。![image-20191110110209579](assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110110209579.png)
 
 该loadClass载入按照上述的顺序（这里不贴代码了，找到`org.apache.catalina.loader.WebappClassLoaderBase.loadClass`即可），先从cache中找已载入的类，如果前3点都没找到，再通过父类`URLClassLoader`的`loadClass`函数载入。但是实际上此时loadClass的参数name值带上了数组的标志，即`/Lorg/apache/commons/collections/Transformer;.class`，在参考的第二篇文章里有提到这个问题，所以导致shiro无法载入数组类型的对象。
 
@@ -112,7 +112,7 @@ PriorityQueue.readObject
 
 那么就来改造改造吧！我们先将注意力关注在`InvokerTransformer.transform()`上
 
-![image-20191110141818530](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191110141818530.png)
+![image-20191110141818530](assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110141818530.png)
 
 这里是最经典的反射机制的写法，根据传入的`input`对象，调用其`iMethodName`（可控）。那么如果此时传入的`input`为构造好的`TemplatesImpl`对象呢？
 
@@ -136,11 +136,11 @@ PriorityQueue.readObject
 
 来看一看
 
-![image-20191110143619051](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191110143619051.png)
+![image-20191110143619051](assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110143619051.png)
 
 其中`map`和`key`我们都可以控制，而`LazyMap.get`调用了`transform`函数，并将可控的`key`传入`transform`函数
 
-![image-20191110143737549](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191110143737549.png)
+![image-20191110143737549](assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110143737549.png)
 
 这里就接上了我们前面讨论的，将构造好的`TemplatesImpl`（key）作为`InvokerTransformer.transform`函数的`input`传入，我们就可以将templates gadgets串起来了。
 
@@ -164,7 +164,7 @@ TiedMapEntry entry = new TiedMapEntry(lazyMap, templates);
 
 当应用开启了security manager时，需要设置`-Djdk.xml.enableTemplatesImplDeserialization=true`
 
-![image-20200109193558744](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20200109193558744.png)
+![image-20200109193558744](assets/study-java-deserialized-shiro-1-2-4-20191110/image-20200109193558744.png)
 
 ## 0x04 EXP编写
 
@@ -245,7 +245,7 @@ java.util.HashSet.readObject()
 
 最后，在最近的[shiro-721](https://issues.apache.org/jira/browse/SHIRO-721)利用上，这个利用链希望可以帮助到大家
 
-![image-20191110151222301](/images/study-java-deserialized-shiro-1-2-4-20191110/image-20191110151222301.png)
+![image-20191110151222301](assets/study-java-deserialized-shiro-1-2-4-20191110/image-20191110151222301.png)
 
 Happy Hacking XD
 

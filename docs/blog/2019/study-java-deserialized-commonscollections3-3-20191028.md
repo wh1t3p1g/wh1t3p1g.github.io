@@ -62,7 +62,7 @@ public class Cracker {
 
 Java中动态调用的另一种方式是`defineClass`
 
-![image-20191025190617899](/images/java-deserialized-commonscollections3-20191028/image-20191025190617899.png)
+![image-20191025190617899](assets/java-deserialized-commonscollections3-20191028/image-20191025190617899.png)
 
 Java提供了ClassLoader从bytes数组中还原Class的方法，defineClass函数就是完成这一过程的函数。
 
@@ -107,13 +107,13 @@ final Transformer[] transformers = new Transformer[] {
 
 我们重点来看`InstaniateTransformer`的`transform`函数
 
-![image-20191025215544053](/images/java-deserialized-commonscollections3-20191028/image-20191025215544053.png)
+![image-20191025215544053](assets/java-deserialized-commonscollections3-20191028/image-20191025215544053.png)
 
 简单来看，该函数对输入的input（这里就是TrAXFilter.class）做实例化的操作。这里看起来，其实有点像php中找对应的__constructs，在Java里我们就去找构造函数里做了危险操作的class。
 
 来看一下`TrAXFilter`类的构造函数
 
-![image-20191025215631300](/images/java-deserialized-commonscollections3-20191028/image-20191025215631300.png)
+![image-20191025215631300](assets/java-deserialized-commonscollections3-20191028/image-20191025215631300.png)
 
 这里的`templates`就是上面exp中构造的`templatesImpl`.
 
@@ -121,15 +121,15 @@ final Transformer[] transformers = new Transformer[] {
 
 `org.apache.xalan.internal.xsltc.trax.TemplatesImpl.java:newTransformer:481`
 
-![image-20191025215358907](/images/java-deserialized-commonscollections3-20191028/image-20191025215358907.png)
+![image-20191025215358907](assets/java-deserialized-commonscollections3-20191028/image-20191025215358907.png)
 
 继续看`getTransletInstance`
 
-![image-20191025215202858](/images/java-deserialized-commonscollections3-20191028/image-20191025215202858.png)
+![image-20191025215202858](assets/java-deserialized-commonscollections3-20191028/image-20191025215202858.png)
 
 再继续`defineTransletClasses`
 
-![image-20191025215052940](/images/java-deserialized-commonscollections3-20191028/image-20191025215052940.png)
+![image-20191025215052940](assets/java-deserialized-commonscollections3-20191028/image-20191025215052940.png)
 
 看到这里是不是有点熟悉，没错，这里用到了0x02中的两个基础知识。`defineTransletClasses`还原出类，`getTransletInstance`进行实例化。那么我们只需要构造一个合适的`_bytecodes`即可执行任意Java代码。
 
@@ -144,7 +144,7 @@ final Transformer[] transformers = new Transformer[] {
 
 来看一下ysoserial的操作
 
-![image-20191028155646352](/images/java-deserialized-commonscollections3-20191028/image-20191028155646352.png)
+![image-20191028155646352](assets/java-deserialized-commonscollections3-20191028/image-20191028155646352.png)
 
 上面的代码不做省略，我们应该好好学习一下javassist的基本操作，代码可以在`Gadgets.createTemplatesImpl`找到！
 
@@ -169,11 +169,11 @@ CommonsCollections3主要利用了可控的byte数组从defineClass函数中还�
 
 前面的分析并没有提到3.2.2版本发生了啥事，导致了利用链的失效，这里简单提一下
 
-![image-20191104193635375](/images/study-java-deserialized-commonscollections3-3-20191028/image-20191104193635375.png)
+![image-20191104193635375](assets/study-java-deserialized-commonscollections3-3-20191028/image-20191104193635375.png)
 
 3.2.2版本对InvokerTransformer增加了readObject函数，并且做了是否允许反序列化的检查，在`FunctorUtils.checkUnsafeSerialization`函数内。
 
-![image-20191104194440916](/images/study-java-deserialized-commonscollections3-3-20191028/image-20191104194440916.png)
+![image-20191104194440916](assets/study-java-deserialized-commonscollections3-3-20191028/image-20191104194440916.png)
 
 这里UNSAFE_SERIALIZABLE_PROPERTY的值默认为false，如果需要为true，需要在运行时指定。
 

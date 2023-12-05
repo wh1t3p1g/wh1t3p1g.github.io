@@ -56,7 +56,7 @@ return * limit 20
 
 本次利用链将限制危险函数为Method.invoke函数，具体查询结果如下图所示
 
-![image-20210313232310869](/images/how_to_find_gadget_chains/image-20210313232310869.png)
+![image-20210313232310869](assets/how_to_find_gadget_chains/image-20210313232310869.png)
 
 可以看到末端的危险函数调用点为`sun.swing.SwingLazyValue#createValue`，来看一下具体的代码
 
@@ -89,7 +89,7 @@ public Object createValue(final UIDefaults table) {
 
 从代码上看，该函数可以调用任意的静态函数或任意对象的构造函数。那么我们就先确定当前这个函数是否是可用的，即找到合适的静态函数或构造函数，该函数会调用某些危险函数从而达成代码执行或命令执行。这里也同样构造图查询语句进行合适函数的查找，暂时限定危险函数为`exec`、`lookup`、`invoke`。
 
-![image-20210314000451728](/images/how_to_find_gadget_chains/image-20210314000451728.png)
+![image-20210314000451728](assets/how_to_find_gadget_chains/image-20210314000451728.png)
 
 找到了一个可以用的函数`<javax.naming.InitialContext: java.lang.Object doLookup(java.lang.String)>`，该静态函数可以进行JNDI注入攻击。
 
@@ -195,7 +195,7 @@ return * limit 20
 
 这里比较难受的是三个触发函数和toString函数都是有大量实现的函数，所以如果要找到一条可用的得看不少时间。下图简单处理了一下（图中画的箭头只是一种可能性）
 
-![image-20210314144816234](/images/how_to_find_gadget_chains/image-20210314144816234.png)
+![image-20210314144816234](assets/how_to_find_gadget_chains/image-20210314144816234.png)
 
 此处我们从compareTo开始讲，`javax.naming.ldap.Rdn$RdnEntry#compareTo`
 

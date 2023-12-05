@@ -33,23 +33,23 @@ commons-collections:4.0版本下的利用链，用的都是TemplatesImpl作为�
 
 CommonsCollections2,4都用到了一个新的类`PriorityQueue`的`Comparator`来触发`transform`函数，两者的区别在于中间的桥接用的不同的Transformer对象。先来看一下`PriorityQueue.readObject`
 
-![image-20191105144356952](/images/study-java-deserialized-commonscollections4-20191105/image-20191105144356952.png)
+![image-20191105144356952](assets/study-java-deserialized-commonscollections4-20191105/image-20191105144356952.png)
 
 框框里的主要工作为反序列化恢复该对象的数据，我们重点关注`heapify()`
 
-![image-20191105144742407](/images/study-java-deserialized-commonscollections4-20191105/image-20191105144742407.png)
+![image-20191105144742407](assets/study-java-deserialized-commonscollections4-20191105/image-20191105144742407.png)
 
 继续跟进`siftDown`
 
-![image-20191105144814493](/images/study-java-deserialized-commonscollections4-20191105/image-20191105144814493.png)
+![image-20191105144814493](assets/study-java-deserialized-commonscollections4-20191105/image-20191105144814493.png)
 
 当我们在实例化对象时提供了`comparator`，将会来到我们最终触发compare的位置，看一下`siftDownUsingComparator`
 
-![image-20191105145042981](/images/study-java-deserialized-commonscollections4-20191105/image-20191105145042981.png)
+![image-20191105145042981](assets/study-java-deserialized-commonscollections4-20191105/image-20191105145042981.png)
 
 这里调用了我们传入的comparator，并调用其compare，利用链中使用了`TransformingComparator`,来看一下它的compare函数
 
-![image-20191105145452819](/images/study-java-deserialized-commonscollections4-20191105/image-20191105145452819.png)
+![image-20191105145452819](assets/study-java-deserialized-commonscollections4-20191105/image-20191105145452819.png)
 
 调用了当前的transformer的transform函数，看到这里，其实已经很熟了，前面分析的很多利用链都跟transform有关，并且4.0版本并没有拉黑相关的transformer。所以接下来，我们就可以用前面的一些思路了。
 
@@ -94,21 +94,21 @@ CommonsCollections8是今年**[navalorenzo](https://github.com/navalorenzo)**推
 
 来看一下`TreeBag.readObject`
 
-![image-20191105154637160](/images/study-java-deserialized-commonscollections4-20191105/image-20191105154637160.png)
+![image-20191105154637160](assets/study-java-deserialized-commonscollections4-20191105/image-20191105154637160.png)
 
 这里的两个关键点`TreeBag`的父类的`doReadObject`函数和`TreeMap`.
 
 看一下`doReadObject`
 
-![image-20191105155805597.png](/images/study-java-deserialized-commonscollections4-20191105/image-20191105155805597.png)
+![image-20191105155805597.png](assets/study-java-deserialized-commonscollections4-20191105/image-20191105155805597.png)
 
 这里对传入的TreeMap调用了`put`函数
 
-![image-20191105155659102](/images/study-java-deserialized-commonscollections4-20191105/image-20191105155659102.png)
+![image-20191105155659102](assets/study-java-deserialized-commonscollections4-20191105/image-20191105155659102.png)
 
 继续跟进`compare`函数
 
-![image-20191105155936014](/images/study-java-deserialized-commonscollections4-20191105/image-20191105155936014.png)
+![image-20191105155936014](assets/study-java-deserialized-commonscollections4-20191105/image-20191105155936014.png)
 
 这里又回到了熟悉的`comparator.compare`函数，其中`comparator`就是我们构造的`TransformingComparator`
 
@@ -133,9 +133,9 @@ TreeBag.readObject()
 
 前面我们用到了InvokerTransformer和InstantiateTransformer作为中转，很真实，4.1版本这两个类都没有实现Serializable接口，导致我们在序列化时就无法利用这两个类。emmmmm，直接干掉了上面的2，4，8。
 
-![image-20191105161531047](/images/study-java-deserialized-commonscollections4-20191105/image-20191105161531047.png)
+![image-20191105161531047](assets/study-java-deserialized-commonscollections4-20191105/image-20191105161531047.png)
 
-![image-20191105161550587](/images/study-java-deserialized-commonscollections4-20191105/image-20191105161550587.png)
+![image-20191105161550587](assets/study-java-deserialized-commonscollections4-20191105/image-20191105161550587.png)
 
 这个改变意味着我们需要从其他可操作危险方法的对象了。
 
