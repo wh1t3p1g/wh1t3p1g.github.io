@@ -1,7 +1,7 @@
 ---
 title: XStream 1.4.15 Blacklist Bypass
 tags:
-  - java
+  - Java
 categories:
   - notes
 date: 2021-1-3 22:43:16

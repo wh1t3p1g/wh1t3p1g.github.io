@@ -1,8 +1,8 @@
 ---
 title: Struts2命令执行各版本记录
 date: 2017-01-13 16:57:47
-tags: 
- - java
+tags:
+  - Java
 categories: notes
 ---
 

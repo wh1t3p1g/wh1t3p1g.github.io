@@ -1,7 +1,7 @@
 ---
 title: struts2历史漏洞分析
-tags: 
-  - java
+tags:
+  - Java
 categories: notes
 date: 2020-05-22 17:14:38
 typora-root-url: ../../../source

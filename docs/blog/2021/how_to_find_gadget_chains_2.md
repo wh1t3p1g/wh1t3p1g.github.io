@@ -1,7 +1,7 @@
 ---
 title: 如何高效地捡漏反序列化利用链？
 tags:
-  - java
+  - Java
 categories:
   - notes
 date: 2021-3-14 22:43:16
