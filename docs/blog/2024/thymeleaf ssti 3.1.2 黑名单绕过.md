@@ -7,6 +7,7 @@ tags:
 
 - thymeleaf 模版对于 SpEL 表达式的解析具有黑名单上的类型检查（最早追溯到什么时间暂时没找到）
 - 在 2023.07 thymeleaf 出了个沙箱绕过的漏洞 CVE-2023-38286，影响版本是 3.1.1.RELEASE。这个沙盒绕过可以追溯到 [spring admin 的模版解析漏洞](https://github.com/advisories/GHSA-7gj7-224w-vpr3) 。主要出在 `org.springframework.util`下的反射包可以绕过上述的类型检查黑名单。thymeleaf 修复的 [commit](https://github.com/thymeleaf/thymeleaf/commit/87b512d1ad331b8844f6bda404db0a36a44d19cd) 主要是增加了黑名单内容`org.springframework.util`。
+
 那么，在最新的黑名单条件下，还能绕过 3.1.2 的沙盒吗？答案是肯定的，黑名单措施永远仅为一个无奈之举。也预想到 thymeleaf 的 cve 也有的卷了 XD。
 本文将以 rwctf2024 的 chatterbox 为例，简单讲述下怎么绕过 3.1.2 的黑名单。
 
